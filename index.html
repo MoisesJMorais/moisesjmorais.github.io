@@ -2,51 +2,196 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Em Breve...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M&T Linker | Sua página, seu negócio online!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     body {
       margin: 0;
-      padding: 0;
-      background: #1e1e2f;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      flex-direction: column;
+      font-family: 'Inter', sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
     }
 
-    .loader {
-      width: 50px;
-      height: 50px;
-      border: 5px solid #555;
-      border-top: 5px solid #fdd835;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 20px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    h1 {
-      font-size: 2em;
+    header {
+      background-color: #004aad;
+      color: white;
+      padding: 60px 20px;
       text-align: center;
     }
 
-    p {
-      font-size: 1.2em;
-      color: #ccc;
+    header h1 {
+      font-size: 2.8rem;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      margin-bottom: 30px;
+    }
+
+    .btn-primary {
+      background-color: #00c67c;
+      color: white;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      text-decoration: none;
+      transition: background 0.3s ease;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      background-color: #00a86b;
+    }
+
+    section {
+      padding: 60px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      justify-content: space-around;
+      text-align: center;
+    }
+
+    .feature {
+      flex: 1 1 250px;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .feature h3 {
+      margin-bottom: 15px;
+      color: #004aad;
+    }
+
+    .how-it-works {
+      background-color: #eef3f9;
+      border-radius: 10px;
+    }
+
+    footer {
+      background-color: #002b5c;
+      color: white;
+      text-align: center;
+      padding: 20px 20px;
+    }
+
+    footer p {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    /* Estilos para os botões com ícones */
+    .contact-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .contact-buttons a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 1rem;
+      padding: 15px 30px;
+      border-radius: 30px;
+      text-decoration: none;
+      color: white;
+      font-weight: 600;
+    }
+
+    .btn-whatsapp {
+      background-color: #25D366;
+    }
+
+    .btn-whatsapp:hover {
+      background-color: #1ebe5b;
+    }
+
+    .btn-call {
+      background-color: #007bff;
+    }
+
+    .btn-call:hover {
+      background-color: #005dc5;
+    }
+
+    .contact-buttons svg {
+      width: 20px;
+      height: 20px;
+      fill: white;
     }
   </style>
 </head>
 <body>
-  <div class="loader"></div>
-  <h1>Estamos trabalhando nisso!</h1>
-  <p>Este site ainda está em construção. Volte em breve 🚧</p>
+
+  <header>
+    <h1>Agora você pode ter uma página única e exclusiva para divulgar o seu negócio!</h1>
+    <p>Seus links, contatos, redes sociais e tudo que você desejar reunidos em um só lugar.</p>
+    <a href="#comecar" class="btn-primary">Quer saber como?</a>
+  </header>
+
+  <section>
+    <h2 style="text-align: center;">Por que o nosso serviço é a melhor opção pra você?</h2>
+    <div class="features">
+      <div class="feature">
+        <h3>Divulgação completa</h3>
+        <p>Coloque todos os links do seu negócio em um só lugar: Instagram, WhatsApp, site, localização no mapa, e muito mais.</p>
+      </div>
+      <div class="feature">
+        <h3>Para qualquer negócio, de qualquer segmento</h3>
+        <p>Se você tem um restaurante e trabalha com o ComandaX por exemplo, podemos adicionar o link da sua comanda digital para facilitar pedidos e atendimento ao cliente.</p>
+      </div>
+      <div class="feature">
+        <h3>Simples e acessível</h3>
+        <p>Sua página online em pouco tempo, sem precisar saber programação. Você solicita e o resto é com a gente.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-it-works">
+    <h2 style="text-align: center;">Mais fácil que fazer dieta em Dezembro...</h2>
+    <ol style="max-width: 700px; margin: auto; padding-left: 20px;">
+      <li>Envie uma mensagem para nós no WhatsApp e solicite orçamento;</li>
+      <li>Envie todos os links que deseja adicionar na sua página (redes sociais, contatos, etc...);</li>
+      <li>Em no máximo 48 horas após solicitado, a sua página de links já estará online;</li>
+      <li>O link será enviado para você logo após a confirmação do pagamento.</li>
+    </ol>
+  </section>
+
+  <section id="comecar" style="text-align: center;">
+    <h2>Simples, não é mesmo?</h2>
+    <p>Levar o seu negócio para o próximo nível com uma página de links profissional e prática nunca foi tão fácil.</p>
+  </section>
+
+  <!-- Seção com botões de contato usando SVGs -->
+  <section class="contact-buttons">
+    <a href="https://wa.me/5544997054802" target="_blank" class="btn-whatsapp">
+      <!-- Ícone WhatsApp -->
+      <svg viewBox="0 0 32 32">
+        <path d="M16 .4C7.2.4 0 7.6 0 16c0 2.8.8 5.5 2.1 7.8L.1 32l8.4-2.1c2.3 1.3 4.9 2 7.5 2 8.8 0 16-7.2 16-16S24.8.4 16 .4zm0 29.2c-2.3 0-4.6-.6-6.6-1.8l-.5-.3-5 1.3 1.3-4.8-.3-.5c-1.3-2-2-4.3-2-6.7 0-7.3 5.9-13.2 13.2-13.2s13.2 5.9 13.2 13.2-5.9 13.2-13.2 13.2zm7.3-9.8c-.4-.2-2.4-1.2-2.8-1.3-.4-.2-.7-.2-1 .2-.3.4-1.1 1.3-1.4 1.5-.3.2-.5.3-.9.1s-1.7-.6-3.3-2c-1.2-1.1-2-2.4-2.3-2.8-.2-.4 0-.6.1-.8.1-.1.4-.5.6-.7.2-.2.3-.4.5-.6.2-.2.1-.5 0-.7s-1-2.4-1.4-3.3c-.4-.9-.7-.7-1-.7h-.9c-.3 0-.7.1-1 .5s-1.3 1.2-1.3 2.9 1.4 3.3 1.6 3.5c.2.2 2.7 4.1 6.5 5.7 2.4 1 3.4 1.1 4.6 1 .7-.1 2.4-1 2.8-2 .4-1 .4-1.9.3-2.1-.1-.3-.4-.4-.8-.6z"/>
+      </svg>
+      WhatsApp
+    </a>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 M&T Linker - Todos os direitos reservados.</p>
+  </footer>
+
 </body>
 </html>
