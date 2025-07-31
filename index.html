@@ -16,6 +16,7 @@
       background-color: #121212;
       color: #ffffff;
     }
+
     .search-bar {
       position: fixed;
       top: 0;
@@ -37,8 +38,11 @@
     }
 
     .content {
-      padding: 50px 16px 24px;
+      max-width: 1024px;
+      margin: 0 auto;
+      padding: 70px 16px 24px;
     }
+
     h2 {
       text-align: center;
       font-size: 36px;
@@ -48,8 +52,21 @@
 
     .icon-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
+      justify-items: center;
+    }
+
+    @media (min-width: 600px) {
+      .icon-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (min-width: 768px) {
+      .icon-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
     }
 
     @media (min-width: 1024px) {
@@ -63,20 +80,30 @@
       border-radius: 12px;
       padding: 12px 4px;
       text-align: center;
+      width: 100%;
+      max-width: 100px;
       cursor: pointer;
+      transition: background 0.2s ease;
     }
+    .favorite-icon:hover {
+      background-color: #2a2a2a;
+    }
+
     .favorite-icon a {
       color: white;
       text-decoration: none;
       display: inline-block;
       width: 100%;
     }
+
     .favorite-icon img {
-      width: 40px;
-      height: 40px;
+      width: 60px;
+      height: 60px;
       margin-bottom: 6px;
       border-radius: 12px;
+      object-fit: cover;
     }
+
     .favorite-icon span {
       display: block;
       font-size: 10px;
@@ -133,31 +160,30 @@
       </div>
       <div class="favorite-icon">
         <a href="https://www.eadunifatecie.com.br/login/index.php" target="_blank">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABBVBMVEX/ZgD..." alt="AVA UniFatecie" />
+          <img src="https://cdn-icons-png.flaticon.com/128/847/847969.png" alt="AVA UniFatecie" />
           <span>AVA UniFatecie</span>
         </a>
       </div>
       <div class="favorite-icon">
         <a href="https://portaldoaluno.fatecie.edu.br/" target="_blank">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABBVBMVEX/ZgD..." alt="Portal do Aluno UniFatecie" />
+          <img src="https://cdn-icons-png.flaticon.com/128/847/847969.png" alt="Portal do Aluno UniFatecie" />
           <span>Portal do Aluno UniFatecie</span>
         </a>
       </div>
       <div class="favorite-icon">
         <a href="https://waeweb.unifatecie.edu.br/servlet/hwalgn?1" target="_blank">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAABBVBMVEX/ZgD..." alt="AlunoNet UniFatecie" />
+          <img src="https://cdn-icons-png.flaticon.com/128/847/847969.png" alt="AlunoNet UniFatecie" />
           <span>AlunoNet UniFatecie</span>
         </a>
       </div>
       <div class="favorite-icon">
         <a href="https://moodle.ifrs.edu.br/login/index.php" target="_blank">
-          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAyVBMVEX///8G..." alt="IFRS Cursos Gratuitos" />
+          <img src="https://cdn-icons-png.flaticon.com/128/847/847969.png" alt="IFRS Cursos Gratuitos" />
           <span>IFRS Cursos Gratuitos</span>
         </a>
       </div>
     `;
 
-    // Verifica se já existe conteúdo salvo
     if (localStorage.getItem('iconContent')) {
       grid.innerHTML = localStorage.getItem('iconContent');
     } else {
@@ -165,13 +191,12 @@
       localStorage.setItem('iconContent', iconsHTML);
     }
 
-    // Filtro de busca
     input.addEventListener('input', () => {
       const filtro = input.value.toLowerCase();
       const items = grid.querySelectorAll('.favorite-icon');
       items.forEach(item => {
         const texto = item.querySelector('span').textContent.toLowerCase();
-        item.style.display = texto.includes(filtro) ? 'block' : 'none';
+        item.style.display = texto.includes(filtro) ? '' : 'none';
       });
     });
   </script>
