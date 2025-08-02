@@ -52,10 +52,17 @@
     }
 
     .icon-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 16px;
-    }
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .icon-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 
     .favorite-icon {
       background-color: #1f1f1f;
