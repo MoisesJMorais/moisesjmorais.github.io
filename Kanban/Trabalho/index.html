@@ -18,7 +18,7 @@
         /* ------------------------------------- */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f7f9; 
+            background-color: #A9A9A9; 
             margin: 0;
             padding: 0; 
             transition: background-color 0.3s, color 0.3s;
@@ -35,7 +35,7 @@
         /* HEADER (TOPO FIXO) */
         /* ------------------------------------- */
         .header-container { 
-            background-color: #ffffff; 
+            background-color: #F8F8FF; 
             padding: 20px; 
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); 
             display: flex;
@@ -51,9 +51,21 @@
         .title-group { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 5px; flex-wrap: wrap; }
         .header-content h1 { color: #172b4d; margin: 0; transition: color 0.3s; }
         .header-content p { color: #5e6c84; margin-top: 0; margin-bottom: 15px; font-size: 1.1em; transition: color 0.3s; }
-        #reset-button, #dark-mode-toggle { padding: 8px 12px; font-size: 14px; border-radius: 4px; cursor: pointer; border: none; transition: background-color 0.3s, color 0.3s; }
-        #reset-button { background-color: #343a40; color: white; }
-        #reset-button:hover { background-color: #23272b; }
+        
+        /* ALTERADO: Estilo do Botão Resetar em LIGHT MODE (claro) */
+        #reset-button, #dark-mode-toggle { 
+            padding: 8px 12px; 
+            font-size: 14px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            border: none; 
+            transition: background-color 0.3s, color 0.3s; 
+        }
+        
+        /* NOVO ESTILO: Fundo claro, texto escuro */
+        #reset-button { background-color: #f0f0f0; color: #343a40; border: 1px solid #ccc; }
+        #reset-button:hover { background-color: #e0e0e0; } 
+        
         #dark-mode-toggle { background-color: #f0f0f0; color: #343a40; border: 1px solid #ccc; }
         #dark-mode-toggle:hover { background-color: #e0e0e0; }
         .progress-bar-container { width: 80%; max-width: 600px; background-color: #ddd; border-radius: 5px; overflow: hidden; margin: 15px auto 5px auto; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); position: relative; }
@@ -82,7 +94,7 @@
             padding-right: 20px;
 
             /* CORREÇÃO APLICADA AQUI: Adiciona espaçamento inferior para compensar o rodapé */
-            padding-bottom: 70px; 
+            padding-bottom: 90px; 
             
             height: 100%; 
         }
@@ -129,7 +141,7 @@
         /* ------------------------------------- */
         footer {
             height: var(--footer-height); 
-            background-color: #ffffff;
+            background-color: #F8F8FF;
             color: #5e6c84;
             text-align: center;
             padding: 10px 20px;
@@ -176,10 +188,10 @@
 
         /* DARK MODE ESTILOS (Omitido por brevidade) */
         body.dark-mode { background-color: #121212; color: #f4f7f9; }
-        body.dark-mode .header-container { background-color: #1e1e1e; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
+        body.dark-mode .header-container { background-color: #000000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
         body.dark-mode .header-content h1 { color: #ffffff; }
         body.dark-mode .header-content p { color: #b3bac5; }
-        body.dark-mode footer { background-color: #1e1e1e; color: #b3bac5; box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.3); }
+        body.dark-mode footer { background-color: #000000; color: #b3bac5; box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.3); }
         body.dark-mode .column-header { color: #ffffff; border-bottom: 2px solid #555; }
         body.dark-mode .kanban-column { background-color: #1e1e1e; box-shadow: 0 1px 3px rgba(255, 255, 255, 0.15); }
         body.dark-mode .card { background-color: #2a2a2a; color: #ffffff; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15); }
@@ -189,8 +201,11 @@
         body.dark-mode .card-red { background-color: #cc4444; border-left: 5px solid #ff1a1a; }
         body.dark-mode .card-yellow { background-color: #c9c937; border-left: 5px solid #e6e600; }
         body.dark-mode .card-green { background-color: #44cc44; border-left: 5px solid #1aff1a; }
-        body.dark-mode #reset-button { background-color: #444; }
+        
+        /* ALTERADO: Estilo do Botão Resetar em DARK MODE (escuro) */
+        body.dark-mode #reset-button { background-color: #444; color: #ffffff; border: 1px solid #444; }
         body.dark-mode #reset-button:hover { background-color: #555; }
+        
         body.dark-mode #dark-mode-toggle { background-color: #444; color: #ffffff; border: 1px solid #444; }
         body.dark-mode #dark-mode-toggle:hover { background-color: #555; }
         body.dark-mode .add-card-area { color: #b3bac5; border-top: 1px dashed #555; }
@@ -214,12 +229,12 @@
         <div class="header-content">
             
             <div class="title-group">
-                <h1>🛠️ Kanban Digital - Gestão de Tarefas</h1>
-                <button id="dark-mode-toggle">🌙 Dark Mode</button>
-                <button id="reset-button">🔄 Resetar Cards</button>
+                <h1>📈 Kanban - Gestão de Tarefas</h1>
+                <button id="dark-mode-toggle">🌙</button>
+                <button id="reset-button">🔄 Resetar Painel</button>
             </div>
             
-            <p>Utilize este quadro para organizar seus estudos ou tarefas de trabalho. Arraste os cartões e observe a mudança de cor, Mestre!</p>
+            <p>Essa ferramenta tem o objetivo de melhorar a produtividade nas operações do setor Câmara Fria de NFC.</p>
             
             <div class="progress-bar-container">
                 <div id="progress-bar">
@@ -234,7 +249,7 @@
 
     <div class="kanban-container">
         <div class="kanban-column" id="to-do">
-            <div class="column-header">🔴 A Fazer (To Do)</div>
+            <div class="column-header">🔴 Pendente</div>
             <div class="add-card-area" onclick="showCardInput('to-do')">
                 + Adicionar novo cartão
                 <input type="text" onkeyup="checkEnter(event, 'to-do')" placeholder="Descrição do Card" style="display:none;">
@@ -242,7 +257,7 @@
         </div>
 
         <div class="kanban-column" id="in-progress">
-            <div class="column-header">🟡 Em Progresso (In Progress)</div>
+            <div class="column-header">🟡 Em Progresso</div>
             <div class="add-card-area" onclick="showCardInput('in-progress')">
                 + Adicionar novo cartão
                 <input type="text" onkeyup="checkEnter(event, 'in-progress')" placeholder="Descrição do Card" style="display:none;">
@@ -250,7 +265,7 @@
         </div>
 
         <div class="kanban-column" id="done">
-            <div class="column-header">🟢 Concluído (Done)</div>
+            <div class="column-header">🟢 Concluído</div>
             <div class="add-card-area" onclick="showCardInput('done')">
                 + Adicionar novo cartão
                 <input type="text" onkeyup="checkEnter(event, 'done')" placeholder="Descrição do Card" style="display:none;">
@@ -259,7 +274,7 @@
     </div>
 
     <footer>
-        Kanban Mestre | Desenvolvido com HTML, CSS e JavaScript (Sem Frameworks) | Versão 1.2
+        Kanban Digital | Desenvolvido por Moisés J. Morais Lima
     </footer>
 
     <div id="confirmation-modal" class="modal-overlay">
@@ -280,10 +295,10 @@
         /* ------------------------------------- */
         
         const initialCards = [
-            { id: 'card1', content: 'Estudar Matéria de Biologia', status: 'to-do' },
-            { id: 'card2', content: 'Preparar Relatório de Qualidade', status: 'to-do' },
-            { id: 'card3', content: 'Pesquisar sobre Linguagens Web', status: 'in-progress' },
-            { id: 'card4', content: 'Revisar Notas de Física e Química', status: 'done' }
+            { id: 'card1', content: 'Abertura de fluxo de estoque', status: 'to-do' },
+            { id: 'card2', content: 'Lista de presença (DDS)', status: 'to-do' },
+            { id: 'card3', content: 'Check-list de empilhadeiras', status: 'to-do' },
+            { id: 'card4', content: 'Ficha de limpeza', status: 'to-do' }
         ];
 
         const colorMap = {
@@ -383,8 +398,8 @@
                 e.stopPropagation();
                 const confirmed = await showConfirmationModal(
                     'Deseja realmente remover este cartão de forma permanente?', 
-                    'Sim, Excluir',
-                    'Não, Cancelar'
+                    'Excluir',
+                    'Cancelar'
                 );
                 if (confirmed) {
                     deleteCard(cardData.id);
@@ -570,9 +585,9 @@
         
         document.getElementById('reset-button').addEventListener('click', async () => {
             const confirmed = await showConfirmationModal(
-                "Deseja realmente mover TODOS os cards de volta para a coluna 'A Fazer' (Vermelha)?", 
-                'Sim, Resetar',
-                'Não, Manter'
+                "Deseja realmente reiniciar o painel de tarefas?", 
+                'Resetar',
+                'Cancelar'
             );
             
             if (confirmed) {
@@ -657,7 +672,7 @@
             const isDarkMode = localStorage.getItem('darkMode') === 'true';
             document.body.classList.toggle('dark-mode', isDarkMode);
             document.body.classList.toggle('light-mode', !isDarkMode);
-            toggleButton.textContent = isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
+            toggleButton.textContent = isDarkMode ? '☀️' : '🌑';
         }
         
         function toggleDarkMode() {
@@ -666,7 +681,7 @@
             
             const isDarkMode = document.body.classList.contains('dark-mode');
             localStorage.setItem('darkMode', isDarkMode);
-            toggleButton.textContent = isDarkMode ? '☀️ Light Mode' : '🌙 Dark Mode';
+            toggleButton.textContent = isDarkMode ? '☀️' : '🌑';
         }
 
         toggleButton.addEventListener('click', toggleDarkMode);
