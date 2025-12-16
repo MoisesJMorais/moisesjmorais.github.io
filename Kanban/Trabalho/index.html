@@ -9,7 +9,7 @@
         /* VARIÁVEIS DE ALTURA PARA CÁLCULO */
         /* ------------------------------------- */
         :root {
-            --footer-height: 40px;  
+            --footer-height: 40px; 
             --padding-vertical: 20px; 
         }
 
@@ -68,10 +68,46 @@
         
         #dark-mode-toggle { background-color: #f0f0f0; color: #343a40; border: 1px solid #ccc; }
         #dark-mode-toggle:hover { background-color: #e0e0e0; }
-        .progress-bar-container { width: 80%; max-width: 600px; background-color: #ddd; border-radius: 5px; overflow: hidden; margin: 15px auto 5px auto; box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); position: relative; }
-        #progress-bar { height: 25px; width: 0%; background-color: #009900; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; }
-        #progress-summary { text-align: center; font-weight: bold; color: #172b4d; margin-bottom: 15px; font-size: 1.1em; transition: color 0.3s; }
-        #progress-text { line-height: 25px; color: white; font-weight: bold; font-size: 0.9em; text-shadow: 0 0 3px rgba(0, 0, 0, 0.5); }
+        
+        /* Estilos da Barra de Progresso */
+        .progress-bar-container { 
+            width: 80%; 
+            max-width: 600px; 
+            background-color: #ddd; 
+            border-radius: 5px; 
+            overflow: hidden; 
+            margin: 15px auto 5px auto; 
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2); 
+            position: relative; 
+        }
+        #progress-bar { 
+            height: 25px; 
+            width: 0%; 
+            background-color: #009900; 
+            transition: width 0.5s ease-in-out; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        #progress-summary { 
+            text-align: center; 
+            font-weight: bold; 
+            color: #172b4d; 
+            margin-bottom: 15px; 
+            font-size: 1.1em; 
+            transition: color 0.3s; 
+        }
+        /* Ajuste para o texto dentro da barra */
+        #progress-text { 
+            line-height: 25px; 
+            color: white; 
+            font-weight: bold; 
+            font-size: 0.9em; 
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5); 
+            /* Importante: Garante que o texto fique centralizado horizontalmente na barra */
+            width: 100%; 
+            text-align: center;
+        }
 
 
         /* ------------------------------------- */
@@ -158,35 +194,114 @@
 
 
         /* Estilos de Cards e Modal (Omitido por brevidade) */
-        .card { background-color: #fff; padding: 15px; margin-bottom: 10px; border-radius: 3px; box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25); cursor: grab; transition: background-color 0.3s ease, color 0.3s; position: relative; }
-        .card:hover { background-color: #f4f5f7; }
-        .card-delete-btn { position: absolute; top: 5px; right: 5px; color: #5e6c84; font-weight: bold; cursor: pointer; padding: 0 5px; border-radius: 3px; line-height: 1; transition: color 0.2s; }
+        .card { 
+            background-color: #fff; 
+            padding: 15px; 
+            margin-bottom: 10px; 
+            border-radius: 3px; 
+            box-shadow: 0 1px 0 rgba(9, 30, 66, 0.25); 
+            cursor: pointer; /* Alterado para indicar clique */
+            transition: background-color 0.3s ease, color 0.3s, border 0.2s; 
+            position: relative; 
+        }
+        .card:hover { 
+            background-color: #f4f5f7; 
+            /* Efeito visual para indicar que pode ser clicado para descrição */
+            border-bottom: 2px solid #007bff; 
+        }
+        
+        /* NOVO: Ícones de Ação no Card */
+        .card-actions {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px; /* Espaço entre os ícones */
+        }
+        
+        .card-delete-btn, .card-priority-btn { 
+            color: #5e6c84; 
+            font-weight: bold; 
+            cursor: pointer; 
+            padding: 0 5px; 
+            border-radius: 3px; 
+            line-height: 1; 
+            transition: color 0.2s, background-color 0.2s; 
+            font-size: 1.2em; /* Tamanho maior para a estrela/x */
+        }
         .card-delete-btn:hover { color: #cc0000; }
+        
+        /* Estilos da Estrela de Prioridade */
+        .card-priority-btn {
+            color: #ccc; /* Estrela não prioritária (cinza) */
+        }
+        .card-priority-btn.active {
+            color: #ffc107; /* Estrela prioritária (amarela) */
+            text-shadow: 0 0 5px rgba(255, 193, 7, 0.5); /* Leve brilho */
+        }
+        .card-priority-btn:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
         .card:active { opacity: 0.8; transform: scale(1.02); box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3); cursor: grabbing; }
         .card-placeholder { opacity: 0.2; background-color: #5e6c84; height: 46px; margin-bottom: 10px; border-radius: 3px; }
         .kanban-column.drag-over { background-color: #dadbdd; }
-        .card-red { background-color: #ffcccc; border-left: 5px solid #cc0000; }
-        .card-yellow { background-color: #ffffcc; border-left: 5px solid #cccc00; }
-        .card-green { background-color: #ccffcc; border-left: 5px solid #009900; }
-        .card-content { display: block; min-height: 18px; padding: 0; margin-right: 20px; cursor: text; }
+        
+        /* ------------------------------------- */
+        /* CORES DOS CARDS LIGHT MODE (Mais Escuras/Saturadas) */
+        /* ------------------------------------- */
+        .card-red { background-color: #ffcdd2; border-left: 5px solid #cc0000; }
+        .card-yellow { background-color: #fff9c4; border-left: 5px solid #cccc00; }
+        .card-green { background-color: #c8e6c9; border-left: 5px solid #009900; }
+        
+        .card-content { display: block; min-height: 18px; padding: 0; margin-right: 40px; cursor: text; }
         .card-content[contenteditable="true"] { outline: none; padding: 2px 4px; border-radius: 3px; background-color: transparent; }
         .add-card-area { text-align: center; padding: 5px; cursor: pointer; color: #5e6c84; border-top: 1px dashed #ccc; margin-top: 10px; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         .add-card-area:hover { background-color: #e3e4e7; }
         .add-card-area input { width: 90%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 3px; transition: background-color 0.3s, color 0.3s, border-color 0.3s; }
         
-        /* MODAL DE CONFIRMAÇÃO ESTILIZADO (Omitido por brevidade) */
+        /* MODAL DE CONFIRMAÇÃO ESTILIZADO (Usado para Confirmação E Edição de Descrição) */
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: none; justify-content: center; align-items: center; z-index: 1000; backdrop-filter: blur(3px); }
-        .modal-content { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); max-width: 400px; width: 90%; text-align: center; transition: background-color 0.3s, color 0.3; }
-        .modal-content h3 { margin-top: 0; color: #172b4d; }
+        .modal-content { 
+            background-color: #fff; 
+            padding: 30px; 
+            border-radius: 8px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+            max-width: 500px; /* Aumentado para melhor visualização da descrição */
+            width: 90%; 
+            text-align: left; /* Alinhamento para edição de texto */
+            transition: background-color 0.3s, color 0.3; 
+        }
+        .modal-content h3 { margin-top: 0; color: #172b4d; text-align: center; }
         .modal-buttons { margin-top: 20px; display: flex; justify-content: center; gap: 15px; }
         .modal-button { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; transition: background-color 0.2s; }
-        .modal-confirm-btn { background-color: #cc0000; color: white; }
-        .modal-confirm-btn:hover { background-color: #a30000; }
+        .modal-confirm-btn { background-color: #007bff; color: white; }
+        .modal-confirm-btn:hover { background-color: #0056b3; }
         .modal-cancel-btn { background-color: #f0f0f0; color: #343a40; border: 1px solid #ccc; }
         .modal-cancel-btn:hover { background-color: #e0e0e0; }
 
+        /* NOVO: Estilo para a Área de Descrição no Modal */
+        #description-input-area {
+            width: 100%;
+            margin-top: 10px;
+        }
+        #description-textarea {
+            width: 96%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+        #description-label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #172b4d;
+        }
 
-        /* DARK MODE ESTILOS (Omitido por brevidade) */
+        /* DARK MODE ESTILOS (MANTIDOS) */
         body.dark-mode { background-color: #121212; color: #f4f7f9; }
         body.dark-mode .header-container { background-color: #000000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); }
         body.dark-mode .header-content h1 { color: #ffffff; }
@@ -202,7 +317,7 @@
         body.dark-mode .card-yellow { background-color: #c9c937; border-left: 5px solid #e6e600; }
         body.dark-mode .card-green { background-color: #44cc44; border-left: 5px solid #1aff1a; }
         
-        /* ALTERADO: Estilo do Botão Resetar em DARK MODE (escuro) */
+        /* Estilo do Botão Resetar em DARK MODE (escuro) */
         body.dark-mode #reset-button { background-color: #444; color: #ffffff; border: 1px solid #444; }
         body.dark-mode #reset-button:hover { background-color: #555; }
         
@@ -219,6 +334,21 @@
         body.dark-mode .modal-cancel-btn:hover { background-color: #555; }
         body.dark-mode .modal-confirm-btn { background-color: #ff3333; }
         body.dark-mode .modal-confirm-btn:hover { background-color: #cc0000; }
+        body.dark-mode #description-label { color: #f4f7f9; }
+        body.dark-mode #description-textarea { 
+            background-color: #1e1e1e; 
+            color: #f4f7f9; 
+            border: 1px solid #555; 
+        }
+
+        /* Estilo da estrela em Dark Mode */
+        body.dark-mode .card-priority-btn {
+            color: #555; 
+        }
+        body.dark-mode .card-priority-btn.active {
+            color: #ffc107; 
+            text-shadow: 0 0 5px rgba(255, 193, 7, 0.7); 
+        }
 
         
     </style>
@@ -229,13 +359,13 @@
         <div class="header-content">
             
             <div class="title-group">
-                <h1>📈 Kanban - Gestão de Tarefas</h1>
+                <h1>📈 Kanban - Câmara Fria</h1>
                 <button id="dark-mode-toggle">🌙</button>
-                <button id="reset-button">🔄 Resetar Painel</button>
+                <button id="reset-button">🔄</button>
             </div>
-            
-            <p>Essa ferramenta tem o objetivo de melhorar a produtividade nas operações do setor Câmara Fria de NFC.</p>
-            
+
+		<p>Simples ferramenta de Administração para maximizar a produtividade no setor</p>
+
             <div class="progress-bar-container">
                 <div id="progress-bar">
                     <span id="progress-text"></span>
@@ -251,7 +381,7 @@
         <div class="kanban-column" id="to-do">
             <div class="column-header">🔴 Pendente</div>
             <div class="add-card-area" onclick="showCardInput('to-do')">
-                + Adicionar novo cartão
+                + Adicionar novo card
                 <input type="text" onkeyup="checkEnter(event, 'to-do')" placeholder="Descrição do Card" style="display:none;">
             </div>
         </div>
@@ -259,7 +389,7 @@
         <div class="kanban-column" id="in-progress">
             <div class="column-header">🟡 Em Progresso</div>
             <div class="add-card-area" onclick="showCardInput('in-progress')">
-                + Adicionar novo cartão
+                + Adicionar novo card
                 <input type="text" onkeyup="checkEnter(event, 'in-progress')" placeholder="Descrição do Card" style="display:none;">
             </div>
         </div>
@@ -267,20 +397,26 @@
         <div class="kanban-column" id="done">
             <div class="column-header">🟢 Concluído</div>
             <div class="add-card-area" onclick="showCardInput('done')">
-                + Adicionar novo cartão
+                + Adicionar novo card
                 <input type="text" onkeyup="checkEnter(event, 'done')" placeholder="Descrição do Card" style="display:none;">
             </div>
         </div>
     </div>
 
     <footer>
-        Kanban Digital | Desenvolvido por Moisés J. Morais Lima
+        Kanban - Gestão de Tarefas | Desenvolvido por Moisés J. Morais Lima
     </footer>
 
     <div id="confirmation-modal" class="modal-overlay">
         <div class="modal-content">
             <h3 id="modal-title">Confirmação</h3>
             <p id="modal-message">Tem certeza de que deseja realizar esta ação?</p>
+            
+            <div id="description-input-area" style="display:none;">
+                <label id="description-label" for="description-textarea">Descrição Detalhada:</label>
+                <textarea id="description-textarea" placeholder="Adicione a descrição do seu card aqui."></textarea>
+            </div>
+
             <div class="modal-buttons">
                 <button id="modal-cancel" class="modal-button modal-cancel-btn">Cancelar</button>
                 <button id="modal-confirm" class="modal-button modal-confirm-btn">Confirmar</button>
@@ -294,11 +430,31 @@
         /* JAVASCRIPT: Lógica de Persistência, Drag and Drop, Delete, Dark Mode, Progress Bar */
         /* ------------------------------------- */
         
+        // Cards iniciais com novos campos: description e priority
         const initialCards = [
-            { id: 'card1', content: 'Abertura de fluxo de estoque', status: 'to-do' },
-            { id: 'card2', content: 'Lista de presença (DDS)', status: 'to-do' },
-            { id: 'card3', content: 'Check-list de empilhadeiras', status: 'to-do' },
-            { id: 'card4', content: 'Ficha de limpeza', status: 'to-do' }
+            { id: 'card1', content: 'Abertura de fluxo de estoque', status: 'to-do', description: 'Abrir o fluxo de movimentação de estoque durante o turno (FMEC).', priority: true },
+            { id: 'card2', content: 'Lista de presença (DDS)', status: 'to-do', description: 'Coletar assinaturas da lista de presença do Diálogo Diário de Segurança (DDS).', priority: true }, // PRIORITÁRIO
+            { id: 'card3', content: 'Check-list de empilhadeiras', status: 'to-do', description: 'Preencher o check-list diário de cada empilhadeira que for utilizada durante o turno e reportar eventuais problemas detectados durante a inspeção.', priority: true },
+            { id: 'card4', content: 'Ficha de limpeza', status: 'to-do', description: 'Preencher a ficha de controle de limpeza diária da câmara fria.', priority: true },
+	{ id: 'card5', content: 'Lote do dia', status: 'to-do', description: 'Conferir nas embalagens envasadas o lote e data de hoje para evitar erros no processo e retrabalhos.', priority: true },
+	{ id: 'card6', content: 'Reprocesso NFC', status: 'to-do', description: 'Verificar se tem reprocesso de NFC na câmara fria do mesmo sabor que está sendo produzido no dia e comunicar o encarregado/supervisor de produção.', priority: true },
+	{ id: 'card7', content: 'Descartes', status: 'to-do', description: 'Verificar se tem produto para ser descartado da câmara fria e comunicar o encarregado/supervisor de produção.', priority: true },
+	{ id: 'card8', content: 'Produção anterior', status: 'to-do', description: 'Conferir a produção do turno anterior para evitar possíveis erros de apontamento.', priority: true },
+	{ id: 'card9', content: 'FORM-PROD-015', status: 'to-do', description: 'Verificar se o formulário FORM-PROD-015 (Controle de Entrada de Produto Acabado) está sendo devidamente preenchido pelos operadores de empilhadeira.', priority: true },
+	{ id: 'card10', content: 'Mesa do computador', status: 'to-do', description: 'Manter a mesa do computador sempre organizada, sem objetos desnecessários.', priority: false },
+	{ id: 'card11', content: 'Armários de documentos e objetos', status: 'to-do', description: 'Manter os dois armários organizados.', priority: false },
+	{ id: 'card12', content: 'Fichas de Produção', status: 'to-do', description: 'Verificar se tem uma quantidade razoável de formulários de produção impressos e prontos para uso.', priority: false },
+	{ id: 'card13', content: 'Ordens de produção', status: 'to-do', description: 'Verificar quais linhas de produção vão operar durante o turno e já abrir as OPs caso ainda não tiver abertas.', priority: false },
+	{ id: 'card14', content: 'Lixos do setor', status: 'to-do', description: 'Trocar o saco de lixo das lixeiras do setor se estiverem cheias.', priority: false },
+	{ id: 'card15', content: 'Pallets sem uso', status: 'to-do', description: 'Retirar do setor pallets quebrados ou vazios, mantendo o ambiente mais limpo e organizado.', priority: false },
+	{ id: 'card16', content: 'Papelão sem uso', status: 'to-do', description: 'Retirar do setor chapas de papelão rasgadas, sujas ou sem uso, mantendo o ambiente mais limpo e organizado.', priority: false },
+	{ id: 'card17', content: 'Conferir produção 17:00h', status: 'to-do', description: 'Conferência da produção armazenada na câmara fria de hora em hora.', priority: false },
+	{ id: 'card18', content: 'Conferir produção 18:00h', status: 'to-do', description: 'Conferência da produção armazenada na câmara fria de hora em hora.', priority: false },
+	{ id: 'card19', content: 'Conferir produção 19:00h', status: 'to-do', description: 'Conferência da produção armazenada na câmara fria de hora em hora.', priority: false },
+	{ id: 'card20', content: 'Conferir produção 20:00h', status: 'to-do', description: 'Conferência da produção armazenada na câmara fria de hora em hora.', priority: false },
+	{ id: 'card21', content: 'Conferir produção 21:00h', status: 'to-do', description: 'Conferência da produção armazenada na câmara fria de hora em hora.', priority: false },
+	{ id: 'card22', content: 'Conferir produção 22:00h', status: 'to-do', description: 'Conferência da produção armazenada na câmara fria de hora em hora.', priority: false },
+	{ id: 'card23', content: 'Conferir produção 23:00h', status: 'to-do', description: 'Conferência da produção armazenada na câmara fria de hora em hora.', priority: false },
         ];
 
         const colorMap = {
@@ -314,19 +470,38 @@
         
         // Elementos do Modal
         const modalOverlay = document.getElementById('confirmation-modal');
+        const modalTitle = document.getElementById('modal-title');
         const modalMessage = document.getElementById('modal-message');
         const modalConfirmBtn = document.getElementById('modal-confirm');
         const modalCancelBtn = document.getElementById('modal-cancel');
+        
+        // Elementos de Descrição
+        const descriptionArea = document.getElementById('description-input-area');
+        const descriptionTextarea = document.getElementById('description-textarea');
+        let currentModalMode = 'confirmation'; // 'confirmation' ou 'description'
+        let currentCardId = null;
+
+        // Função para alternar o conteúdo do Modal
+        function setModalContent(mode, title, message, showDescriptionArea, confirmText, cancelText) {
+            currentModalMode = mode;
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            
+            descriptionArea.style.display = showDescriptionArea ? 'block' : 'none';
+            modalMessage.style.display = showDescriptionArea ? 'none' : 'block';
+            
+            modalConfirmBtn.textContent = confirmText || 'Confirmar';
+            modalCancelBtn.textContent = cancelText || 'Cancelar';
+
+            modalOverlay.style.display = 'flex'; 
+        }
 
 
         // Função para exibir o Modal de Confirmação
         function showConfirmationModal(message, confirmText, cancelText) {
             return new Promise(resolve => {
-                modalMessage.textContent = message;
-                modalConfirmBtn.textContent = confirmText || 'Confirmar';
-                modalCancelBtn.textContent = cancelText || 'Cancelar';
-                modalOverlay.style.display = 'flex'; 
-
+                setModalContent('confirmation', 'Confirmação', message, false, confirmText, cancelText);
+                
                 const handleConfirm = () => {
                     cleanup();
                     resolve(true);
@@ -343,14 +518,51 @@
                     modalOverlay.style.display = 'none'; 
                 };
 
-                modalConfirmBtn.addEventListener('click', handleConfirm);
-                modalCancelBtn.addEventListener('click', handleCancel);
+                // Limpa ouvintes anteriores para evitar múltiplas execuções
+                modalConfirmBtn.onclick = handleConfirm;
+                modalCancelBtn.onclick = handleCancel;
                 
-                modalOverlay.addEventListener('click', (e) => {
+                modalOverlay.onclick = (e) => {
                     if (e.target === modalOverlay) {
                         handleCancel();
                     }
-                });
+                };
+            });
+        }
+        
+        // NOVO: Função para exibir o Modal de Edição de Descrição
+        function showDescriptionModal(cardId, initialDescription) {
+            currentCardId = cardId;
+            return new Promise(resolve => {
+                setModalContent('description', 'Editar Descrição do Card', '', true, 'Salvar', 'Fechar');
+                descriptionTextarea.value = initialDescription || '';
+                
+                const handleSave = () => {
+                    const newDescription = descriptionTextarea.value;
+                    cleanup();
+                    resolve({ saved: true, description: newDescription });
+                };
+
+                const handleCancel = () => {
+                    cleanup();
+                    resolve({ saved: false });
+                };
+
+                const cleanup = () => {
+                    modalConfirmBtn.removeEventListener('click', handleSave);
+                    modalCancelBtn.removeEventListener('click', handleCancel);
+                    modalOverlay.style.display = 'none'; 
+                    currentCardId = null;
+                };
+
+                modalConfirmBtn.onclick = handleSave;
+                modalCancelBtn.onclick = handleCancel;
+                
+                modalOverlay.onclick = (e) => {
+                    if (e.target === modalOverlay) {
+                        handleCancel();
+                    }
+                };
             });
         }
         
@@ -361,7 +573,12 @@
             if (savedCards) {
                 currentCards = JSON.parse(savedCards);
             } else {
-                currentCards = initialCards;
+                // Ao carregar pela primeira vez, garante que a lista inicial tenha os novos campos
+                currentCards = initialCards.map(card => ({
+                    ...card,
+                    description: card.description || '', 
+                    priority: card.priority || false
+                }));
                 saveCards();
             }
             renderCards();
@@ -380,6 +597,15 @@
             card.id = cardData.id;
             card.draggable = true;
             
+            // Evento para abrir o modal de descrição
+            card.addEventListener('click', (e) => {
+                // Garante que o clique não foi no botão de delete ou priority, nem na edição do título
+                if (e.target.classList.contains('card-content')) return;
+                if (e.target.closest('.card-actions')) return;
+                
+                openCardDescription(cardData.id);
+            });
+            
             const content = document.createElement('span');
             content.className = 'card-content';
             content.textContent = cardData.content;
@@ -391,6 +617,25 @@
             
             card.appendChild(content);
 
+            // NOVO: Container para os botões de ação (prioridade e exclusão)
+            const actionsContainer = document.createElement('div');
+            actionsContainer.className = 'card-actions';
+
+            // NOVO: Botão de Prioridade (Estrela)
+            const priorityBtn = document.createElement('span');
+            priorityBtn.className = 'card-priority-btn';
+            priorityBtn.innerHTML = '&#9733;'; // Símbolo da estrela (cheio)
+            if (cardData.priority) {
+                priorityBtn.classList.add('active');
+            }
+            priorityBtn.onclick = (e) => {
+                e.stopPropagation();
+                toggleCardPriority(cardData.id);
+            };
+            actionsContainer.appendChild(priorityBtn);
+
+
+            // Botão de Exclusão
             const deleteBtn = document.createElement('span');
             deleteBtn.className = 'card-delete-btn';
             deleteBtn.textContent = '×';
@@ -405,7 +650,9 @@
                     deleteCard(cardData.id);
                 }
             };
-            card.appendChild(deleteBtn);
+            actionsContainer.appendChild(deleteBtn);
+            
+            card.appendChild(actionsContainer);
             
             card.addEventListener('dragstart', dragStart);
             card.addEventListener('dragend', dragEnd);
@@ -414,6 +661,7 @@
         }
 
         function renderCards() {
+            // Limpa o conteúdo das colunas
             document.querySelectorAll('.kanban-column').forEach(col => {
                 Array.from(col.children).forEach(child => {
                     if (child.classList.contains('card') || child.classList.contains('card-placeholder')) {
@@ -427,20 +675,30 @@
                 'in-progress': document.getElementById('in-progress'),
                 'done': document.getElementById('done')
             };
+            
+            // Ordenar cards: prioritários primeiro, depois pela ordem de criação
+            const sortedCards = [...currentCards].sort((a, b) => {
+                if (a.priority && !b.priority) return -1;
+                if (!a.priority && b.priority) return 1;
+                // Se a prioridade for igual, mantém a ordem original (pelo ID ou ordem de inserção)
+                return 0;
+            });
 
-            currentCards.forEach(cardData => {
+
+            sortedCards.forEach(cardData => {
                 const column = columnElements[cardData.status];
                 if (column) {
                     const cardElement = createCardElement(cardData);
                     const addArea = column.querySelector('.add-card-area');
+                    // Inserir o novo card antes da área de adicionar novo
                     column.insertBefore(cardElement, addArea);
                 }
             });
         }
         
-        // 3. Lógica de Drag and Drop
+        // 3. Lógica de Drag and Drop (Mantida)
         function dragStart(e) {
-            if (isEditing || e.target.classList.contains('card-delete-btn')) {
+            if (isEditing || e.target.closest('.card-actions') || e.target.classList.contains('card-content')) {
                 e.preventDefault();
                 return;
             }
@@ -473,7 +731,24 @@
             draggedCard = null;
             placeholder = null;
             document.querySelectorAll('.kanban-column').forEach(col => col.classList.remove('drag-over'));
+            
+            // Reordenar cards com base na nova posição
+            const orderedCards = [];
+            document.querySelectorAll('.kanban-container .kanban-column').forEach(col => {
+                const columnId = col.id;
+                Array.from(col.querySelectorAll('.card')).forEach(cardElement => {
+                    const cardDataFound = currentCards.find(c => c.id === cardElement.id);
+                    if (cardDataFound) {
+                        cardDataFound.status = columnId;
+                        orderedCards.push(cardDataFound);
+                    }
+                });
+            });
+            currentCards = orderedCards; 
+            
             saveCards();
+            // Chamada extra para garantir que a prioridade se mantenha no topo
+            renderCards(); 
         }
 
         function dragOver(e) {
@@ -572,6 +847,29 @@
             }
         }
         
+        // NOVO: Lógica de Priorização
+        function toggleCardPriority(cardId) {
+            const card = currentCards.find(c => c.id === cardId);
+            if (card) {
+                card.priority = !card.priority;
+                saveCards();
+                renderCards(); // Re-renderiza para colocar o prioritário no topo
+            }
+        }
+
+        // NOVO: Abrir e Salvar Descrição
+        async function openCardDescription(cardId) {
+            const cardData = currentCards.find(c => c.id === cardId);
+            if (!cardData) return;
+
+            const result = await showDescriptionModal(cardId, cardData.description);
+            
+            if (result.saved) {
+                cardData.description = result.description;
+                saveCards();
+            }
+        }
+        
         // 5. Lógica de Exclusão de Card
         
         function deleteCard(cardId) {
@@ -581,19 +879,22 @@
             updateProgressBar();
         }
         
-        // 6. Lógica do Botão Reset
+        // 6. Lógica do Botão Reset (REINICIA PARA OS CARDS INICIAIS)
         
         document.getElementById('reset-button').addEventListener('click', async () => {
             const confirmed = await showConfirmationModal(
-                "Deseja realmente reiniciar o painel de tarefas?", 
-                'Resetar',
+                "Deseja realmente apagar todos os cards atuais e reiniciar o painel para o estado inicial?", 
+                'Reiniciar',
                 'Cancelar'
             );
             
             if (confirmed) {
-                currentCards.forEach(card => {
-                    card.status = 'to-do';
-                });
+                // Copia profunda (deep copy) da lista inicial, incluindo os novos campos
+                currentCards = initialCards.map(card => ({
+                    ...card,
+                    description: card.description || '', 
+                    priority: card.priority || false
+                }));
                 saveCards();
                 renderCards();
                 updateProgressBar();
@@ -621,7 +922,10 @@
             const newCard = {
                 id: getNextCardId(),
                 content: content.trim(),
-                status: columnId
+                status: columnId,
+                // NOVOS CAMPOS PADRÃO
+                description: '', 
+                priority: false 
             };
 
             currentCards.push(newCard);
@@ -665,7 +969,7 @@
             }
         }
         
-        // 8. Lógica Dark Mode
+        // 8. Lógica Dark Mode (Mantida)
         const toggleButton = document.getElementById('dark-mode-toggle');
         
         function loadDarkModePreference() {
@@ -686,7 +990,7 @@
 
         toggleButton.addEventListener('click', toggleDarkMode);
 
-        // 9. Lógica da Barra de Progresso
+        // 9. Lógica da Barra de Progresso (Mantida)
         function updateProgressBar() {
             const totalCards = currentCards.length;
             const doneCards = currentCards.filter(card => card.status === 'done').length;
@@ -702,12 +1006,16 @@
             
             progressBar.style.width = `${percentage}%`;
             
-            progressText.textContent = ''; 
+            if (percentage > 0) {
+                progressText.textContent = `${percentage}%`;
+            } else {
+                progressText.textContent = ''; 
+            }
             
-            progressSummary.textContent = `${doneCards} de ${totalCards} tarefas concluídas (${percentage}%)`;
+            progressSummary.textContent = `${doneCards} de ${totalCards} tarefas concluídas`;
         }
         
-        // 10. Inicialização
+        // 10. Inicialização (Mantida)
         
         document.querySelectorAll('.kanban-column').forEach(column => {
             if (column.id !== 'to-do' && column.id !== 'in-progress' && column.id !== 'done') return;
