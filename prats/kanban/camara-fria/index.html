@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Restrito</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --accent-color: #3b82f6; /* Azul similar aos botões de ação */
+            --input-bg: #2a2a2a;
+            --error-color: #ff5555;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background-color: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            border-bottom: 2px solid var(--accent-color);
+            display: inline-block;
+            padding-bottom: 5px;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #bbb;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #333;
+            background-color: var(--input-bg);
+            color: white;
+            box-sizing: border-box;
+            transition: border 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.3s, transform 0.1s;
+            margin-top: 1rem;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #message {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--error-color);
+            min-height: 1.2rem;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <h1>🔒 Acesso Restrito</h1>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" required placeholder="Digite seu usuário">
+            </div>
+            <div class="input-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" required placeholder="Digite sua senha">
+            </div>
+            <button type="submit">Entrar</button>
+            <div id="message"></div>
+        </form>
+        <div class="footer">
+            Kanban - Gestão de Tarefas | Desenvolvido por Moisés J. Morais Lima
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const messageDiv = document.getElementById('message');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const usernameInput = document.getElementById('username').value;
+            const passwordInput = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('usuarios.json');
+                if (!response.ok) throw new Error('Não foi possível carregar o arquivo de usuários.');
+                
+                const data = await response.json();
+                
+                // Verifica se as credenciais batem
+                const user = data.users.find(u => u.username === usernameInput && u.password === passwordInput);
+
+                if (user) {
+                    messageDiv.style.color = "#4caf50";
+                    messageDiv.textContent = "Autenticado! Redirecionando...";
+                    
+                    // Redireciona para o link solicitado após 1 segundo
+                    setTimeout(() => {
+                        window.location.href = "https://moisesjmorais.github.io/Kanban/Trabalho";
+                    }, 1000);
+                } else {
+                    messageDiv.textContent = "Usuário ou senha incorretos.";
+                }
+            } catch (error) {
+                console.error(error);
+                messageDiv.textContent = "Usuário ou senha incorretos.";
+            }
+        });
+    </script>
+</body>
+</html>
