@@ -25,7 +25,6 @@
             margin: 0;
         }
 
-        /* Container estilo Rufus */
         .app-container {
             background-color: var(--container-bg);
             width: 380px;
@@ -80,7 +79,11 @@
             border-color: var(--accent-color);
         }
 
-        /* Esconder setas do input number */
+        input:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -159,7 +162,7 @@
 
     <script>
         const config = {
-            "200":  { camada: 396, fardo: 12, maxC: 9, maxF: 32, maxU: 11 },
+            "200":  { camada: 396, fardo: 12, maxC: 9, maxF: 32, maxU: 0 }, // maxU alterado para 0
             "300":  { camada: 360, fardo: 12, maxC: 7, maxF: 29, maxU: 11 },
             "900":  { camada: 204, fardo: 6,  maxC: 5, maxF: 33, maxU: 5 },
             "1500": { camada: 120, fardo: 6,  maxC: 4, maxF: 19, maxU: 5 },
@@ -175,25 +178,20 @@
             const inputF = document.getElementById('fardos');
             const inputU = document.getElementById('unidades');
 
-            // Atualiza os limites máximos nos campos
+            // Atualiza limites
             inputC.max = data.maxC;
             inputU.max = data.maxU;
-            
-            // Lógica para SKUs sem fardos (3L e 5L)
-            if (data.fardo === 0) {
-                inputF.disabled = true;
-                inputF.value = "";
-                inputF.style.opacity = "0.3";
-            } else {
-                inputF.disabled = false;
-                inputF.max = data.maxF;
-                inputF.style.opacity = "1";
-            }
-            
-            // Limpa valores ao trocar SKU para evitar erros de cálculo
-            inputC.value = "";
-            inputF.value = data.fardo === 0 ? "" : "";
+            inputF.max = data.maxF;
+
+            // Bloqueio de Fardos
+            inputF.disabled = (data.fardo === 0);
+            inputF.value = "";
+
+            // Bloqueio de Unidades (Novo: para o SKU 200ml)
+            inputU.disabled = (data.maxU === 0);
             inputU.value = "";
+            
+            inputC.value = "";
             calculate();
         }
 
@@ -201,33 +199,31 @@
             const sku = document.getElementById('sku').value;
             const data = config[sku];
             
-            let c = parseInt(document.getElementById('camadas').value) || 0;
-            let f = parseInt(document.getElementById('fardos').value) || 0;
-            let u = parseInt(document.getElementById('unidades').value) || 0;
+            let inputC = document.getElementById('camadas');
+            let inputF = document.getElementById('fardos');
+            let inputU = document.getElementById('unidades');
+
+            let c = parseInt(inputC.value) || 0;
+            let f = parseInt(inputF.value) || 0;
+            let u = parseInt(inputU.value) || 0;
 
             // Validação de Máximos
-            if (c > data.maxC) { c = data.maxC; document.getElementById('camadas').value = c; }
-            if (f > data.maxF && data.fardo > 0) { f = data.maxF; document.getElementById('fardos').value = f; }
-            if (u > data.maxU) { u = data.maxU; document.getElementById('unidades').value = u; }
+            if (c > data.maxC) { c = data.maxC; inputC.value = c; }
+            if (data.fardo > 0 && f > data.maxF) { f = data.maxF; inputF.value = f; }
+            if (u > data.maxU) { u = data.maxU; inputU.value = u; }
 
-            // Cálculo final
             const total = (c * data.camada) + (f * data.fardo) + u;
-            
             document.getElementById('total').innerText = total.toLocaleString('pt-BR');
-// Desabilitar clique direito
-document.addEventListener('contextmenu', event => event.preventDefault());
-
-// Bloquear atalhos de inspeção
-document.onkeydown = function(e) {
-  if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
-    return false;
-  }
-
-}
-
         }
 
-        // Inicializar limites no carregamento
+        // Segurança
+        document.addEventListener('contextmenu', event => event.preventDefault());
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 'I'.charCodeAt(0) || e.keyCode == 'J'.charCodeAt(0) || e.keyCode == 'C'.charCodeAt(0))) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+                return false;
+            }
+        }
+
         window.onload = updateMaxValues;
     </script>
 </body>
