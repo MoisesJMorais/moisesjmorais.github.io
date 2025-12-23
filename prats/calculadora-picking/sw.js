@@ -1,26 +1,31 @@
-const CACHE_NAME = 'picking-v1';
-const ASSETS = [
+const CACHE_NAME = 'picking-calc-v2';
+const urlsToCache = [
   '/prats/calculadora-picking/',
   '/prats/calculadora-picking/index.html',
-  '/prats/calculadora-picking/favicon.ico',
-  '/prats/calculadora-picking/icon.png',
-  '/prats/calculadora-picking/index.html',
   '/prats/calculadora-picking/security.js',
+  '/prats/calculadora-picking/sw.js',
+  '/prats/calculadora-picking/manifest.json',
+  '/prats/calculadora-picking/icon.png'
+  '/prats/calculadora-picking/favicon.ico'
 ];
 
-self.addEventListener('install', (event) => {
+// Instalação
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
-    })
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
   );
 });
 
-// Intercepta as requisições: Tenta buscar no cache primeiro
-self.addEventListener('fetch', (event) => {
+// O SEGREDO DO OFFLINE: Interceptar as buscas
+self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
+    caches.match(event.request)
+      .then(response => {
+        // Se achou no cache, retorna. Se não, tenta buscar na rede.
+        return response || fetch(event.request);
+      }).catch(() => {
+        // Opcional: retornar uma página de erro offline específica aqui
+      })
   );
 });
