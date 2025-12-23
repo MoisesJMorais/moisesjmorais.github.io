@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="manifest" href="manifest.json">
+    
     <title>Calculadora de Picking</title>
     <style>
         :root {
@@ -160,7 +162,7 @@
 
         <footer>Desenvolvido por Moisés J. Morais Lima</footer>
     </div>
-
+    
     <script>
         const config = {
             "200":  { camada: 396, fardo: 12, maxC: 9, maxF: 32, maxU: 0 }, // maxU alterado para 0
@@ -263,7 +265,13 @@ window.addEventListener('keyup', function(e) {
     if (e.key === 'PrintScreen') {
         navigator.clipboard.writeText(''); // Tenta limpar o que foi copiado
         alert('Capturas de tela não são permitidas neste aplicativo.');
-    }
+}
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log("Service Worker Ativo!"))
+      .catch(err => console.log("Erro no SW:", err));
+  }
 });
 
         window.onload = updateMaxValues;
