@@ -1,0 +1,15 @@
+{
+  "name": "Calculadora de Picking",
+  "short_name": "Calculadora de Picking",
+  "start_url": "/prats/calculadora-picking/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0078d4",
+  "icons": [
+    {
+      "src": "https://moisesjmorais.github.io/prats/calculadora-picking/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
