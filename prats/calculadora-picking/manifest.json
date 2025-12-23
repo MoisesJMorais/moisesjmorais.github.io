@@ -1,5 +1,6 @@
 {
   "name": "Calculadora de Picking",
+  "theme_color": "#000000",
   "short_name": "Calculadora de Picking",
   "start_url": "/prats/calculadora-picking/",
   "display": "standalone",
