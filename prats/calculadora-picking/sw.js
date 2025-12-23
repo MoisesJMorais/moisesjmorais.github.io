@@ -1,4 +1,4 @@
-const CACHE_NAME = 'picking-calc-v2';
+const CACHE_NAME = 'calculadora-de-picking';
 const urlsToCache = [
   '/prats/calculadora-picking/',
   '/prats/calculadora-picking/index.html',
