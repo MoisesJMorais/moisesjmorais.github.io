@@ -1,9 +1,9 @@
 {
   "name": "AVA UniFatecie",
   "short_name": "AVA UniFatecie",
-  "start_url": "/index.html",
+  "start_url": "/app.html",
   "display": "standalone",
-  "background_color": "#000000",
+  "background_color": "#ffffff",
   "theme_color": "#000000",
   "x-app-version": "1.0.0",
   "x-provider": "UniFatecie",
