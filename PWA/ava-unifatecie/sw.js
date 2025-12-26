@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ava-unifatecie-cache-v1';
+const CACHE_NAME = 'ava-unifatecie-cache-v2';
 const urlsToCache = ['/'];
 
 self.addEventListener('install', event => {
