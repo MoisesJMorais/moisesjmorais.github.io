@@ -1,4 +1,4 @@
-const CACHE_NAME = 'unifatecie-cache';
+const CACHE_NAME = 'unifatecie-test';
 const ASSETS = ['/', '/index.html', '/app.html'];
 
 self.addEventListener('install', (event) => {
