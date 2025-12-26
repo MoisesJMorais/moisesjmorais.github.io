@@ -1,4 +1,4 @@
-const CACHE_NAME = 'unifatecie-pwa-v3';
+const CACHE_NAME = 'unifatecie-cache';
 const ASSETS = ['/', '/index.html', '/app.html'];
 
 self.addEventListener('install', (event) => {
