@@ -187,8 +187,8 @@
 
         <form id="login-form">
             <div class="input-group">
-                <label>E-mail</label>
-                <input type="email" id="email" placeholder="seu@email.com" required>
+                <label>Login</label>
+                <input type="email" id="email" placeholder="Digite seu nome de usuário" required>
             </div>
 
             <div class="input-group">
@@ -218,7 +218,7 @@
             const password = document.getElementById('password').value;
 
             // Simulação simples: qualquer email e senha '1234' para teste
-            if (email && password === '1234') {
+            if (email && password === '71239856') {
                 // Em um app real, aqui você usaria signIn('credentials', {...})
                 localStorage.setItem('isAuthenticated', 'true');
                 window.location.href = 'tasks.html';
@@ -243,3 +243,4 @@
 </body>
 
 </html>
+
