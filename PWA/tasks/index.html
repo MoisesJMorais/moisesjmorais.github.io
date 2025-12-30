@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyanTask - Login</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00e5ff">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --surface: #1e1e1e;
+            --surface-light: #2d2d2d;
+            --primary: #00e5ff;
+            --text-main: #e0e0e0;
+            --text-dim: #a0a0a0;
+            --border: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            background: var(--surface);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .logo-area {
+            margin-bottom: 30px;
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            color: var(--primary);
+            text-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 35px;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            background: var(--surface-light);
+            border: 2px solid transparent;
+            padding: 14px 16px;
+            border-radius: 12px;
+            color: white;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            background: #252525;
+        }
+
+        .btn-login {
+            width: 100%;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 229, 255, 0.3);
+        }
+
+        .btn-login:active { transform: translateY(0); }
+
+        .auth-divider {
+            margin: 25px 0;
+            display: flex;
+            align-items: center;
+            color: var(--border);
+            font-size: 0.8rem;
+        }
+
+        .auth-divider::before, .auth-divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+            margin: 0 10px;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Feedback de Erro */
+        #error-msg {
+            color: #ff5252;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <div class="logo-area">
+            <i class="fas fa-check-double logo-icon"></i>
+            <h1>CyanTask</h1>
+            <p>Gerencie suas tarefas com foco e clareza.</p>
+        </div>
+
+        <form id="login-form">
+            <div class="input-group">
+                <label>E-mail</label>
+                <input type="email" id="email" placeholder="seu@email.com" required>
+            </div>
+
+            <div class="input-group">
+                <label>Senha</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+
+            <button type="submit" class="btn-login">
+                Entrar
+                <i class="fas fa-arrow-right"></i>
+            </button>
+        </form>
+
+        <div id="error-msg">Credenciais inválidas. Tente novamente.</div>
+
+        <div class="auth-divider">OU CONTINUE COM</div>
+
+        <div class="social-login">
+            <div class="social-btn" onclick="socialLogin('Google')"><i class="fab fa-google"></i></div>
+            <div class="social-btn" onclick="socialLogin('Github')"><i class="fab fa-github"></i></div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const errorMsg = document.getElementById('error-msg');
+
+        // Simulação de autenticação (Lógica Auth.js)
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Simulação simples: qualquer email e senha '1234' para teste
+            if (email && password === '1234') {
+                // Em um app real, aqui você usaria signIn('credentials', {...})
+                localStorage.setItem('isAuthenticated', 'true');
+                window.location.href = 'tasks.html';
+            } else {
+                errorMsg.style.display = 'block';
+                setTimeout(() => { errorMsg.style.display = 'none'; }, 3000);
+            }
+        });
+
+        function socialLogin(provider) {
+            console.log(`Conectando ao ${provider} via Auth.js...`);
+            // Simulação de sucesso
+            localStorage.setItem('isAuthenticated', 'true');
+            window.location.href = 'tasks.html';
+        }
+
+        // Verifica se já está logado
+        if (localStorage.getItem('isAuthenticated') === 'true') {
+            window.location.href = 'tasks.html';
+        }
+    </script>
+</body>
+</html>
