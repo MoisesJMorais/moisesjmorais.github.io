@@ -1,1 +1,295 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TV Online</title>
 
+<style>
+:root {
+  --player-height: 34vh;
+  --controls-height: 110px;
+  --bg: #0b0b0e;
+  --card: #1a1a1f;
+  --text: #ffffff;
+  --muted: #aaaaaa;
+  --active: #ffcc00;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  overflow: auto;
+  height: 100vh;
+}
+
+/* PLAYER */
+.player {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: var(--player-height);
+  background: black;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.iframe-mask {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.iframe-mask iframe {
+  position: absolute;
+  top: -90px;
+  left: 0;
+  width: 100%;
+  height: calc(100% + 90px);
+  border: none;
+  pointer-events: auto;
+}
+
+.iframe-guard {
+  position: absolute;
+  inset: 0;
+  z-index: 15;
+  background: transparent;
+}
+
+/* CONTROLS */
+.controls {
+  position: fixed;
+  top: var(--player-height);
+  width: 100%;
+  height: var(--controls-height);
+  background: var(--bg);
+  z-index: 900;
+  padding: 10px;
+  border-bottom: 1px solid #222;
+}
+
+.search {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #1c1c22;
+  color: white;
+  font-size: 15px;
+  outline: none;
+}
+
+/* CATEGORIES */
+.categories {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-top: 10px;
+}
+
+.category {
+  padding: 8px 14px;
+  border-radius: 20px;
+  background: #1c1c22;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.category.active {
+  background: var(--active);
+  color: #000;
+}
+
+/* GRID */
+.grid {
+  position: absolute;
+  top: calc(var(--player-height) + var(--controls-height));
+  width: 100%;
+  height: calc(100vh - var(--player-height) - var(--controls-height));
+  overflow-y: auto;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px 10px;
+  align-content: start;
+}
+
+.channel {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: .2s;
+}
+
+.channel.active {
+  border-color: var(--active);
+  transform: scale(1.04);
+}
+
+.channel img {
+  width: 100%;
+  max-width: 90px;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+}
+
+.channel span {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+@media (min-width: 600px) {
+  .grid { grid-template-columns: repeat(5, 1fr); gap: 16px 12px; }
+}
+@media (min-width: 900px) {
+  :root { --player-height: 45vh; }
+  .grid { grid-template-columns: repeat(8, 1fr); gap: 18px 14px; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="player">
+  <div class="iframe-mask">
+    <iframe
+      id="player"
+      referrerpolicy="no-referrer"
+      allow="fullscreen"
+      sandbox="allow-scripts allow-same-origin allow-presentation">
+    </iframe>
+  </div>
+  <div class="iframe-guard" id="iframeGuard"></div>
+</div>
+
+<div class="controls">
+  <input class="search" id="search" placeholder="🔍 Buscar canais...">
+  <div class="categories" id="categories"></div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<script src="channels.js"></script>
+<script>
+const grid = document.getElementById('grid');
+const player = document.getElementById('player');
+const guard = document.getElementById('iframeGuard');
+const search = document.getElementById('search');
+
+let canalAtivo = null;
+let categoriaAtiva = 'Todos';
+let batchSize = 16;
+let currentIndex = 0;
+let filtered = [];
+
+const io = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      img.src = img.dataset.src;
+      io.unobserve(img);
+    }
+  });
+}, { root: grid, threshold: 0.1, rootMargin: "120px" });
+
+const categorias = ['Todos', ...new Set(canais.map(c => c.categoria))];
+categorias.forEach(cat => {
+  const el = document.createElement('div');
+  el.className = 'category';
+  el.textContent = cat;
+  if (cat === 'Todos') el.classList.add('active');
+
+  el.onclick = () => {
+    categoriaAtiva = cat;
+    document.querySelectorAll('.category').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    canalAtivo = null;
+    resetAndRender();
+  };
+  document.getElementById('categories').appendChild(el);
+});
+
+function resetAndRender() {
+  currentIndex = 0;
+  grid.innerHTML = '';
+  applyFilter();
+  renderBatch();
+  if (filtered.length) autoPlayFirst();
+}
+
+function applyFilter() {
+  const termo = search.value.toLowerCase();
+  filtered = canais.filter(c =>
+    c.nome.toLowerCase().includes(termo) &&
+    (categoriaAtiva === 'Todos' || c.categoria === categoriaAtiva)
+  );
+}
+
+function renderBatch() {
+  const slice = filtered.slice(currentIndex, currentIndex + batchSize);
+  slice.forEach(canal => {
+    const div = document.createElement('div');
+    div.className = 'channel';
+    div.innerHTML = `
+      <img data-src="${canal.logo}" src="" loading="eager">
+      <span>${canal.nome}</span>
+    `;
+    const img = div.querySelector("img");
+    io.observe(img);
+    div.onclick = () => trocarCanal(canal.url, div);
+    grid.appendChild(div);
+  });
+  currentIndex += batchSize;
+}
+
+function autoPlayFirst() {
+  const first = grid.querySelector('.channel');
+  if (first) trocarCanal(filtered[0].url, first);
+}
+
+grid.addEventListener('scroll', () => {
+  if (grid.scrollTop + grid.clientHeight >= grid.scrollHeight - 40) {
+    if (currentIndex < filtered.length) renderBatch();
+  }
+});
+
+function trocarCanal(url, el) {
+  const iframeWindow = player.contentWindow;
+  if (iframeWindow) {
+    iframeWindow.location.replace(url); // SEM histórico
+  } else {
+    player.src = url;
+  }
+
+  if (canalAtivo) canalAtivo.classList.remove('active');
+  el.classList.add('active');
+  canalAtivo = el;
+  guard.style.pointerEvents = 'none';
+}
+
+search.addEventListener('input', () => {
+  canalAtivo = null;
+  grid.innerHTML = '';
+  currentIndex = 0;
+  applyFilter();
+  renderBatch();
+  if (filtered.length) autoPlayFirst();
+});
+
+resetAndRender();
+</script>
+
+</body>
+</html>
