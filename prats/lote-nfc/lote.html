@@ -1,0 +1,197 @@
+<!-- DESENVOLVIDO POR MOISÉS J. MORAIS LIMA -->
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LOTES NFC 2026 | Desenvolvido por Moisés J. Morais Lima</title>
+    <style>
+        :root {
+            --primary-cyan: #00e5ff;
+            --dark-bg: #0a0a0a;
+            --card-bg: #161616;
+            --accent-bg: #222;
+            --text-main: #ffffff;
+            --text-secondary: #888;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* Destaque Superior - Data/Hora e Lote */
+        .main-display {
+            background-color: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 229, 255, 0.05);
+        }
+
+        #current-date {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        #current-time {
+            color: var(--text-main);
+            font-size: 4rem;
+            font-weight: 800;
+            margin: 10px 0;
+            font-variant-numeric: tabular-nums;
+            display: block;
+        }
+
+        .lote-badge {
+            display: inline-block;
+            background: rgba(0, 229, 255, 0.1);
+            border: 2px solid var(--primary-cyan);
+            padding: 10px 30px;
+            border-radius: 50px;
+            margin-top: 15px;
+        }
+
+        .lote-badge .label {
+            color: var(--primary-cyan);
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .lote-badge #lote-base {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--primary-cyan);
+        }
+
+        /* Grid de Produção */
+        .production-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .line-card {
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #333;
+        }
+
+        .line-card:hover {
+            border-left-color: var(--primary-cyan);
+            background: var(--accent-bg);
+        }
+
+        .line-name {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .line-code {
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-cyan);
+        }
+
+        /* Animação simples para o relógio */
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
+        #current-time { animation: pulse 2s infinite ease-in-out; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="main-display">
+            <span id="current-date">-- DE -- DE ----</span>
+            <span id="current-time">00:00</span>
+            
+            <div class="lote-badge">
+                <span class="label">LOTE DO DIA:</span>
+                <span id="lote-base">----</span>
+            </div>
+        </div>
+
+        <div id="production-lines" class="production-grid">
+            </div>
+    </div>
+    
+    <script src="security.js"></script>
+    <script>
+        const linhas = [
+            { nome: "COMPACT FLEX", letra: "C" },
+            { nome: "ZEGLA 1", letra: "Z" },
+            { nome: "ZEGLA 2", letra: "G" },
+            { nome: "MESAL 60", letra: "M" },
+            { nome: "SIDEL", letra: "H" },
+            { nome: "KHS 1", letra: "K" },
+            { nome: "KHS 2", letra: "T" }
+        ];
+
+        function atualizar() {
+            const agora = new Date();
+            
+            // Atualizar Data
+            const opcoesData = { day: '2-digit', month: 'long', year: 'numeric' };
+            document.getElementById('current-date').innerText = agora.toLocaleDateString('pt-BR', opcoesData);
+
+            // Atualizar Hora
+            const hora = agora.getHours().toString().padStart(2, '0');
+            const min = agora.getMinutes().toString().padStart(2, '0');
+            document.getElementById('current-time').innerText = `${hora}:${min}`;
+
+            // Cálculo do Lote (Base 01/01/2026 = 6001)
+            const dataBase = new Date('2026-01-01T00:00:00');
+            const diffDias = Math.floor((agora - dataBase) / (1000 * 60 * 60 * 24));
+            const loteAtual = 6001 + diffDias;
+
+            document.getElementById('lote-base').innerText = loteAtual;
+
+            // Renderizar Linhas
+            const grid = document.getElementById('production-lines');
+            grid.innerHTML = '';
+            
+            linhas.forEach(l => {
+                const div = document.createElement('div');
+                div.className = 'line-card';
+                div.innerHTML = `
+                    <span class="line-name">${l.nome}</span>
+                    <span class="line-code">${l.letra}${loteAtual}</span>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        // Atualização em tempo real
+        setInterval(atualizar, 30000); // A cada 30 segundos
+        atualizar();
+    </script>
+</body>
+</html>
