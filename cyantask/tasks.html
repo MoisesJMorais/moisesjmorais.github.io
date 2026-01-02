@@ -456,12 +456,6 @@ function logout() {
 		  }
 		});
 		
-		// Impede o zoom via roda do mouse (Ctrl + Scroll)
-		document.addEventListener('wheel', function (e) {
-		  if (e.ctrlKey) {
-		    e.preventDefault();
-		  }
-		}, { passive: false });
 	</script>
     <script src="bottoast.js"></script>
 </body>
