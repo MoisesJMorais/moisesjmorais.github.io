@@ -19,6 +19,13 @@ document.addEventListener("contextmenu", (e) => {
   e.stopPropagation();
 });
 
+// Impede o zoom via roda do mouse (Ctrl + Scroll)
+		document.addEventListener('wheel', function (e) {
+		  if (e.ctrlKey) {
+		    e.preventDefault();
+		  }
+		}, { passive: false });
+
 // Desabilitar seleção de texto e copiar
 const style = document.createElement("style");
 style.innerHTML = `
