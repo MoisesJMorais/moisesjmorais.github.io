@@ -3,7 +3,7 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>CyanTask - Login</title>
     
     <link rel="manifest" href="manifest.json">
@@ -27,6 +27,13 @@
             box-sizing: border-box;
             font-family: 'Segoe UI', sans-serif;
         }
+
+		html, body {
+			  /* Impede gestos de zoom em touchpads e telas touch */
+			  touch-action: pan-x pan-y;
+			  /* Evita que o navegador tente ajustar o texto automaticamente */
+			  -webkit-text-size-adjust: none;
+		}
 
         body {
             background-color: var(--bg-dark);
