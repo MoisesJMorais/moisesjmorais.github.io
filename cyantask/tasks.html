@@ -445,16 +445,6 @@ function logout() {
         taskInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') addTask(); });
 
         init();
-
-		// Impede o zoom via teclado (Ctrl + / Ctrl - / Ctrl 0)
-		document.addEventListener('keydown', function (e) {
-		  if (
-		    e.ctrlKey && 
-		    (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0' || e.code === 'NumpadAdd' || e.code === 'NumpadSubtract')
-		  ) {
-		    e.preventDefault();
-		  }
-		});
 		
 	</script>
     <script src="bottoast.js"></script>
