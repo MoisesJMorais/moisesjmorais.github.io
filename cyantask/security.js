@@ -26,6 +26,16 @@ document.addEventListener("contextmenu", (e) => {
 		  }
 		}, { passive: false });
 
+// Impede o zoom via teclado (Ctrl + / Ctrl - / Ctrl 0)
+		document.addEventListener('keydown', function (e) {
+		  if (
+		    e.ctrlKey && 
+		    (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0' || e.code === 'NumpadAdd' || e.code === 'NumpadSubtract')
+		  ) {
+		    e.preventDefault();
+		  }
+		});
+
 // Desabilitar seleção de texto e copiar
 const style = document.createElement("style");
 style.innerHTML = `
