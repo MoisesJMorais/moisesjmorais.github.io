@@ -1,4 +1,4 @@
-// DESENVOLVIDO POR MOISÉS J. MORAIS LKMA
+// DESENVOLVIDO POR MOISÉS J. MORAIS LIMA
 
 // Bloquear atalhos de inspeção no teclado
 document.addEventListener("keydown", (e) => {
@@ -18,6 +18,23 @@ document.addEventListener("contextmenu", (e) => {
   e.preventDefault();
   e.stopPropagation();
 });
+
+// Impede o zoom via roda do mouse (Ctrl + Scroll)
+		document.addEventListener('wheel', function (e) {
+		  if (e.ctrlKey) {
+		    e.preventDefault();
+		  }
+		}, { passive: false });
+
+// Impede o zoom via teclado (Ctrl + / Ctrl - / Ctrl 0)
+		document.addEventListener('keydown', function (e) {
+		  if (
+		    e.ctrlKey && 
+		    (e.key === '+' || e.key === '-' || e.key === '=' || e.key === '0' || e.code === 'NumpadAdd' || e.code === 'NumpadSubtract')
+		  ) {
+		    e.preventDefault();
+		  }
+		});
 
 // Desabilitar seleção de texto e copiar
 const style = document.createElement("style");
