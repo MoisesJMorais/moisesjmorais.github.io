@@ -1,0 +1,25 @@
+{
+  "short_name": "CyanTask",
+  "name": "CyanTask",
+  "description": "Gerencie suas tarefas com foco e clareza.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/cyantask/",
+  "background_color": "#212121",
+  "display": "standalone",
+  "scope": "/cyantask/",
+  "theme_color": "#000000",
+  "orientation": "portrait"
+}
