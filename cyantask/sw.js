@@ -7,7 +7,8 @@ const ASSETS_TO_CACHE = [
   './bottoast.js',
   './security.js',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './favicon.ico',
 ];
 
 self.addEventListener('install', (event) => {
