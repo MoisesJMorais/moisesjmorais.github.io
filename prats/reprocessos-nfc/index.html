@@ -4,72 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Desenvolvido por Moisés J. Morais Lima</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
-        /* BLOQUEIO MOBILE CORRIGIDO E CENTRALIZADO */
+        /* BLOQUEIO MOBILE */
         .mobile-warning { display: none; }
-
         @media (max-width: 767px) {
-            html, body { 
-                height: 100% !important; 
-                margin: 0 !important; 
-                padding: 0 !important;
-                overflow: hidden !important;
-                background-color: #ffffff !important;
-            }
+            html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background-color: #ffffff; }
             .container { display: none !important; }
-            
             .mobile-warning { 
-                display: flex !important; 
-                flex-direction: column;
-                align-items: center; 
-                justify-content: center; 
-                position: fixed;
-                top: 0; left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: #ffffff;
-                z-index: 999999;
-                padding: 20px;
-                box-sizing: border-box;
-                text-align: center;
-                font-family: 'Segoe UI', sans-serif;
+                display: flex !important; flex-direction: column; align-items: center; justify-content: center; 
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #ffffff; 
+                z-index: 999999; padding: 20px; box-sizing: border-box; text-align: center; font-family: 'Segoe UI', sans-serif;
             }
             .mobile-warning .icon { font-size: 64px; margin-bottom: 20px; }
             .mobile-warning h1 { color: #e74c3c; font-size: 26px; margin: 0 0 15px 0; }
-            .mobile-warning p { color: #34495e; font-size: 16px; line-height: 1.5; margin: 0; max-width: 280px; }
         }
 
         /* ESTILOS DESKTOP */
         body { font-family: 'Segoe UI', sans-serif; background-color: #e9ecef; margin: 20px; }
         .container { max-width: 1400px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); min-height: 85vh; display: flex; flex-direction: column; }
-        
         .header-app { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid #f1f2f6; padding-bottom: 15px; }
         .header-app h2 { color: #2c3e50; border-left: 5px solid #27ae60; padding-left: 15px; margin: 0; }
         .header-buttons { display: flex; gap: 8px; }
-
         .panel { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #dee2e6; }
         .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; }
-        
         input, select, button { padding: 10px; border: 1px solid #cbd5e0; border-radius: 6px; font-size: 13px; }
         button { cursor: pointer; border: none; font-weight: bold; transition: 0.2s; }
-        
         .btn-add { background-color: #27ae60; color: white; }
         .btn-util { color: white; padding: 8px 15px; font-size: 11px; }
         .btn-json { background-color: #34495e; }
-        .btn-excel { background-color: #27ae60; }
+        .btn-pdf { background-color: #e74c3c; }
         .btn-import { background-color: #8e44ad; }
-        
         .btn-tabela { font-size: 10px; padding: 5px 8px; background: #fff; border: 1px solid #ccc; color: #333; border-radius: 4px; }
         .btn-excluir { background-color: #e74c3c !important; color: white !important; }
-        
         table { width: 100%; border-collapse: collapse; margin-top: 10px; table-layout: fixed; }
         th { background-color: #2d3748; color: white; padding: 12px; font-size: 12px; }
         td { padding: 8px; border-bottom: 1px solid #edf2f7; text-align: center; font-weight: 500; font-size: 13px; }
-
         .pagination { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: auto; padding-top: 20px; }
         .btn-page { background: #34495e; color: white; padding: 8px 15px; }
 
-        /* Cores dos Sabores Solicitadas */
+        /* Cores Sabores */
         .sabor-laranja { background-color: #ffe082 !important; }
         .sabor-fruitz-laranja { background-color: #ffc107 !important; }
         .sabor-uva { background-color: #d1c4e9 !important; }
@@ -79,26 +54,17 @@
         .sabor-goiaba { background-color: #f48fb1 !important; }
         .sabor-caju { background-color: #e6ee9c !important; }
 
-        /* MODIFICAÇÃO REALIZADA: Fundo branco nos textos de status */
-        .status-pendente, .status-reprocessado { 
-            background-color: white !important; 
-            padding: 4px 8px; 
-            border-radius: 4px;
-            display: inline-block;
-            min-width: 90px;
-        }
+        .status-pendente, .status-reprocessado { background-color: white !important; padding: 4px 8px; border-radius: 4px; display: inline-block; min-width: 90px; }
         .status-pendente { color: #d35400; font-weight: 800; }
         .status-reprocessado { color: #27ae60; font-weight: 800; }
-        
-        .filters-bar { display: flex; gap: 10px; margin-bottom: 10px; }
+        .filters-bar { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
     </style>
 </head>
 <body>
 
     <div class="mobile-warning">
         <div class="icon">🖥️</div>
-        <h1>Dispositivo móvel imconpatível...</h1>
-        <p>Utilize um computador para operar o sistema de controle de reprocessos da Câmara Fria.</p>
+        <h1>Dispositivo móvel incompatível...</h1>
     </div>
 
     <div class="container">
@@ -107,7 +73,7 @@
             <div class="header-buttons">
                 <button class="btn-util btn-json" onclick="exportarJSON()">Backup JSON</button>
                 <button class="btn-util btn-import" onclick="document.getElementById('fileInput').click()">Importar JSON</button>
-                <button class="btn-util btn-excel" onclick="exportarCSV()">Exportar Excel</button>
+                <button class="btn-util btn-pdf" onclick="exportarPDF()">Exportar PDF</button>
                 <input type="file" id="fileInput" style="display:none" onchange="importarJSON(event)">
             </div>
         </header>
@@ -117,32 +83,24 @@
                 <input type="text" id="lote" placeholder="Lote">
                 <select id="sku">
                     <option value="">SKU</option>
-                    <option value="200 ML">200 ML</option>
-                    <option value="300 ML">300 ML</option>
-                    <option value="900 ML">900 ML</option>
-                    <option value="1.5 LT">1.5 LT</option>
-                    <option value="3 LT">3 LT</option>
-                    <option value="5 LT">5 LT</option>
+                    <option value="200 ML">200 ML</option><option value="300 ML">300 ML</option>
+                    <option value="900 ML">900 ML</option><option value="1.5 LT">1.5 LT</option>
+                    <option value="3 LT">3 LT</option><option value="5 LT">5 LT</option>
                 </select>
                 <select id="sabor">
                     <option value="">Sabor</option>
-                    <option value="Laranja">Laranja</option>
-                    <option value="Fruitz Laranja">Fruitz Laranja</option>
-                    <option value="Uva">Uva</option>
-                    <option value="Fruitz Uva">Fruitz Uva</option>
-                    <option value="Acerola">Acerola</option>
-                    <option value="Limão">Limão</option>
-                    <option value="Goiaba">Goiaba</option>
-                    <option value="Caju">Caju</option>
+                    <option value="Laranja">Laranja</option><option value="Fruitz Laranja">Fruitz Laranja</option>
+                    <option value="Uva">Uva</option><option value="Fruitz Uva">Fruitz Uva</option>
+                    <option value="Acerola">Acerola</option><option value="Limão">Limão</option>
+                    <option value="Goiaba">Goiaba</option><option value="Caju">Caju</option>
                 </select>
                 <input type="number" id="qtd" placeholder="Quantidade">
                 <select id="unidade">
-                    <option value="Unidades">Unidades</option>
-                    <option value="Paletes">Paletes</option>
+                    <option value="Rep. Linha">Rep. Linha</option><option value="Paletes">Paletes</option>
                 </select>
+                <input type="date" id="validade" title="Data de Validade">
                 <select id="status_inicial">
-                    <option value="Pendente">Pendente</option>
-                    <option value="Reprocessado">Reprocessado</option>
+                    <option value="Pendente">Pendente</option><option value="Reprocessado">Reprocessado</option>
                 </select>
                 <button class="btn-add" id="btnAcaoMain" onclick="adicionar()">Registrar Entrada</button>
             </div>
@@ -155,6 +113,7 @@
                 <option value="Pendente">Pendente</option>
                 <option value="Reprocessado">Reprocessado</option>
             </select>
+            <input type="text" id="fDataGeral" placeholder="Filtrar Data (Entrada ou Validade)" onkeyup="irParaPagina(1)">
         </div>
 
         <div style="flex-grow: 1; overflow-y: auto;">
@@ -163,12 +122,13 @@
                     <tr>
                         <th style="width: 10%;">Lote</th>
                         <th style="width: 10%;">SKU</th>
-                        <th style="width: 15%;">Sabor</th>
-                        <th style="width: 8%;">Qtd</th>
+                        <th style="width: 12%;">Sabor</th>
+                        <th style="width: 7%;">Qtd</th>
                         <th style="width: 10%;">Tipo</th>
-                        <th style="width: 17%;">Entrada</th>
+                        <th style="width: 12%;">Entrada</th>
+                        <th style="width: 12%;">Validade</th>
                         <th style="width: 12%;">Status</th>
-                        <th style="width: 18%;">Ações</th>
+                        <th style="width: 15%;">Ações</th>
                     </tr>
                 </thead>
                 <tbody id="tabelaCorpo"></tbody>
@@ -203,9 +163,10 @@
             sabor: document.getElementById('sabor').value,
             qtd: document.getElementById('qtd').value,
             unidade: document.getElementById('unidade').value,
+            validade: document.getElementById('validade').value,
             status: document.getElementById('status_inicial').value
         };
-        if(!dados.lote || !dados.sku || !dados.sabor || !dados.qtd) return alert("Mestre, campos incompletos.");
+        if(!dados.lote || !dados.sku || !dados.sabor || !dados.qtd || !dados.validade) return alert("Mestre, campos incompletos.");
 
         if(editandoId) {
             const idx = reprocessos.findIndex(i => i.id === editandoId);
@@ -214,7 +175,7 @@
             document.getElementById('btnAcaoMain').innerText = "Registrar Entrada";
             document.getElementById('btnAcaoMain').style.background = "#27ae60";
         } else {
-            reprocessos.unshift({ id: Date.now(), ...dados, dataEntrada: new Date().toLocaleString('pt-BR') });
+            reprocessos.unshift({ id: Date.now(), ...dados, dataEntrada: new Date().toLocaleDateString('pt-BR') });
         }
         salvar();
         limparCampos();
@@ -227,6 +188,7 @@
         document.getElementById('sabor').value = item.sabor;
         document.getElementById('qtd').value = item.qtd;
         document.getElementById('unidade').value = item.unidade;
+        document.getElementById('validade').value = item.validade;
         document.getElementById('status_inicial').value = item.status;
         editandoId = id;
         document.getElementById('btnAcaoMain').innerText = "Salvar Alteração";
@@ -240,7 +202,7 @@
     }
 
     function excluir(id) {
-        if(confirm("Deseja excluir permanentemente, Mestre?")) {
+        if(confirm("Deseja excluir permanentemente?")) {
             reprocessos = reprocessos.filter(i => i.id !== id);
             salvar();
         }
@@ -251,22 +213,34 @@
         renderizar(); 
     }
 
-    function limparCampos() { ['lote','sku','sabor','qtd'].forEach(id => document.getElementById(id).value = ""); }
+    function limparCampos() { ['lote','sku','sabor','qtd','validade'].forEach(id => document.getElementById(id).value = ""); }
 
     function renderizar() {
         const corpo = document.getElementById('tabelaCorpo');
         const fSabor = document.getElementById('fSabor').value;
         const fStatus = document.getElementById('fStatus').value;
-        const filtrados = reprocessos.filter(i => (fSabor === "TODOS" || i.sabor === fSabor) && (fStatus === "TODOS" || i.status === fStatus));
+        const fData = document.getElementById('fDataGeral').value.toLowerCase();
+        
+        const filtrados = reprocessos.filter(i => {
+            const valFmt = i.validade.split('-').reverse().join('/');
+            const matchSabor = (fSabor === "TODOS" || i.sabor === fSabor);
+            const matchStatus = (fStatus === "TODOS" || i.status === fStatus);
+            const matchData = i.dataEntrada.includes(fData) || valFmt.includes(fData);
+            return matchSabor && matchStatus && matchData;
+        });
+
         const totalP = Math.ceil(filtrados.length / itensPorPagina) || 1;
         document.getElementById('pageInfo').innerText = `Página ${paginaAtual} de ${totalP}`;
         document.getElementById('btnPrev').disabled = paginaAtual === 1;
         document.getElementById('btnNext').disabled = paginaAtual === totalP;
+        
         const inicio = (paginaAtual - 1) * itensPorPagina;
         corpo.innerHTML = "";
+        
         filtrados.slice(inicio, inicio + itensPorPagina).forEach(i => {
+            const valFmt = i.validade.split('-').reverse().join('/');
             corpo.innerHTML += `<tr class="${coresSabores[i.sabor] || ''}">
-                <td>${i.lote}</td><td>${i.sku}</td><td>${i.sabor}</td><td>${i.qtd}</td><td>${i.unidade}</td><td>${i.dataEntrada}</td>
+                <td>${i.lote}</td><td>${i.sku}</td><td>${i.sabor}</td><td>${i.qtd}</td><td>${i.unidade}</td><td>${i.dataEntrada}</td><td>${valFmt}</td>
                 <td><span class="status-${i.status.toLowerCase()}">${i.status}</span></td>
                 <td>
                     <button class="btn-tabela" onclick="editar(${i.id})">Editar</button>
@@ -288,17 +262,39 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             try {
-                reprocessos = [...reprocessos, ...JSON.parse(e.target.result)];
+                let data = JSON.parse(e.target.result);
+                data = data.map(item => {
+                    if(item.unidade === "Unidades") item.unidade = "Rep. Linha";
+                    return item;
+                });
+                reprocessos = [...reprocessos, ...data];
                 salvar();
             } catch (err) { alert("Erro ao importar."); }
         };
         reader.readAsText(event.target.files[0]);
     }
 
-    function exportarCSV() {
-        let c = 'Lote,SKU,Sabor,Quantidade,Tipo,Entrada,Status\n';
-        reprocessos.forEach(i => c += `${i.lote},${i.sku},${i.sabor},${i.qtd},${i.unidade},${i.dataEntrada},${i.status}\n`);
-        const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([c], { type: 'text/csv;charset=utf-8;' })); a.download = "relatorio.csv"; a.click();
+    function exportarPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'pt', 'a4');
+        const agora = new Date();
+        const dataHoraGera = agora.toLocaleString('pt-BR');
+
+        const colunas = ["Lote", "SKU", "Sabor", "Qtd", "Tipo", "Entrada", "Validade", "Status"];
+        const linhas = reprocessos.map(i => [
+            i.lote, i.sku, i.sabor, i.qtd, i.unidade, i.dataEntrada, i.validade.split('-').reverse().join('/'), i.status
+        ]);
+
+        doc.setFontSize(14);
+        doc.text("Relatório de Reprocessos - Câmara Fria", 40, 40);
+        doc.setFontSize(10);
+        doc.text(`Gerado em: ${dataHoraGera}`, 40, 55);
+
+        doc.autoTable({
+            head: [colunas], body: linhas, startY: 70, theme: 'grid',
+            headStyles: { fillStyle: [44, 62, 80], fontSize: 9 }, styles: { fontSize: 8 }
+        });
+        doc.save(`relatorio_${agora.getTime()}.pdf`);
     }
 
     const sel = document.getElementById('fSabor');
