@@ -30,6 +30,7 @@ if (loginForm) {
 // Função de Proteção: Adicione esta chamada no topo do seu arquivo rep-nfc.html
 function verificarAutenticacao() {
     if (sessionStorage.getItem('autenticado') !== 'true') {
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     }
+
 }
