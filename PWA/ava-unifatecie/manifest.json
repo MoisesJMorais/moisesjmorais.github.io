@@ -1,7 +1,7 @@
 {
   "name": "UniFatecie EAD",
   "short_name": "UniFatecie EAD",
-  "start_url": "https://eadunifatecie.com.br/",
+  "start_url": "./app.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000",
