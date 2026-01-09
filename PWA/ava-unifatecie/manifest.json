@@ -1,6 +1,6 @@
 {
-  "name": "AVA UniFatecie",
-  "short_name": "AVA UniFatecie",
+  "name": "UniFatecie EAD",
+  "short_name": "UniFatecie EAD",
   "start_url": "./app.html",
   "display": "standalone",
   "background_color": "#ffffff",
