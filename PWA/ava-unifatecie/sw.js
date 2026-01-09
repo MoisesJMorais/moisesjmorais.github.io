@@ -1,5 +1,5 @@
 const CACHE_NAME = 'unifatecie-webapp';
-const ASSETS = ['/'];
+const ASSETS = ['./app.html'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
