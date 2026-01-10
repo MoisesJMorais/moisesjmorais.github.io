@@ -1,9 +1,9 @@
 const USUARIOS_PERMITIDOS = {
 	"moises.morais": "32489657",
 	"jhonn.santos": "1910",
+	"geazi.mathias": "abc123",
 	"mateus.alves": "@prats5000",
-	"carlos.domingos": "@prats5000",
-    "prats": "admin"
+	"carlos.domingos": "@prats5000"
 };
 
 const loginForm = document.getElementById('loginForm');
@@ -34,3 +34,4 @@ function verificarAutenticacao() {
     }
 
 }
+
