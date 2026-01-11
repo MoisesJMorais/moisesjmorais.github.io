@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Metas</title>
+    <script src="security.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-page: #252525;
+            --bg-header: #000000;
+            --bg-card: #323232;
+            --bg-card-checked: #10b981;
+            --text-main: #ffffff;
+            --accent-1: #3498db;
+            --accent-2: #e67e22;
+            --accent-3: #9b59b6;
+            --danger: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: var(--bg-header);
+            padding: 15px 30px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .brand i { font-size: 2.2rem; color: #60a5fa; }
+        .brand h1 { font-size: 1.4rem; letter-spacing: 1px; }
+        .brand p { font-size: 0.8rem; color: #9ca3af; text-transform: uppercase; }
+
+        .btn-reset {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-reset:hover { background: var(--danger); color: white; }
+
+        .progress-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .progress-box { text-align: center; }
+        
+        /* Ajuste para conter o texto da porcentagem */
+        .progress-bar-bg {
+            background: #262626;
+            height: 14px; /* Aumentado levemente para caber o texto */
+            border-radius: 10px;
+            margin-bottom: 6px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s;
+        }
+
+        /* Texto da porcentagem sobre a barra */
+        .progress-percent {
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            font-size: 0.65rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+            pointer-events: none;
+        }
+
+        .progress-label { font-size: 0.7rem; font-weight: 800; color: #9ca3af; }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            padding: 25px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .column-header {
+            padding: 0 5px 15px 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .column-header h3 { font-size: 1.1rem; color: #e5e7eb; }
+
+        .btn-add {
+            background: #3b82f6;
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-add:hover { background: #2563eb; transform: scale(1.1); }
+
+        .task-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+            scrollbar-width: none;
+        }
+        .task-list::-webkit-scrollbar { display: none; }
+
+        .card {
+            background-color: var(--bg-card);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+            border-left: 4px solid transparent;
+        }
+
+        .card.checked {
+            background-color: var(--bg-card-checked);
+            border-left-color: #065f46;
+        }
+
+        .card.checked .task-text {
+            text-decoration: line-through;
+            color: #064e3b;
+            font-weight: 500;
+        }
+
+        .task-text { flex-grow: 1; font-size: 0.9rem; line-height: 1.4; color: #f3f4f6; }
+        .card-actions { display: flex; gap: 6px; }
+
+        .btn-action {
+            background: rgba(0,0,0,0.15);
+            border: none;
+            color: #d1d5db;
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .btn-delete:hover { background: var(--danger); color: white; }
+        .btn-edit:hover { background: var(--accent-1); color: white; }
+
+        .card input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: #064e3b;
+        }
+
+        footer {
+            background: var(--bg-header);
+            padding: 12px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #6b7280;
+            border-top: 1px solid #1f2937;
+            flex-shrink: 0;
+        }
+
+        .pending-badge {
+            background: #ef4444;
+            color: #ffffff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-top">
+        <div class="brand">
+            <i class="fas fa-snowflake"></i>
+            <div>
+                <h1>Dashboard de Metas</h1>
+                <p>Câmara Fria | Suco Prat's</p>
+            </div>
+        </div>
+        <button class="btn-reset" onclick="resetAll()">
+            <i class="fas fa-rotate-left"></i> REINICIAR METAS
+        </button>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-box">
+            <div class="progress-bar-bg">
+                <div id="fill-1" class="progress-fill"></div>
+                <span id="perc-1" class="progress-percent">0%</span>
+            </div>
+            <span class="progress-label">PRODUTIVIDADE 1° TURNO</span>
+        </div>
+        <div class="progress-box">
+            <div class="progress-bar-bg">
+                <div id="fill-2" class="progress-fill"></div>
+                <span id="perc-2" class="progress-percent">0%</span>
+            </div>
+            <span class="progress-label">PRODUTIVIDADE 2° TURNO</span>
+        </div>
+        <div class="progress-box">
+            <div class="progress-bar-bg">
+                <div id="fill-3" class="progress-fill"></div>
+                <span id="perc-3" class="progress-percent">0%</span>
+            </div>
+            <span class="progress-label">PRODUTIVIDADE 3° TURNO</span>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="column">
+        <div class="column-header">
+            <h3><i class="fas fa-sun"></i> Metas 1° Turno</h3>
+            <button class="btn-add" onclick="addTask(1)"><i class="fas fa-plus"></i></button>
+        </div>
+        <div id="list-1" class="task-list"></div>
+    </div>
+
+    <div class="column">
+        <div class="column-header">
+            <h3><i class="fas fa-cloud-sun"></i> Metas 2° Turno</h3>
+            <button class="btn-add" onclick="addTask(2)"><i class="fas fa-plus"></i></button>
+        </div>
+        <div id="list-2" class="task-list"></div>
+    </div>
+
+    <div class="column">
+        <div class="column-header">
+            <h3><i class="fas fa-moon"></i> Metas 3° Turno</h3>
+            <button class="btn-add" onclick="addTask(3)"><i class="fas fa-plus"></i></button>
+        </div>
+        <div id="list-3" class="task-list"></div>
+    </div>
+</main>
+
+<footer>
+    <div id="total-pending" class="pending-badge">Pendentes: 0</div>
+    <div style="text-align: center;">"Uma tarefa por vez <strong>sem congelar o foco!..."</strong></div>
+    <div id="current-time"></div>
+</footer>
+
+<script>
+    const initialTasks = [
+        { id: 1, turno: 1, text: "Medição de temperatura (Evaporadores)", fixed: true, checked: false },
+        { id: 2, turno: 1, text: "Inspeção de empilhadeiras e baterias", fixed: true, checked: false },
+        { id: 3, turno: 2, text: "Lista de presença (DDS)", fixed: true, checked: false },
+        { id: 4, turno: 2, text: "Ficha de limpeza", fixed: true, checked: false },
+        { id: 5, turno: 2, text: "Check-list de Empilhadeira", fixed: true, checked: false },
+        { id: 6, turno: 2, text: "Abertura de fluxo de estoque (FMEC)", fixed: true, checked: false }
+    ];
+
+    let tasks = JSON.parse(localStorage.getItem('dashboard_metas_camara_fria')) || initialTasks;
+
+    function save() {
+        localStorage.setItem('dashboard_metas_camara_fria', JSON.stringify(tasks));
+        render();
+    }
+
+    function addTask(turno) {
+        const text = prompt("Digite a tarefa para o " + turno + "° turno:");
+        if (text && text.trim() !== "") {
+            tasks.push({
+                id: Date.now(),
+                turno: turno,
+                text: text,
+                fixed: false,
+                checked: false
+            });
+            save();
+        }
+    }
+
+    function deleteTask(id) {
+        tasks = tasks.filter(t => t.id !== id);
+        save();
+    }
+
+    function editTask(id) {
+        const task = tasks.find(t => t.id === id);
+        const newText = prompt("Editar conteúdo:", task.text);
+        if (newText && newText.trim() !== "") {
+            task.text = newText;
+            save();
+        }
+    }
+
+    function toggleTask(id) {
+        const task = tasks.find(t => t.id === id);
+        task.checked = !task.checked;
+        save();
+    }
+
+    function resetAll() {
+        if(confirm("Deseja desmarcar todos os itens?")) {
+            tasks.forEach(t => t.checked = false);
+            save();
+        }
+    }
+
+    function updateDateTime() {
+        const now = new Date();
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+        document.getElementById('current-time').innerText = now.toLocaleString('pt-BR', options);
+    }
+
+    function render() {
+        const columns = [1, 2, 3];
+        let globalPending = 0;
+
+        columns.forEach(turnoNum => {
+            const listElement = document.getElementById(`list-${turnoNum}`);
+            listElement.innerHTML = '';
+            
+            const turnoTasks = tasks.filter(t => t.turno === turnoNum);
+            turnoTasks.sort((a, b) => a.checked - b.checked);
+
+            let doneCount = 0;
+
+            turnoTasks.forEach(task => {
+                if (!task.checked) globalPending++;
+                else doneCount++;
+
+                const card = document.createElement('div');
+                card.className = `card ${task.checked ? 'checked' : ''}`;
+                
+                card.innerHTML = `
+                    <input type="checkbox" ${task.checked ? 'checked' : ''} onchange="toggleTask(${task.id})">
+                    <span class="task-text">${task.text}</span>
+                    <div class="card-actions">
+                        ${!task.fixed ? `
+                            <button class="btn-action btn-edit" title="Editar" onclick="editTask(${task.id})"><i class="fas fa-pen"></i></button>
+                            <button class="btn-action btn-delete" title="Excluir" onclick="deleteTask(${task.id})"><i class="fas fa-trash"></i></button>
+                        ` : `
+                            <div style="color:#666; font-size: 0.65rem; padding: 5px;"><i class="fas fa-lock"></i></div>
+                        `}
+                    </div>
+                `;
+                listElement.appendChild(card);
+            });
+
+            // Lógica de porcentagem e cores solicitada
+            const progressFill = document.getElementById(`fill-${turnoNum}`);
+            const progressText = document.getElementById(`perc-${turnoNum}`);
+            const percent = turnoTasks.length > 0 ? Math.round((doneCount / turnoTasks.length) * 100) : 0;
+            
+            progressFill.style.width = percent + '%';
+            progressText.innerText = percent + '%';
+
+            // Definição de cores baseada na regra
+            if (percent === 100) {
+                progressFill.style.backgroundColor = "#10b981"; // Verde
+            } else if (percent >= 30 && percent <= 70) {
+                progressFill.style.backgroundColor = "#e67e22"; // Alaranjado
+            } else if (percent < 30) {
+                progressFill.style.backgroundColor = "#ef4444"; // Vermelho
+            } else {
+                // Caso entre 71% e 99% (mantém uma cor intermediária ou a do turno original)
+                progressFill.style.backgroundColor = "#3498db"; 
+            }
+        });
+
+        document.getElementById('total-pending').innerText = `Metas pendentes: ${globalPending}`;
+    }
+
+    setInterval(updateDateTime, 1000);
+    updateDateTime();
+    render();
+</script>
+</body>
+</html>
