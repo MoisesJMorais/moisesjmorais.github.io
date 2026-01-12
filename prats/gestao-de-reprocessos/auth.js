@@ -3,7 +3,8 @@ const USUARIOS_PERMITIDOS = {
 	"jhonn.santos": "1910",
 	"geazi.mathias": "abc123",
 	"mateus.alves": "@prats5000",
-	"carlos.domingos": "@prats5000"
+	"carlos.domingos": "@prats5000",
+	"otavio.godoy": "@prats5000"
 };
 
 const loginForm = document.getElementById('loginForm');
@@ -34,4 +35,5 @@ function verificarAutenticacao() {
     }
 
 }
+
 
