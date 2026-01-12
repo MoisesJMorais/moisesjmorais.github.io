@@ -310,10 +310,26 @@
 
 <script>
     const initialTasks = [
-        { id: 1, turno: 2, text: "Lista de presença (DDS)", fixed: true, checked: false },
-        { id: 2, turno: 2, text: "Ficha de limpeza", fixed: true, checked: false },
+        { id: 1, turno: 2, text: "Preencher Lista de presença (DDS)", fixed: true, checked: false },
+        { id: 2, turno: 2, text: "Abertura de fluxo de estoque (FMEC)", fixed: true, checked: false },
         { id: 3, turno: 2, text: "Check-list de Empilhadeira", fixed: true, checked: false },
-        { id: 4, turno: 2, text: "Abertura de fluxo de estoque (FMEC)", fixed: true, checked: false }
+        { id: 4, turno: 2, text: "Verificar lote e validade nas embalagens que estão sendo envasadas", fixed: true, checked: false },
+        { id: 5, turno: 2, text: "Conferir produção do 1° turno", fixed: true, checked: false },
+        { id: 6, turno: 2, text: "Verificar se precisa imprimir formulários de apontamentos", fixed: true, checked: false },
+        { id: 7, turno: 2, text: "Preenchimento FORM-PROD-015", fixed: true, checked: false },
+        { id: 8, turno: 2, text: "Verificar se tem produto para descarte", fixed: true, checked: false },
+        { id: 9, turno: 2, text: "Verificar se tem produto para reprocessar", fixed: true, checked: false },
+        { id: 10, turno: 2, text: "Organização/Limpeza dos corredores 6A e 6B", fixed: true, checked: false },
+        { id: 11, turno: 2, text: "Conferência por hora (17:00)", fixed: true, checked: false },
+        { id: 12, turno: 2, text: "Conferência por hora (18:00)", fixed: true, checked: false },
+        { id: 13, turno: 2, text: "Conferência por hora (19:00)", fixed: true, checked: false },
+        { id: 14, turno: 2, text: "Conferência por hora (20:00)", fixed: true, checked: false },
+        { id: 15, turno: 2, text: "Conferência por hora (21:00)", fixed: true, checked: false },
+        { id: 16, turno: 2, text: "Conferência por hora (22:00)", fixed: true, checked: false },
+        { id: 17, turno: 2, text: "Conferência por hora (23:00)", fixed: true, checked: false },
+        { id: 18, turno: 2, text: "Troca dos sacos de lixo (se estiverem cheios)", fixed: true, checked: false },
+        { id: 19, turno: 2, text: "Preencher ficha de limpeza do setor", fixed: true, checked: false },
+        { id: 20, turno: 2, text: "Fechamento de fluxo de estoque (FMEC)", fixed: true, checked: false },
     ];
 
     let tasks = JSON.parse(localStorage.getItem('dashboard_metas_camara_fria')) || initialTasks;
