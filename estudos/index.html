@@ -48,25 +48,22 @@
             margin: 0;
         }
 
-        /* GRID CONFIGURATION */
         .vitrine-grid {
             display: grid;
-            grid-template-columns: repeat(6, 1fr); /* 6 cards por linha no desktop */
+            grid-template-columns: repeat(6, 1fr);
             gap: 20px;
             max-width: 1400px;
             margin: 0 auto;
             padding: 0 20px 50px 20px;
         }
 
-        /* Responsividade para tablets */
         @media (max-width: 1100px) {
             .vitrine-grid { grid-template-columns: repeat(4, 1fr); }
         }
 
-        /* Responsividade para Mobile */
         @media (max-width: 768px) {
             .vitrine-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 colunas no mobile */
+                grid-template-columns: repeat(2, 1fr);
                 gap: 15px;
             }
         }
@@ -83,6 +80,7 @@
             display: flex;
             flex-direction: column;
             border: 1px solid transparent;
+            cursor: pointer;
         }
 
         .livro-card:hover {
@@ -101,13 +99,13 @@
             background-color: #eee;
             border-radius: 4px;
             overflow: hidden;
-            aspect-ratio: 2 / 3; /* Proporção de livro para manter o alinhamento */
+            aspect-ratio: 2 / 3;
         }
 
         .capa {
             width: 100%;
             height: 100%;
-            object-fit: contain; /* Garante que a imagem apareça inteira */
+            object-fit: contain;
             display: block;
         }
 
@@ -121,6 +119,38 @@
             justify-content: center;
             margin-top: auto;
         }
+
+        /* Estilos do Visualizador PDF */
+        #pdf-viewer-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2000;
+        }
+
+        #pdf-frame {
+            width: 90%;
+            height: 90%;
+            margin: 2% auto;
+            background: white;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
     </style>
 </head>
 <body>
@@ -132,28 +162,28 @@
 
 <main class="vitrine-grid">
 
-    <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_CUSTOS/U1/LIVRO_UNICO.pdf" target="_self" class="livro-card">
+    <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_CUSTOS/U1/LIVRO_UNICO.pdf" class="livro-card">
         <div class="capa-container">
             <img class="capa" src="https://drive.google.com/thumbnail?id=1-aK4s5s5mF0Bxt-ghxT7Rw8zhF0NNl0e&sz=w500" alt="Capa">
         </div>
         <div class="titulo-livro">Análise de custos</div>
     </a>
 
-    <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_INVESTIMENTOS_E_FONTES_DE_FINANCIAMENTO/U1/LIVRO_UNICO.pdf" target="_self" class="livro-card">
+    <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_INVESTIMENTOS_E_FONTES_DE_FINANCIAMENTO/U1/LIVRO_UNICO.pdf" class="livro-card">
         <div class="capa-container">
             <img class="capa" src="https://drive.google.com/thumbnail?id=10fm06WIGae7V5zmpWXmLbpPWUOpQ8Fed&sz=w500" alt="Capa">
         </div>
         <div class="titulo-livro">Análise de investimentos e fontes de financiamento</div>
     </a>
 
-    <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf" target="_self" class="livro-card">
+    <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf" class="livro-card">
         <div class="capa-container">
             <img class="capa" src="https://drive.google.com/thumbnail?id=1Ln0nPC9gQ466GABMX93RkrfrBmKU0mEP&sz=w500" alt="Capa">
         </div>
         <div class="titulo-livro">Capital de giro e análise financeira</div>
     </a>
 
-    <a href="https://drive.google.com/file/d/1J6ZLSaFAvHEXPK8JEM2_Ae6-kaWj7P9D/view" target="_self" class="livro-card">
+    <a href="https://drive.google.com/file/d/1J6ZLSaFAvHEXPK8JEM2_Ae6-kaWj7P9D/view" class="livro-card">
         <div class="capa-container">
             <img class="capa" src="https://drive.google.com/thumbnail?id=1J6ZLSaFAvHEXPK8JEM2_Ae6-kaWj7P9D&sz=w500" alt="Capa">
         </div>
@@ -161,6 +191,55 @@
     </a>
 
 </main>
+
+<div id="pdf-viewer-modal">
+    <div id="pdf-frame">
+        <button class="close-btn" onclick="closeViewer()">&times;</button>
+        <iframe id="pdf-iframe" width="100%" height="100%" frameborder="0"></iframe>
+    </div>
+</div>
+
+<script>
+    // Utilizando o visualizador padrão do PDF.js via CDN para evitar complexidade de renderização manual por canvas
+    const PDF_VIEWER_URL = 'https://mozilla.github.io/pdf.js/web/viewer.html?file=';
+
+    document.querySelectorAll('.livro-card').forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            const pdfUrl = this.getAttribute('href');
+            
+            // Tratamento especial para links do Google Drive que não são PDFs diretos
+            let finalUrl = pdfUrl;
+            if(pdfUrl.includes('drive.google.com')) {
+                // Converte link de visualização do Drive para link de download direto para o PDF.js processar
+                finalUrl = pdfUrl.replace('/view', '').replace('/file/d/', 'https://drive.google.com/uc?id=').split('?')[0];
+            }
+
+            openViewer(finalUrl);
+        });
+    });
+
+    function openViewer(url) {
+        const modal = document.getElementById('pdf-viewer-modal');
+        const iframe = document.getElementById('pdf-iframe');
+        iframe.src = PDF_VIEWER_URL + encodeURIComponent(url);
+        modal.style.display = 'block';
+        document.body.style.overflow = 'hidden'; // Trava scroll do fundo
+    }
+
+    function closeViewer() {
+        const modal = document.getElementById('pdf-viewer-modal');
+        const iframe = document.getElementById('pdf-iframe');
+        iframe.src = '';
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+
+    // Fecha ao clicar fora do PDF
+    document.getElementById('pdf-viewer-modal').addEventListener('click', function(e) {
+        if(e.target === this) closeViewer();
+    });
+</script>
 
 </body>
 </html>
