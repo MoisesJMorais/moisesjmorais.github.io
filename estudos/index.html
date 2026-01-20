@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Materiais de estudo | Bacharelado em Administração</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f8f9fa;
+            --header-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 1.6em;
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1em;
+            color: #7f8c8d;
+            margin: 0;
+        }
+
+        /* GRID CONFIGURATION */
+        .vitrine-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr); /* 6 cards por linha no desktop */
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px 50px 20px;
+        }
+
+        /* Responsividade para tablets */
+        @media (max-width: 1100px) {
+            .vitrine-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
+        /* Responsividade para Mobile */
+        @media (max-width: 768px) {
+            .vitrine-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 colunas no mobile */
+                gap: 15px;
+            }
+        }
+
+        .livro-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid transparent;
+        }
+
+        .livro-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+
+        .capa-container {
+            width: 100%;
+            height: auto; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            background-color: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            aspect-ratio: 2 / 3; /* Proporção de livro para manter o alinhamento */
+        }
+
+        .capa {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Garante que a imagem apareça inteira */
+            display: block;
+        }
+
+        .titulo-livro {
+            font-size: 0.85rem;
+            font-weight: bold;
+            line-height: 1.2;
+            min-height: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Bacharelado em Administração</h1>
+    <p class="subtitle">Graduado: Moisés Jonas de Morais Lima</p>
+</header>
+
+<main class="vitrine-grid">
+
+    <a href="https://drive.google.com/file/d/1-aK4s5s5mF0Bxt-ghxT7Rw8zhF0NNl0e/view" target="_blank" class="livro-card">
+        <div class="capa-container">
+            <img class="capa" src="https://drive.google.com/thumbnail?id=1-aK4s5s5mF0Bxt-ghxT7Rw8zhF0NNl0e&sz=w500" alt="Capa">
+        </div>
+        <div class="titulo-livro">Análise de custos</div>
+    </a>
+
+    <a href="https://drive.google.com/file/d/10fm06WIGae7V5zmpWXmLbpPWUOpQ8Fed/view" target="_blank" class="livro-card">
+        <div class="capa-container">
+            <img class="capa" src="https://drive.google.com/thumbnail?id=10fm06WIGae7V5zmpWXmLbpPWUOpQ8Fed&sz=w500" alt="Capa">
+        </div>
+        <div class="titulo-livro">Análise de investimentos e fontes de financiamento</div>
+    </a>
+
+    <a href="https://drive.google.com/file/d/1Ln0nPC9gQ466GABMX93RkrfrBmKU0mEP/view" target="_blank" class="livro-card">
+        <div class="capa-container">
+            <img class="capa" src="https://drive.google.com/thumbnail?id=1Ln0nPC9gQ466GABMX93RkrfrBmKU0mEP&sz=w500" alt="Capa">
+        </div>
+        <div class="titulo-livro">Capital de giro e análise financeira</div>
+    </a>
+
+    <a href="https://drive.google.com/file/d/1J6ZLSaFAvHEXPK8JEM2_Ae6-kaWj7P9D/view" target="_blank" class="livro-card">
+        <div class="capa-container">
+            <img class="capa" src="https://drive.google.com/thumbnail?id=1J6ZLSaFAvHEXPK8JEM2_Ae6-kaWj7P9D&sz=w500" alt="Capa">
+        </div>
+        <div class="titulo-livro">Comportamento Organizacional</div>
+    </a>
+
+</main>
+
+</body>
+</html>
