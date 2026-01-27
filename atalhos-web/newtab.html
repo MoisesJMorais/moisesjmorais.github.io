@@ -2,126 +2,132 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Nova guia</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova guia</title>
 <link rel="icon" href="https://www.google.com/chrome/static/images/favicons/favicon-32x32.png" type="image/png">
 
-
-
-
+<script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
 * {
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: Roboto, system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
 body {
-    margin: 0;
-    background: #202124;
-    color: #e8eaed;
+    background: #121212;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
     height: 100vh;
     overflow: hidden;
 }
 
-/* ================= HEADER ================= */
+/* HEADER */
 .header {
-    position: fixed;
-    top: 0;
-    width: 100%;
-    background: #202124;
-    padding: 40px 0 16px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 10;
+    padding: 32px 16px 16px;
+    text-align: center;
+    flex-shrink: 0;
 }
 
-.logo img {
-    width: 140px;
+.header img {
+    height: 48px;
+    margin-bottom: 16px;
 }
 
 .search-box {
-    width: 90%;
-    max-width: 560px;
-    margin-top: 16px;
     display: flex;
-    gap: 8px;
+    justify-content: center;
     align-items: center;
-}
-
-.search-box form {
-    flex: 1;
-    background: #303134;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #2a2a2a;
     border-radius: 24px;
-    padding: 10px 16px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    padding: 4px 8px;
 }
 
 .search-box input {
-    width: 100%;
+    flex: 1;
     border: none;
     outline: none;
     background: transparent;
-    color: #e8eaed;
-    font-size: 15px;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 24px;
 }
 
 .search-box input::placeholder {
-    color: #9aa0a6;
+    color: #ccc;
 }
 
-/* BOTÃO QR (sem círculo) */
 .qr-button {
     width: 40px;
     height: 40px;
-    background: none;
-    border-radius: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: none;
     cursor: pointer;
+    margin-left: 4px;
 }
 
-/* ================= FAVORITOS ================= */
-.favorites-container {
-    position: absolute;
-    top: 180px;
-    bottom: 0;
-    width: 100%;
+/* CONTENT GRID */
+.content {
+    flex: 1;
     overflow-y: auto;
+    padding: 16px;
 }
 
-.favorites {
-    display: flex;
-    flex-wrap: wrap;
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
 }
 
-.favorite {
-    width: 50%;
-    height: 40px;
-    background: #303134;
-    border: 1px solid #3c4043;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    color: #e8eaed;
+@media (max-width: 768px) {
+    .icon-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.favorite-icon {
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    padding: 12px 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.favorite-icon:hover {
+    background-color: #2a2a2a;
+}
+
+.favorite-icon a {
+    color: white;
     text-decoration: none;
-    font-size: 14px;
+    display: inline-block;
+    width: 100%;
 }
 
-.favorite:hover {
-    background: #3c4043;
+.favorite-icon img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 6px;
+    border-radius: 12px;
 }
 
-.favorite img {
-    width: 18px;
-    height: 18px;
+.favorite-icon span {
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    word-break: break-word;
 }
 
-/* ================= QR MODAL ================= */
+/* QR Modal */
 #qr-reader-container {
     position: fixed;
     inset: 0;
@@ -150,20 +156,14 @@ body {
 }
 </style>
 </head>
-
 <body>
 
 <!-- HEADER -->
 <div class="header">
-    <div class="logo">
-        <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png">
-    </div>
-
+    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png" alt="Logo">
+    
     <div class="search-box">
-        <form action="https://www.google.com/search" method="GET">
-            <input type="text" name="q" placeholder="Pesquisar ou digitar endereço">
-        </form>
-
+        <input type="text" id="searchInput" placeholder="Pesquisar ou digitar endereço">
         <div class="qr-button" onclick="openQR()" title="Ler QR Code">
             <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#ffffff" viewBox="0 0 24 24">
                 <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm2-2h2v6h-6v-2h4v-4z"/>
@@ -173,64 +173,74 @@ body {
 </div>
 
 <!-- FAVORITOS -->
-<div class="favorites-container">
-    <div class="favorites">
-
-        <a class="favorite" href="https://gemini.google.com/app">
-            <img src="https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64">
-            <span>Gemini</span>
-        </a>
-
-        <a class="favorite" href="https://chatgpt.com">
-            <img src="https://chatgpt.com/favicon.ico">
-            <span>ChatGPT</span>
-        </a>
-
-        <a class="favorite" href="https://y2meta.is">
-            <img src="https://y2meta.is/favicon-32x32.png">
-            <span>Baixar do YouTube</span>
-        </a>
-
-        <a class="favorite" href="https://sssinstagram.com/pt">
-            <img src="https://www.google.com/s2/favicons?domain=sssinstagram.com&sz=64">
-            <span>Baixar do Instagram</span>
-        </a>
-
-        <a class="favorite" href="https://www.eadunifatecie.com.br">
-            <img src="https://moisesjmorais.github.io/atalhos-web/Icons/UniFatecie.jpg">
-            <span>UniFatecie EAD</span>
-        </a>
-
-        <a class="favorite" href="https://portaldoaluno.fatecie.edu.br/">
-            <img src="https://moisesjmorais.github.io/atalhos-web/Icons/UniFatecie.jpg">
-            <span>Portal do Aluno</span>
-        </a>
-
-	<a class="favorite" href="https://waeweb.unifatecie.edu.br/servlet/hwalgn?1">
-            <img src="https://www.google.com/s2/favicons?domain=eadunifatecie.com.br&sz=64">
-            <span>AlunoNet UniFatecie</span>
-        </a>
-
-	<a class="favorite" href="https://sisac.unifatecie.io/">
-            <img src="https://www.google.com/s2/favicons?domain=eadunifatecie.com.br&sz=64">
-            <span>SISAC UniFatecie</span>
-        </a>
-
-	<a class="favorite" href="https://ead.eduno.com.br/login">
-            <img src="https://moisesjmorais.github.io/atalhos-web/Icons/Facuminas.jpeg">
-            <span>FACUMINAS EAD</span>
-        </a>
-
-	<a class="favorite" href="https://moodle.ifrs.edu.br/">
-            <img src="https://moisesjmorais.github.io/atalhos-web/Icons/IF-Logo.png">
-            <span>IFRS Cursos Gratuitos</span>
-        </a>
-
-	<a class="favorite" href="https://drive.google.com/drive/folders/1KXNl_8oZG4un2biQp8fr8EjmFV6tVeTB">
-            <img src="https://moisesjmorais.github.io/atalhos-web/Icons/GoogleDrive.png">
-            <span>Materiais de Estudo</span>
-        </a>	
-
+<div class="content">
+    <div class="icon-grid" id="iconGrid">
+        <div class="favorite-icon">
+            <a href="https://www.google.com" target="_self">
+                <img src="Icons/Google.jpg" alt="Google" />
+                <span>Google</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://chatgpt.com" target="_self">
+                <img src="Icons/ChatGPT.png" alt="ChatGPT" />
+                <span>ChatGPT</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://y2meta.is/" target="_self">
+                <img src="Icons/y2down.jpeg" alt="Baixar do YouTube" />
+                <span>Baixar do YouTube</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://sssinstagram.com/pt" target="_self">
+                <img src="Icons/SSSInstagram.png" alt="Baixar do Instagram" />
+                <span>Baixar do Instagram</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://www.eadunifatecie.com.br/login/index.php" target="_self">
+                <img src="Icons/UniFatecie.jpg" alt="AVA UniFatecie" />
+                <span>AVA UniFatecie</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://portaldoaluno.fatecie.edu.br/" target="_self">
+                <img src="Icons/UniFatecie.jpg" alt="Portal do Aluno UniFatecie" />
+                <span>Portal do Aluno UniFatecie</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://waeweb.unifatecie.edu.br/servlet/hwalgn?1" target="_self">
+                <img src="Icons/UniFatecie.jpg" alt="AlunoNet UniFatecie" />
+                <span>AlunoNet UniFatecie</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://sisac.unifatecie.io" target="_self">
+                <img src="Icons/UniFatecie.jpg" alt="SISAC UniFatecie" />
+                <span>SISAC UniFatecie</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://ead.eduno.com.br/login" target="_self">
+                <img src="Icons/Facuminas.jpeg" alt="FACUMINAS EAD" />
+                <span>FACUMINAS EAD</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://moodle.ifrs.edu.br" target="_self">
+                <img src="Icons/IF-Logo.png" alt="IFRS Cursos Gratuitos" />
+                <span>IFRS Cursos Gratuitos</span>
+            </a>
+        </div>
+        <div class="favorite-icon">
+            <a href="https://drive.google.com/drive/folders/1KXNl_8oZG4un2biQp8fr8EjmFV6tVeTB" target="_self">
+                <img src="Icons/GoogleDrive.png" alt="Materiais de Estudo" />
+                <span>Materiais de Estudo</span>
+            </a>
+        </div>
     </div>
 </div>
 
@@ -240,8 +250,6 @@ body {
     <div id="qr-reader"></div>
 </div>
 
-<!-- SCRIPT -->
-<script src="https://unpkg.com/html5-qrcode"></script>
 <script>
 let qrScanner;
 
@@ -254,24 +262,27 @@ function openQR() {
         { facingMode: "environment" },
         { fps: 10, qrbox: 250 },
         (decodedText) => {
-
-            if (navigator.vibrate) {
-                navigator.vibrate(200);
-            }
-
+            if (navigator.vibrate) navigator.vibrate(200);
             qrScanner.stop();
             container.style.display = 'none';
             window.location.href = decodedText;
         }
-    );
+    ).catch(err => { alert("Erro ao acessar a câmera: "+err); });
 }
 
 function closeQR() {
-    if (qrScanner) {
-        qrScanner.stop();
-    }
+    if(qrScanner) qrScanner.stop();
     document.getElementById('qr-reader-container').style.display = 'none';
 }
+
+// Busca Google ao pressionar Enter
+document.getElementById('searchInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+        e.preventDefault();
+        const query = this.value.trim();
+        if(query) window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    }
+});
 </script>
 
 </body>
