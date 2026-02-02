@@ -99,6 +99,7 @@
         .btn-page:hover:not(:disabled) { background: #aab2b7; }
         .btn-page:disabled { background: #e0e0e0; color: #7f8c8d; cursor: not-allowed; border-color: #ccc; }
 
+        /* CORES DA TABELA NO NAVEGADOR */
         .sabor-laranja td:not(.celula-acoes) { background-color: #ffe082 !important; color: #000 !important; }
         .sabor-fruitz-laranja td:not(.celula-acoes) { background-color: #ffc107 !important; color: #000 !important; }
         .sabor-uva td:not(.celula-acoes) { background-color: #d1c4e9 !important; color: #000 !important; }
@@ -226,6 +227,18 @@
         "Limão": "sabor-limao", "Caju": "sabor-caju"
     };
 
+    // CORES SUAVES PARA O PDF (RGB)
+    const coresSuavesPDF = {
+        "Laranja": [255, 236, 179],
+        "Fruitz Laranja": [255, 224, 130],
+        "Uva": [225, 190, 231],
+        "Fruitz Uva": [209, 196, 233],
+        "Acerola": [255, 204, 188],
+        "Limão": [220, 255, 200],
+        "Goiaba": [248, 187, 208],
+        "Caju": [240, 244, 195]
+    };
+
     const usuarioLogado = sessionStorage.getItem('usuarioLogado');
     if (usuarioLogado) {
         document.getElementById('exibirUsuario').innerText = `Operador: ${usuarioLogado}`;
@@ -323,7 +336,6 @@
                    (fData === "" || i.dataEntrada.includes(fData) || valFmt.includes(fData));
         });
 
-        // ORDENAÇÃO SOLICITADA: Sabores iguais juntos e dentro do grupo por Validade
         return filtrados.sort((a, b) => {
             if (a.sabor < b.sabor) return -1;
             if (a.sabor > b.sabor) return 1;
@@ -399,7 +411,6 @@
         const agora = new Date();
         const filtrados = obterDadosFiltrados();
         
-        // LÓGICA DE TÍTULO DINÂMICO
         const statusFiltro = document.getElementById('fStatus').value;
         let complementoTitulo = "";
         if(statusFiltro === "Pendente") complementoTitulo = " PENDENTES";
@@ -425,8 +436,18 @@
             body: linhas, 
             startY: 80, 
             theme: 'grid',
-            headStyles: { fillColor: [0, 49, 83], fontSize: 9, fontStyle: 'bold' }, 
-            styles: { fontSize: 8 }
+            headStyles: { fillColor: [44, 62, 80], fontSize: 9, fontStyle: 'bold' }, 
+            styles: { fontSize: 8, textColor: [0, 0, 0] },
+            didParseCell: function(data) {
+                // Aplica cores apenas nas células do corpo (body) e na coluna de Sabor (índice 3) ou na linha inteira
+                if (data.section === 'body') {
+                    const saborNaLinha = data.row.raw[3]; // Coluna Sabor
+                    const corRgb = coresSuavesPDF[saborNaLinha];
+                    if (corRgb) {
+                        data.cell.styles.fillColor = corRgb;
+                    }
+                }
+            }
         });
 
         doc.save(`relatorio_${agora.getTime()}.pdf`);
