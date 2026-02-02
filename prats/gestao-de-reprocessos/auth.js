@@ -1,5 +1,5 @@
 const USUARIOS_PERMITIDOS = {
-	"moises.morais": "32489657",
+	"moises.morais": "71239856",
 	"jhonn.santos": "1910",
 	"geazi.mathias": "abc123",
 	"mateus.alves": "@prats5000",
@@ -35,5 +35,6 @@ function verificarAutenticacao() {
     }
 
 }
+
 
 
