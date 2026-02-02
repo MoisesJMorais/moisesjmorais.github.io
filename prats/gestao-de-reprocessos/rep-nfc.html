@@ -323,11 +323,10 @@
                    (fData === "" || i.dataEntrada.includes(fData) || valFmt.includes(fData));
         });
 
-        // ORDENAÇÃO: Sabores iguais juntos (A-Z) e depois por data de validade (vencimento mais próximo)
+        // ORDENAÇÃO SOLICITADA: Sabores iguais juntos e dentro do grupo por Validade
         return filtrados.sort((a, b) => {
             if (a.sabor < b.sabor) return -1;
             if (a.sabor > b.sabor) return 1;
-            // Se o sabor for o mesmo, ordena pela validade
             return new Date(a.validade) - new Date(b.validade);
         });
     }
@@ -399,10 +398,17 @@
         const doc = new jsPDF('p', 'pt', 'a4');
         const agora = new Date();
         const filtrados = obterDadosFiltrados();
+        
+        // LÓGICA DE TÍTULO DINÂMICO
+        const statusFiltro = document.getElementById('fStatus').value;
+        let complementoTitulo = "";
+        if(statusFiltro === "Pendente") complementoTitulo = " PENDENTES";
+        else if(statusFiltro === "Reprocessado") complementoTitulo = " REPROCESSADOS";
+        else if(statusFiltro === "Descartado") complementoTitulo = " DESCARTADOS";
 
         doc.setFont("helvetica", "bold");
         doc.setFontSize(14);
-        doc.text("Relatório de Reprocessos - Câmara Fria", 40, 40);
+        doc.text(`RELATÓRIO DE REPROCESSOS${complementoTitulo}`, 40, 40);
         
         doc.setFont("helvetica", "normal");
         doc.setFontSize(10);
