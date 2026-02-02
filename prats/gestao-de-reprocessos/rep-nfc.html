@@ -227,7 +227,6 @@
         "Limão": "sabor-limao", "Caju": "sabor-caju"
     };
 
-    // CORES SUAVES PARA O PDF (RGB)
     const coresSuavesPDF = {
         "Laranja": [255, 236, 179],
         "Fruitz Laranja": [255, 224, 130],
@@ -410,21 +409,41 @@
         const doc = new jsPDF('p', 'pt', 'a4');
         const agora = new Date();
         const filtrados = obterDadosFiltrados();
-        
         const statusFiltro = document.getElementById('fStatus').value;
-        let complementoTitulo = "";
-        if(statusFiltro === "Pendente") complementoTitulo = " PENDENTES";
-        else if(statusFiltro === "Reprocessado") complementoTitulo = " REPROCESSADOS";
-        else if(statusFiltro === "Descartado") complementoTitulo = " DESCARTADOS";
+
+        // CABEÇALHO COM FAVICON E AUTORIA
+        try {
+            // Tenta pegar o favicon da página (funciona se estiver no mesmo domínio ou via Base64)
+            const favicon = document.querySelector('link[rel*="icon"]').href;
+            doc.addImage(favicon, 'PNG', 40, 30, 20, 20);
+        } catch(e) {
+            // Caso falhe, apenas pula a imagem
+        }
 
         doc.setFont("helvetica", "bold");
-        doc.setFontSize(14);
-        doc.text(`RELATÓRIO DE REPROCESSOS${complementoTitulo}`, 40, 40);
+        doc.setFontSize(16);
+        doc.text("Gestão de Reprocessos", 65, 45);
+        
+        doc.setFont("helvetica", "italic");
+        doc.setFontSize(8);
+        doc.text("developed by Moisés J. Morais Lima", 65, 55);
+
+        // LINHA DIVISORA
+        doc.setLineWidth(1);
+        doc.line(40, 65, 555, 65);
+
+        // TÍTULO DINÂMICO
+        let tituloRelatorio = "RELATÓRIO GERAL";
+        if(statusFiltro !== "TODOS") tituloRelatorio = `RELATÓRIO DE REPROCESSOS ${statusFiltro.toUpperCase()}S`;
+        
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(tituloRelatorio, 40, 85);
         
         doc.setFont("helvetica", "normal");
-        doc.setFontSize(10);
-        doc.text(`Gerado em: ${agora.toLocaleString('pt-BR')}`, 40, 55);
-        doc.text(`Total de registros: ${filtrados.length}`, 40, 68);
+        doc.setFontSize(9);
+        doc.text(`Gerado em: ${agora.toLocaleString('pt-BR')}`, 40, 100);
+        doc.text(`Total de registros: ${filtrados.length}`, 40, 112);
 
         const colunas = ["ID", "Lote", "SKU", "Sabor", "Qtd", "Tipo", "Entrada", "Validade", "Status"];
         const linhas = filtrados.map(i => [
@@ -434,14 +453,13 @@
         doc.autoTable({
             head: [colunas], 
             body: linhas, 
-            startY: 80, 
+            startY: 125, 
             theme: 'grid',
             headStyles: { fillColor: [44, 62, 80], fontSize: 9, fontStyle: 'bold' }, 
             styles: { fontSize: 8, textColor: [0, 0, 0] },
             didParseCell: function(data) {
-                // Aplica cores apenas nas células do corpo (body) e na coluna de Sabor (índice 3) ou na linha inteira
                 if (data.section === 'body') {
-                    const saborNaLinha = data.row.raw[3]; // Coluna Sabor
+                    const saborNaLinha = data.row.raw[3];
                     const corRgb = coresSuavesPDF[saborNaLinha];
                     if (corRgb) {
                         data.cell.styles.fillColor = corRgb;
