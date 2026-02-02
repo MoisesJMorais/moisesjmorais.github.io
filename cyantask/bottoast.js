@@ -36,7 +36,7 @@ function notificarConclusao() {
       animation:botSlide 0.4s ease-out;
       z-index:9999;
     ">
-      <img src="https://icons.iconarchive.com/icons/iconarchive/robot-avatar/128/Blue-2-Robot-Avatar-icon.png"
+      <img src="favicon.ico"
       style="width:56px;height:56px;">
       <span>${msg}</span>
     </div>
