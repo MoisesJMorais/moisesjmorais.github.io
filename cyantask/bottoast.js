@@ -1,16 +1,7 @@
 // --- DESENVOLVIDO POR MOISÉS J. MORAIS LIMA ---
 function notificarConclusao() {
   const frases = [
-    "Tarefa entregue com sucesso. Nível: Jedi da produtividade.",
-    "Check concluído. Você acaba de subir 2 níveis no jogo da vida.",
-    "Missão finalizada. A galáxia do foco agradece.",
-    "Tarefa descarregada no destino certo. Sem avarias.",
-    "Produtividade 1 × Caos 0. Placar atualizado.",
-    "Você concluiu uma task. Isso te dá +10 de autoestima.",
-    "Feito! Se eficiência fosse moeda, você tava rico agora.",
-    "Ok! Operação finalizada com padrão ISO 9001 do coração.",
-    "Conclusão confirmada. Universo orgulhoso.",
-    "Task concluída. Dopamina liberada sem moderação."
+    "Tarefa concluída com sucesso. Próximo nível: Jedi da produtividade."
   ];
   const msg = frases[Math.floor(Math.random() * frases.length)];
 
