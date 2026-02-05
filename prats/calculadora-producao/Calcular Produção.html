@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aguafina+Script&display=swap" rel="stylesheet">
+    <script src="ajustes.js"></script>
+    
+    <title>C.I.D.P.A - v1.0</title>
+    
+    <style>
+        :root {
+            --bg: #0a0b0d;
+            --calc-bg: #16181c;
+            --cyan: #00e5ff;
+            --row: #212429;
+            --text: #ffffff;
+            --input-bg: #000000;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .calculator {
+            width: 650px;
+            background: var(--calc-bg);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9);
+            border: 1px solid #2d2f34;
+        }
+        header h1 {
+            font-size: 0.9rem;
+            text-align: center;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            margin: 0 0 20px 0;
+            text-transform: uppercase;
+            opacity: 0.8;
+        }
+        .labels {
+            display: grid;
+            grid-template-columns: 1.2fr 2fr 1.5fr 1.5fr;
+            gap: 10px;
+            padding: 0 10px 8px 10px;
+            font-size: 0.65rem;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .sku-list { display: flex; flex-direction: column; gap: 6px; }
+        .sku-row {
+            background: var(--row);
+            padding: 10px;
+            border-radius: 8px;
+            display: grid;
+            grid-template-columns: 1.2fr 2fr 1.5fr 1.5fr;
+            gap: 10px;
+            align-items: center;
+            transition: background 0.2s;
+        }
+        .sku-row:hover { background: #2a2e35; }
+        .sku-name { font-weight: bold; font-size: 0.9rem; }
+        .sku-name span { display: block; font-size: 0.7rem; color: #888; font-weight: normal; }
+        .inputs-group { display: flex; gap: 4px; }
+        input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid #3d4148;
+            color: #fff;
+            padding: 6px 2px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        input:focus { border-color: var(--cyan); outline: none; color: var(--cyan); }
+        .row-total {
+            font-family: 'Consolas', monospace;
+            font-size: 1.2rem;
+            text-align: right;
+        }
+        .row-total.units { color: #fff; }
+        .row-total.liters { color: var(--cyan); font-weight: bold; }
+        .display {
+            background: #000;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #222;
+            display: flex;
+            justify-content: space-around;
+        }
+        .display-box { text-align: center; }
+        .display-label { display: block; font-size: 0.65rem; color: #666; margin-bottom: 4px; text-transform: uppercase; }
+        .display-val { font-family: 'Courier New', monospace; font-size: 1.4rem; color: var(--cyan); font-weight: bold; }
+
+        /* Nova área de assinatura */
+        footer {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #555;
+        }
+        footer span {
+            font-family: 'Aguafina Script', cursive;
+            font-size: 1.3rem;
+            color: var(--cyan);
+            margin-left: 5px;
+            opacity: 0.8;
+        }
+
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <header>
+		<h1>Cálculo Instantâneo de Produção Armazenada</h1>
+	</header>
+
+    <div class="labels">
+        <span>SKU</span>
+        <span>Entrada (Pallets | Picking)</span>
+        <span style="text-align: right;">Total Unidades</span>
+        <span style="text-align: right;">Total Litros</span>
+    </div>
+
+    <div class="sku-list" id="skuList"></div>
+
+    <div class="display">
+        <div class="display-box">
+            <span class="display-label">Total Unidades (soma todos os sku)</span>
+            <div class="display-val" id="grandUn">0</div>
+        </div>
+        <div class="display-box" style="border-left: 1px solid #222; padding-left: 40px;">
+            <span class="display-label">Total Litros (soma todos os sku)</span>
+            <div class="display-val" id="grandLi">0.00</div>
+        </div>
+    </div>
+
+    <footer>
+        Desenvolvido por <br><span>Moisés J. Morais Lima</span>
+    </footer>
+</div>
+
+<script>
+    const skus = [
+        { n: "200 ML", f: 3960, l: 0.2 },
+        { n: "300 ML", f: 2880, l: 0.3 },
+        { n: "900 ML", f: 1224, l: 0.9 },
+        { n: "1,5 LT", f: 600, l: 1.5 },
+        { n: "3 LT", f: 280, l: 3.0 },
+        { n: "5 LT", f: 168, l: 5.0 }
+    ];
+
+    const state = skus.map(() => ({ p: 0, u: 0 }));
+
+    function render() {
+        document.getElementById('skuList').innerHTML = skus.map((s, i) => `
+            <div class="sku-row">
+                <div class="sku-name">${s.n} <span>Pallet: ${s.f} un</span></div>
+                <div class="inputs-group">
+                    <input type="number" placeholder="Pallets" oninput="upd(${i},'p',this.value)">
+                    <input type="number" placeholder="Picking" oninput="upd(${i},'u',this.value)">
+                </div>
+                <div class="row-total units" id="ru-${i}">0</div>
+                <div class="row-total liters" id="rl-${i}">0.0</div>
+            </div>
+        `).join('');
+    }
+
+    function upd(i, t, v) {
+        state[i][t] = Number(v) || 0;
+        const rowUn = (state[i].p * skus[i].f) + state[i].u;
+        const rowLi = rowUn * skus[i].l;
+        document.getElementById(`ru-${i}`).innerText = rowUn.toLocaleString();
+        document.getElementById(`rl-${i}`).innerText = rowLi.toLocaleString(undefined, {minimumFractionDigits: 1});
+
+        let gUn = 0, gLi = 0;
+        state.forEach((val, idx) => {
+            const u = (val.p * skus[idx].f) + val.u;
+            gUn += u;
+            gLi += (u * skus[idx].l);
+        });
+
+        document.getElementById('grandUn').innerText = gUn.toLocaleString();
+        document.getElementById('grandLi').innerText = gLi.toLocaleString(undefined, {minimumFractionDigits: 2}) + " L";
+    }
+
+    render();
+</script>
+</body>
+</html>
