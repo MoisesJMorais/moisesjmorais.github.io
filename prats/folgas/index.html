@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escala de Folgas</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-container: #1e293b;
+            --bg-header: #334155;
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+            --border-color: #334155;
+            --accent-brand: #ef4444;
+            --nav-btn: #38bdf8;
+            --shift-btn: #475569;
+            --shift-active: #38bdf8;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            min-height: 100vh;
+        }
+
+        .main-title { text-align: center; margin-bottom: 10px; }
+        .main-title h1 { margin: 0; color: var(--nav-btn); font-size: 1.4rem; text-transform: uppercase; }
+        .main-title span { color: var(--accent-brand); font-weight: bold; font-size: 0.8rem; }
+
+        .container {
+            width: 100%;
+            max-width: 980px;
+            background: var(--bg-container);
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border: 1px solid var(--border-color);
+        }
+
+        /* Controles Superiores */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .shift-filters {
+            display: flex;
+            gap: 5px;
+        }
+
+        .shift-btn {
+            background: var(--shift-btn);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .shift-btn.active { background: var(--shift-active); color: var(--bg-main); }
+
+        .nav-btns button {
+            background: transparent;
+            color: var(--nav-btn);
+            border: 1px solid var(--nav-btn);
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        h2 { margin: 0; font-size: 1.1rem; text-transform: capitalize; color: var(--text-main); }
+
+        /* Calendário */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background: var(--border-color);
+            gap: 1px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .day-header {
+            background: var(--bg-header);
+            text-align: center;
+            font-weight: bold;
+            padding: 10px 0;
+            color: var(--text-dim);
+            font-size: 0.75rem;
+        }
+
+        .day {
+            min-height: 95px;
+            background: var(--bg-container);
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .day-number { 
+            font-weight: bold; 
+            color: var(--text-dim); 
+            text-align: right; 
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .off-badge {
+            color: #fff;
+            font-size: 0.7rem;
+            padding: 3px 5px;
+            border-radius: 3px;
+            margin-bottom: 2px;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .day.empty { background: #161e2d; }
+
+        @media (max-width: 600px) {
+            .day { min-height: 70px; }
+            .shift-btn { padding: 5px 8px; font-size: 0.65rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-title">
+        <h1>ESCALA DE FOLGAS - CÂMARA FRIA</h1>
+    </div>
+
+    <div class="container">
+        <div class="controls">
+            <div class="shift-filters">
+                <button class="shift-btn" onclick="filterShift('1T', this)">1°T</button>
+                <button class="shift-btn active" onclick="filterShift('2T', this)">2°T</button>
+                <button class="shift-btn" onclick="filterShift('3T', this)">3°T</button>
+            </div>
+            <div class="nav-btns">
+                <button onclick="changeMonth(-1)">&#10094;</button>
+                <button onclick="changeMonth(1)">&#10095;</button>
+            </div>
+        </div>
+
+        <header style="text-align:center; margin-bottom: 10px;">
+            <h2 id="monthDisplay">...</h2>
+        </header>
+
+        <div class="calendar-grid">
+            <div class="day-header">Dom</div>
+            <div class="day-header">Seg</div>
+            <div class="day-header">Ter</div>
+            <div class="day-header">Qua</div>
+            <div class="day-header">Qui</div>
+            <div class="day-header">Sex</div>
+            <div class="day-header">Sáb</div>
+            <div id="calendarBody" style="display: contents;"></div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * CONFIGURAÇÃO DE EQUIPE POR TURNOS
+         * turno: '1T', '2T' ou '3T'
+         */
+        const CONFIG_ESCALAS = [
+            { nome: "Moisés", dataBase: "2026-03-01", tipo: "6x1", cor: "#10b981", turno: "2T" },
+            { nome: "Kenyi", dataBase: "2026-02-28", tipo: "6x2", cor: "#f97316", turno: "2T" },
+            { nome: "Elton", dataBase: "2026-03-02", tipo: "6x2", cor: "#3b82f6", turno: "2T" },
+            { nome: "Geazi", dataBase: "2026-03-04", tipo: "6x2", cor: "#a855f7", turno: "2T" }
+        ];
+
+        let nav = 0;
+        let currentShift = 'all';
+
+        function verificarFolga(dataAlvo, colab) {
+            const dataInicio = new Date(colab.dataBase + 'T00:00:00');
+            const dataTeste = new Date(dataAlvo + 'T00:00:00');
+            const diffTime = dataTeste - dataInicio;
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+            if (colab.tipo === "6x1") {
+                return diffDays % 7 === 0;
+            } else if (colab.tipo === "6x2") {
+                const resto = ((diffDays % 8) + 8) % 8;
+                return resto === 0 || resto === 1;
+            }
+            return false;
+        }
+
+        function filterShift(shift, btn) {
+            currentShift = shift;
+            document.querySelectorAll('.shift-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            initCalendar();
+        }
+
+        function initCalendar() {
+            const dt = new Date();
+            dt.setMonth(new Date().getMonth() + nav);
+
+            const month = dt.getMonth();
+            const year = dt.getFullYear();
+
+            const firstDayOfMonth = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            document.getElementById('monthDisplay').innerText = firstDayOfMonth.toLocaleDateString('pt-br', { month: 'long', year: 'numeric' });
+            const calendarBody = document.getElementById('calendarBody');
+            calendarBody.innerHTML = '';
+
+            const paddingDays = firstDayOfMonth.getDay();
+
+            for (let i = 1; i <= paddingDays + daysInMonth; i++) {
+                const daySquare = document.createElement('div');
+                daySquare.classList.add('day');
+
+                if (i > paddingDays) {
+                    const dayNum = i - paddingDays;
+                    const dateId = `${year}-${String(month + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+                    daySquare.innerHTML = `<div class="day-number">${dayNum}</div>`;
+                    
+                    CONFIG_ESCALAS.forEach(colab => {
+                        // Filtra pelo turno selecionado (ou mostra todos)
+                        if (currentShift === 'all' || colab.turno === currentShift) {
+                            if (verificarFolga(dateId, colab)) {
+                                const badge = document.createElement('div');
+                                badge.classList.add('off-badge');
+                                badge.innerText = colab.nome;
+                                badge.style.backgroundColor = colab.cor;
+                                daySquare.appendChild(badge);
+                            }
+                        }
+                    });
+                } else {
+                    daySquare.classList.add('empty');
+                }
+                calendarBody.appendChild(daySquare);
+            }
+        }
+
+        function changeMonth(dir) {
+            nav += dir;
+            initCalendar();
+        }
+
+        initCalendar();
+    </script>
+</body>
+</html>
