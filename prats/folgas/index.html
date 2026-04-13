@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📅</text></svg>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Escala de Folgas</title>
+    <title>Escala de Folgas - by Moisés J. Morais Lima</title>
     <style>
         :root {
-            --bg-main: #0f172a;
-            --bg-container: #1e293b;
-            --bg-header: #334155;
+            --bg-main: #1a1a1a; /* Cinza grafite escuro */
+            --bg-container: #262626;
+            --bg-header: #333333;
             --text-main: #f1f5f9;
             --text-dim: #94a3b8;
-            --border-color: #334155;
+            --border-color: #404040;
             --accent-brand: #ef4444;
             --nav-btn: #38bdf8;
             --shift-btn: #475569;
             --shift-active: #38bdf8;
+            --vinho: #800020; /* Vermelho forte puxado pra vinho */
         }
 
         body {
@@ -33,7 +34,6 @@
 
         .main-title { text-align: center; margin-bottom: 10px; }
         .main-title h1 { margin: 0; color: var(--nav-btn); font-size: 1.4rem; text-transform: uppercase; }
-        .main-title span { color: var(--accent-brand); font-weight: bold; font-size: 0.8rem; }
 
         .container {
             width: 100%;
@@ -45,7 +45,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* Controles Superiores */
         .controls {
             display: flex;
             justify-content: space-between;
@@ -86,7 +85,6 @@
 
         h2 { margin: 0; font-size: 1.1rem; text-transform: capitalize; color: var(--text-main); }
 
-        /* Calendário */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -133,7 +131,7 @@
             text-overflow: ellipsis;
         }
 
-        .day.empty { background: #161e2d; }
+        .day.empty { background: #1f1f1f; }
 
         @media (max-width: 600px) {
             .day { min-height: 70px; }
@@ -150,8 +148,8 @@
     <div class="container">
         <div class="controls">
             <div class="shift-filters">
-                <button class="shift-btn" onclick="filterShift('1T', this)">1°T</button>
-                <button class="shift-btn active" onclick="filterShift('2T', this)">2°T</button>
+                <button class="shift-btn active" onclick="filterShift('1T', this)">1°T</button>
+                <button class="shift-btn" onclick="filterShift('2T', this)">2°T</button>
                 <button class="shift-btn" onclick="filterShift('3T', this)">3°T</button>
             </div>
             <div class="nav-btns">
@@ -177,10 +175,6 @@
     </div>
 
     <script>
-        /**
-         * CONFIGURAÇÃO DE EQUIPE POR TURNOS
-         * turno: '1T', '2T' ou '3T'
-         */
         const CONFIG_ESCALAS = [
             { nome: "Moisés", dataBase: "2026-03-01", tipo: "6x1", cor: "#10b981", turno: "2T" },
             { nome: "Kenyi", dataBase: "2026-02-28", tipo: "6x2", cor: "#f97316", turno: "2T" },
@@ -191,15 +185,14 @@
             { nome: "Otávio", dataBase: "2026-03-20", tipo: "6x2", cor: "#3b82f6", turno: "3T" },
             { nome: "Cláudio", dataBase: "2026-03-22", tipo: "6x2", cor: "#a855f7", turno: "3T" },
             { nome: "Jhonn", dataBase: "2026-03-01", tipo: "6x1", cor: "#10b981", turno: "1T" },
-            { nome: "Mateus", dataBase: "2026-03-24", tipo: "6x2", cor: "#f97316", turno: "1T" },
+            { nome: "Mateus", dataBase: "2026-03-24", tipo: "6x2", cor: "#800020", turno: "1T" },
             { nome: "Edson", dataBase: "2026-03-26", tipo: "6x2", cor: "#3b82f6", turno: "1T" },
             { nome: "Iago", dataBase: "2026-03-20", tipo: "6x2", cor: "#a855f7", turno: "1T" },
             { nome: "Claudinei", dataBase: "2026-03-30", tipo: "6x2", cor: "#f97316", turno: "1T" }
-               
         ];
 
         let nav = 0;
-        let currentShift = 'all';
+        let currentShift = '1T'; 
 
         function verificarFolga(dataAlvo, colab) {
             const dataInicio = new Date(colab.dataBase + 'T00:00:00');
@@ -249,8 +242,7 @@
                     daySquare.innerHTML = `<div class="day-number">${dayNum}</div>`;
                     
                     CONFIG_ESCALAS.forEach(colab => {
-                        // Filtra pelo turno selecionado (ou mostra todos)
-                        if (currentShift === 'all' || colab.turno === currentShift) {
+                        if (colab.turno === currentShift) {
                             if (verificarFolga(dateId, colab)) {
                                 const badge = document.createElement('div');
                                 badge.classList.add('off-badge');
