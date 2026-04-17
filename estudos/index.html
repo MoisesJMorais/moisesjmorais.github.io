@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
     <title>Materiais de Estudo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    <script src="ajustes.js"></script>
     <style>
         :root {
             --bg-body: #121212;
@@ -28,153 +28,149 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         header {
-            padding: 50px 20px;
+            padding: 60px 20px;
             text-align: center;
             background: linear-gradient(180deg, #1a1a1a 0%, var(--bg-body) 100%);
             border-bottom: 1px solid var(--border-color);
-            margin-bottom: 40px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #ffffff;
+            margin-bottom: 10px;
         }
 
         .search-container {
             max-width: 600px;
             margin: 20px auto 0;
-            position: relative;
         }
 
         #search-input {
             width: 100%;
-            padding: 12px 20px;
-            border-radius: 25px;
+            padding: 14px 25px;
+            border-radius: 30px;
             border: 1px solid var(--border-color);
             background-color: var(--bg-card);
             color: var(--text-main);
             font-size: 1rem;
             outline: none;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
         }
 
-        #search-input:focus {
-            border-color: var(--primary-accent);
-        }
+        #search-input:focus { border-color: var(--primary-accent); box-shadow: 0 0 15px rgba(74, 144, 226, 0.15); }
 
-        .container {
+        .category-section {
             max-width: 1300px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
+            margin: 20px auto;
             padding: 0 15px;
         }
 
+        .category-header {
+            background-color: var(--bg-card);
+            padding: 18px 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.3s;
+            margin-bottom: 12px;
+            user-select: none;
+        }
+
+        .category-header:hover { background-color: var(--bg-card-hover); border-color: var(--text-secondary); }
+
+        .category-title { 
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.15rem; 
+            font-weight: 600; 
+            color: var(--primary-accent); 
+            /* Removido o CAPS LOCK forçado */
+            letter-spacing: 0.5px; 
+        }
+
+        .toggle-icon { transition: transform 0.3s ease; font-size: 0.8rem; color: var(--text-secondary); }
+
+        .category-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            max-height: 5000px; 
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0, 1, 0, 1), opacity 0.3s;
+            padding: 10px 0 30px;
+        }
+
+        .category-section.collapsed .category-content { max-height: 0; opacity: 0; padding: 0; }
+        .category-section.collapsed .toggle-icon { transform: rotate(-90deg); }
+
         @media (min-width: 768px) {
-            .container {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 30px;
-            }
+            .category-content { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
         }
 
         .book-card {
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border-radius: 15px;
             overflow: hidden;
             transition: all 0.4s ease;
             display: flex;
             flex-direction: column;
-            position: relative;
         }
 
         .book-card:hover {
             transform: translateY(-8px);
             border-color: var(--primary-accent);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
-        }
-
-        .category-tag {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.7rem;
-            color: var(--primary-accent);
-            z-index: 10;
-            border: 1px solid rgba(255,255,255,0.1);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
         .cover-container {
             width: 100%;
             aspect-ratio: var(--a4-aspect-ratio);
-            background-color: #000;
+            background-color: #0a0a0a;
             position: relative;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        canvas {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .book-card:hover canvas { transform: scale(1.05); }
-
-        .loader {
-            position: absolute;
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .book-info {
-            padding: 20px;
-            flex-grow: 1;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .book-title {
-            font-size: 1.1rem;
-            color: #ffffff;
-            margin-bottom: 15px;
-            height: 2.8em;
             overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
         }
+
+        canvas { width: 100%; height: 100%; display: block; object-fit: cover; }
+
+        .loader { position: absolute; z-index: 2; font-size: 0.75rem; color: var(--text-secondary); }
+
+        .book-info { padding: 15px; flex-grow: 1; border-top: 1px solid var(--border-color); }
+
+        .book-title { display: none; }
 
         .btn-access {
             display: block;
             text-align: center;
-            padding: 10px;
+            padding: 14px;
             background-color: var(--graphite);
             color: white;
             text-decoration: none;
-            border-radius: 8px;
-            font-size: 0.9rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
             border: 1px solid var(--border-color);
             transition: 0.3s;
         }
 
-        .btn-access:hover { background-color: var(--primary-accent); }
+        .btn-access:hover { background-color: var(--primary-accent); border-color: var(--primary-accent); }
 
         footer { 
-            text-align: center; 
-            padding: 40px; 
-            color: var(--text-secondary); 
-            font-size: 0.8rem; 
-            border-top: 1px solid var(--border-color);
-            margin-top: 40px;
+            text-align: center; padding: 50px; color: var(--text-secondary); 
+            font-size: 0.8rem; border-top: 1px solid var(--border-color); margin-top: 40px;
         }
     </style>
 </head>
@@ -183,117 +179,179 @@
 <header>
     <h1>Materiais de Estudo</h1>
     <div class="search-container">
-        <input type="text" id="search-input" placeholder="Buscar por título ou categoria...">
+        <input type="text" id="search-input" placeholder="O que você deseja estudar hoje?">
     </div>
 </header>
 
-<div class="container" id="library-container">
-    <div class="book-card">
-        <span class="category-tag">Administração</span>
-        <div class="cover-container">
-            <span class="loader">Carregando capa...</span>
-            <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_CUSTOS/U1/LIVRO_UNICO.pdf"></canvas>
-        </div>
-        <div class="book-info">
-            <h2 class="book-title">Análise de Custos</h2>
-            <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_CUSTOS/U1/LIVRO_UNICO.pdf" target="_blank" class="btn-access">Visualizar PDF</a>
-        </div>
+<div class="category-section">
+    <div class="category-header" onclick="toggleCategory(this)">
+        <span class="category-title">Bacharelado em Administração</span>
+        <span class="toggle-icon">▼</span>
     </div>
+    <div class="category-content">
+        <div class="book-card">
+            <div class="cover-container">
+                <span class="loader">Carregando capa...</span>
+                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_CUSTOS/U1/LIVRO_UNICO.pdf"></canvas>
+            </div>
+            <div class="book-info">
+                <h2 class="book-title">Análise de Custos</h2>
+                <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_CUSTOS/U1/LIVRO_UNICO.pdf" target="_blank" class="btn-access">Acessar Material</a>
+            </div>
+        </div>
+        <div class="book-card">
+            <div class="cover-container">
+                <span class="loader">Carregando capa...</span>
+                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_INVESTIMENTOS_E_FONTES_DE_FINANCIAMENTO/U1/LIVRO_UNICO.pdf"></canvas>
+            </div>
+            <div class="book-info">
+                <h2 class="book-title">Análise de Investimentos e Financiamento</h2>
+                <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_INVESTIMENTOS_E_FONTES_DE_FINANCIAMENTO/U1/LIVRO_UNICO.pdf" target="_blank" class="btn-access">Acessar Material</a>
+            </div>
+        </div>
 
-    <div class="book-card">
-        <span class="category-tag">Administração</span>
-        <div class="cover-container">
-            <span class="loader">Carregando capa...</span>
-            <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_INVESTIMENTOS_E_FONTES_DE_FINANCIAMENTO/U1/LIVRO_UNICO.pdf"></canvas>
+        <div class="book-card">
+            <div class="cover-container">
+                <span class="loader">Carregando capa...</span>
+                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf"></canvas>
+            </div>
+            <div class="book-info">
+                <h2 class="book-title">Capital de Giro e Análise Financeira</h2>
+                <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf" target="_blank" class="btn-access">Acessar Material</a>
+            </div>
         </div>
-        <div class="book-info">
-            <h2 class="book-title">Análise de Investimentos e Fontes de Financiamento</h2>
-            <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_INVESTIMENTOS_E_FONTES_DE_FINANCIAMENTO/U1/LIVRO_UNICO.pdf" target="_self" class="btn-access">Visualizar PDF</a>
-        </div>
-    </div>
 
-    <div class="book-card">
-        <span class="category-tag">Administração</span>
-        <div class="cover-container">
-            <span class="loader">Carregando capa...</span>
-            <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf"></canvas>
-        </div>
-        <div class="book-info">
-            <h2 class="book-title">Capital de Giro e Análise Financeira</h2>
-            <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf" target="_self" class="btn-access">Visualizar PDF</a>
-        </div>
-    </div>
-
-    <div class="book-card">
-        <span class="category-tag">Administração</span>
-        <div class="cover-container">
-            <span class="loader">Carregando capa...</span>
-            <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/COMPORTAMENTO_ORGANIZACIONAL/U1/LIVRO_UNICO.pdf"></canvas>
-        </div>
-        <div class="book-info">
-            <h2 class="book-title">Comportamento Organizacional</h2>
-            <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/COMPORTAMENTO_ORGANIZACIONAL/U1/LIVRO_UNICO.pdf" target="_self" class="btn-access">Visualizar PDF</a>
+        <div class="book-card">
+            <div class="cover-container">
+                <span class="loader">Carregando capa...</span>
+                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/COMPORTAMENTO_ORGANIZACIONAL/U1/LIVRO_UNICO.pdf"></canvas>
+            </div>
+            <div class="book-info">
+                <h2 class="book-title">Comportamento Organizacional</h2>
+                <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/COMPORTAMENTO_ORGANIZACIONAL/U1/LIVRO_UNICO.pdf" target="_blank" class="btn-access">Acessar Material</a>
+            </div>
         </div>
     </div>
 </div>
 
 <footer>
-    <p>&copy; Moisés J. Morais | Para uso pessoal e fins acadêmicos | Todos os direito reservados.</p>
+    <p>&copy; Moisés J. Morais | Para uso pessoal e fins acadêmicos | Todos os direitos reservados.</p>
 </footer>
 
 <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+    const DB_NAME = 'LibraryCacheDB';
+    const STORE_NAME = 'pdf_covers';
 
-    async function initLibrary() {
-        const canvases = document.querySelectorAll('.pdf-canvas');
-        
-        canvases.forEach(async (canvas) => {
-            const url = canvas.getAttribute('data-src');
-            const context = canvas.getContext('2d');
-            const loader = canvas.parentElement.querySelector('.loader');
+    function toggleCategory(header) {
+        header.parentElement.classList.toggle('collapsed');
+    }
 
-            try {
-                const loadingTask = pdfjsLib.getDocument(url);
-                const pdf = await loadingTask.promise;
-                const page = await pdf.getPage(1);
-                
-                const viewport = page.getViewport({ scale: 1.5 });
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
-
-                const renderContext = {
-                    canvasContext: context,
-                    viewport: viewport
-                };
-                
-                await page.render(renderContext).promise;
-                loader.style.display = 'none';
-            } catch (error) {
-                console.error("Erro:", error);
-                loader.innerText = "Erro ao carregar";
-            }
+    function initDB() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(DB_NAME, 1);
+            request.onupgradeneeded = (e) => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
         });
     }
 
-    // Lógica de Busca
+    async function getCachedCover(db, id) {
+        return new Promise((resolve) => {
+            const transaction = db.transaction(STORE_NAME, 'readonly');
+            const store = transaction.objectStore(STORE_NAME);
+            const request = store.get(id);
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => resolve(null);
+        });
+    }
+
+    async function saveCoverToCache(db, id, data) {
+        const transaction = db.transaction(STORE_NAME, 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        store.put(data, id);
+    }
+
+    async function loadLibrary() {
+        const db = await initDB();
+        const canvases = document.querySelectorAll('.pdf-canvas');
+
+        for (const canvas of canvases) {
+            const url = canvas.getAttribute('data-src');
+            const ctx = canvas.getContext('2d');
+            const loader = canvas.parentElement.querySelector('.loader');
+
+            try {
+                const cachedData = await getCachedCover(db, url);
+                
+                if (cachedData) {
+                    const img = new Image();
+                    img.onload = () => {
+                        canvas.width = 500; 
+                        canvas.height = 500 * 1.414;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                        loader.style.display = 'none';
+                    };
+                    img.src = cachedData;
+                } else {
+                    const pdf = await pdfjsLib.getDocument(url).promise;
+                    const page = await pdf.getPage(1);
+                    const desiredWidth = 500;
+                    const viewport = page.getViewport({ scale: desiredWidth / page.getViewport({scale:1}).width });
+
+                    canvas.width = viewport.width;
+                    canvas.height = viewport.height;
+
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                    await page.render({ 
+                        canvasContext: ctx, 
+                        viewport: viewport,
+                        intent: 'display' 
+                    }).promise;
+                    
+                    const dataURL = canvas.toDataURL('image/webp', 0.8);
+                    await saveCoverToCache(db, url, dataURL);
+                    loader.style.display = 'none';
+                }
+            } catch (err) {
+                console.error("Erro no item:", url, err);
+                loader.innerText = "Erro ao carregar";
+            }
+        }
+    }
+
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
-        const cards = document.querySelectorAll('.book-card');
+        const sections = document.querySelectorAll('.category-section');
 
-        cards.forEach(card => {
-            const title = card.querySelector('.book-title').innerText.toLowerCase();
-            const category = card.querySelector('.category-tag').innerText.toLowerCase();
-            
-            if (title.includes(term) || category.includes(term)) {
-                card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
+        sections.forEach(section => {
+            const cards = section.querySelectorAll('.book-card');
+            let hasMatch = false;
+
+            cards.forEach(card => {
+                const title = card.querySelector('.book-title').innerText.toLowerCase();
+                if (title.includes(term)) {
+                    card.style.display = 'flex';
+                    hasMatch = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            section.style.display = hasMatch ? 'block' : 'none';
+            if (term.length > 0 && hasMatch) {
+                section.classList.remove('collapsed');
             }
         });
     });
 
-    window.addEventListener('load', initLibrary);
+    window.addEventListener('DOMContentLoaded', loadLibrary);
 </script>
 
 </body>
