@@ -37,6 +37,7 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
+            touch-action: pan-x pan-y; /* Ajuda no bloqueio de zoom em alguns browsers */
         }
 
         header {
@@ -217,8 +218,29 @@
                 <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_INVESTIMENTOS_E_FONTES_DE_FINANCIAMENTO/U1/LIVRO_UNICO.pdf" target="_blank" class="btn-access">Acessar Material</a>
             </div>
         </div>
-        
+
+        <div class="book-card">
+            <div class="cover-container">
+                <span class="loader">Carregando capa...</span>
+                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf"></canvas>
+            </div>
+            <div class="book-info">
+                <h2 class="book-title">Capital de Giro e Análise Financeira</h2>
+                <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf" target="_blank" class="btn-access">Acessar Material</a>
+            </div>
         </div>
+
+        <div class="book-card">
+            <div class="cover-container">
+                <span class="loader">Carregando capa...</span>
+                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/COMPORTAMENTO_ORGANIZACIONAL/U1/LIVRO_UNICO.pdf"></canvas>
+            </div>
+            <div class="book-info">
+                <h2 class="book-title">Comportamento Organizacional</h2>
+                <a href="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/COMPORTAMENTO_ORGANIZACIONAL/U1/LIVRO_UNICO.pdf" target="_blank" class="btn-access">Acessar Material</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <footer>
@@ -312,7 +334,6 @@
         }
     }
 
-    // Busca e Filtro
     const searchInput = document.getElementById('search-input');
     searchInput.addEventListener('input', (e) => {
         const term = e.target.value.toLowerCase();
@@ -339,7 +360,6 @@
         });
     });
 
-    // Registro do Service Worker para PWA
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('sw.js')
