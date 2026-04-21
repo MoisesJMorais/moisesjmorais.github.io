@@ -14,8 +14,6 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@700&display=swap" rel="stylesheet">
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-    
     <style>
         :root {
             --bg-body: #121212;
@@ -37,7 +35,7 @@
             color: var(--text-main);
             line-height: 1.6;
             overflow-x: hidden;
-            touch-action: pan-x pan-y; /* Ajuda no bloqueio de zoom em alguns browsers */
+            touch-action: pan-x pan-y;
         }
 
         header {
@@ -152,9 +150,7 @@
             overflow: hidden;
         }
 
-        canvas { width: 100%; height: 100%; display: block; object-fit: cover; }
-
-        .loader { position: absolute; z-index: 2; font-size: 0.75rem; color: var(--text-secondary); }
+        .cover-image { width: 100%; height: 100%; display: block; object-fit: cover; }
 
         .book-info { padding: 15px; flex-grow: 1; border-top: 1px solid var(--border-color); }
 
@@ -191,7 +187,7 @@
     </div>
 </header>
 
-<div class="category-section">
+<div class="category-section collapsed">
     <div class="category-header" onclick="toggleCategory(this)">
         <span class="category-title">Bacharelado em Administração</span>
         <span class="toggle-icon">▼</span>
@@ -199,8 +195,7 @@
     <div class="category-content">
         <div class="book-card">
             <div class="cover-container">
-                <span class="loader">Carregando capa...</span>
-                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_CUSTOS/U1/LIVRO_UNICO.pdf"></canvas>
+                <img src="capas/analise-de-custos.png" alt="Análise de Custos" class="cover-image">
             </div>
             <div class="book-info">
                 <h2 class="book-title">Análise de Custos</h2>
@@ -210,8 +205,7 @@
 
         <div class="book-card">
             <div class="cover-container">
-                <span class="loader">Carregando capa...</span>
-                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/ANALISE_DE_INVESTIMENTOS_E_FONTES_DE_FINANCIAMENTO/U1/LIVRO_UNICO.pdf"></canvas>
+                <img src="capas/analise-de-investimentos.png" alt="Análise de Investimentos" class="cover-image">
             </div>
             <div class="book-info">
                 <h2 class="book-title">Análise de Investimentos e Financiamento</h2>
@@ -221,8 +215,7 @@
 
         <div class="book-card">
             <div class="cover-container">
-                <span class="loader">Carregando capa...</span>
-                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/CAPITAL_DE_GIRO_E_ANALISE_FINANCEIRA/U1/LIVRO_UNICO.pdf"></canvas>
+                <img src="capas/capital-de-giro.png" alt="Capital de Giro" class="cover-image">
             </div>
             <div class="book-info">
                 <h2 class="book-title">Capital de Giro e Análise Financeira</h2>
@@ -232,8 +225,7 @@
 
         <div class="book-card">
             <div class="cover-container">
-                <span class="loader">Carregando capa...</span>
-                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/COMPORTAMENTO_ORGANIZACIONAL/U1/LIVRO_UNICO.pdf"></canvas>
+                <img src="capas/comportamento-organizacional.png" alt="Comportamento Organizacional" class="cover-image">
             </div>
             <div class="book-info">
                 <h2 class="book-title">Comportamento Organizacional</h2>
@@ -243,8 +235,7 @@
 
         <div class="book-card">
             <div class="cover-container">
-                <span class="loader">Carregando capa...</span>
-                <canvas class="pdf-canvas" data-src="https://cm-kls-content.s3.amazonaws.com/201801/INTERATIVAS_2_0/CONTABILIDADE_INTRODUTORIA/U1/LIVRO_UNICO.pdf"></canvas>
+                <img src="capas/contabilidade-introdutoria.png" alt="Contabilidade Introdutória" class="cover-image">
             </div>
             <div class="book-info">
                 <h2 class="book-title">Contabilidade Introdutória</h2>
@@ -254,8 +245,7 @@
 
         <div class="book-card">
             <div class="cover-container">
-                <span class="loader">Carregando capa...</span>
-                <canvas class="pdf-canvas" data-src="http://cm-kls-content.s3.amazonaws.com/201801/INTERATIVAS_2_0/DESENVOLVIMENTO_DE_PESSOAS/U1/LIVRO_UNICO.pdf"></canvas>
+                <img src="capas/desenvolvimento-de-pessoas.png" alt="Desenvolvimento de Pessoas" class="cover-image">
             </div>
             <div class="book-info">
                 <h2 class="book-title">Desenvolvimento de Pessoas</h2>
@@ -265,7 +255,7 @@
     </div>
 </div>
 
-<div class="category-section">
+<div class="category-section collapsed">
     <div class="category-header" onclick="toggleCategory(this)">
         <span class="category-title">Técnico em Informática</span>
         <span class="toggle-icon">▼</span>
@@ -273,8 +263,7 @@
     <div class="category-content">
         <div class="book-card">
             <div class="cover-container">
-                <span class="loader">Carregando capa...</span>
-                <img src="/capas/analise-de-sistemas.png"></img>
+                <img src="capas/analise-de-sistemas.png" alt="Análise de Sistemas" class="cover-image">
             </div>
             <div class="book-info">
                 <h2 class="book-title">Análise de Sistemas</h2>
@@ -289,90 +278,8 @@
 </footer>
 
 <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
-    const DB_NAME = 'LibraryCacheDB';
-    const STORE_NAME = 'pdf_covers';
-
     function toggleCategory(header) {
         header.parentElement.classList.toggle('collapsed');
-    }
-
-    function initDB() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(DB_NAME, 1);
-            request.onupgradeneeded = (e) => {
-                const db = e.target.result;
-                if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
-            };
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => reject(request.error);
-        });
-    }
-
-    async function getCachedCover(db, id) {
-        return new Promise((resolve) => {
-            const transaction = db.transaction(STORE_NAME, 'readonly');
-            const store = transaction.objectStore(STORE_NAME);
-            const request = store.get(id);
-            request.onsuccess = () => resolve(request.result);
-            request.onerror = () => resolve(null);
-        });
-    }
-
-    async function saveCoverToCache(db, id, data) {
-        const transaction = db.transaction(STORE_NAME, 'readwrite');
-        const store = transaction.objectStore(STORE_NAME);
-        store.put(data, id);
-    }
-
-    async function loadLibrary() {
-        const db = await initDB();
-        const canvases = document.querySelectorAll('.pdf-canvas');
-
-        for (const canvas of canvases) {
-            const url = canvas.getAttribute('data-src');
-            const ctx = canvas.getContext('2d');
-            const loader = canvas.parentElement.querySelector('.loader');
-
-            try {
-                const cachedData = await getCachedCover(db, url);
-                
-                if (cachedData) {
-                    const img = new Image();
-                    img.onload = () => {
-                        canvas.width = 500; 
-                        canvas.height = 500 * 1.414;
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                        loader.style.display = 'none';
-                    };
-                    img.src = cachedData;
-                } else {
-                    const pdf = await pdfjsLib.getDocument(url).promise;
-                    const page = await pdf.getPage(1);
-                    const desiredWidth = 500;
-                    const viewport = page.getViewport({ scale: desiredWidth / page.getViewport({scale:1}).width });
-
-                    canvas.width = viewport.width;
-                    canvas.height = viewport.height;
-
-                    ctx.fillStyle = '#FFFFFF';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    await page.render({ 
-                        canvasContext: ctx, 
-                        viewport: viewport,
-                        intent: 'display' 
-                    }).promise;
-                    
-                    const dataURL = canvas.toDataURL('image/webp', 0.8);
-                    await saveCoverToCache(db, url, dataURL);
-                    loader.style.display = 'none';
-                }
-            } catch (err) {
-                console.error("Erro no item:", url, err);
-                loader.innerText = "Erro ao carregar";
-            }
-        }
     }
 
     const searchInput = document.getElementById('search-input');
@@ -397,6 +304,8 @@
             section.style.display = hasMatch ? 'block' : 'none';
             if (term.length > 0 && hasMatch) {
                 section.classList.remove('collapsed');
+            } else if (term.length === 0) {
+                section.classList.add('collapsed');
             }
         });
     });
@@ -408,8 +317,6 @@
                 .catch(err => console.error('Erro no Service Worker', err));
         });
     }
-
-    window.addEventListener('DOMContentLoaded', loadLibrary);
 </script>
 
 </body>
