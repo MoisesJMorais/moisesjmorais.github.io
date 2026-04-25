@@ -1,7 +1,38 @@
 // --- DESENVOLVIDO POR MOISÉS J. MORAIS LIMA ---
 function notificarConclusao() {
   const frases = [
-    "Tarefa concluída com sucesso. Próximo nível: Jedi da produtividade."
+    "Tarefa concluída com sucesso. Próximo nível: Jedi da produtividade.",
+    "Tarefa finalizada! Agora respira e toma um suco (Só zoeira, ok?)!",
+    "Moisés Morais ataca novamente!",
+    "Concluído com a energia de quem sabe o que faz.",
+    "Sextou? Ainda não, mas essa tarefa já era!",
+    "Você está mais rápido que o carregamento da fábrica!",
+    "Boa! O dia está rendendo na mão de quem entende.",
+    "Ficou perfeito. Padrão Moisés de qualidade!",
+    "Pode riscar essa da lista. Você é imparável!",
+    "Trabalho concluído. O descanso vai ser merecido!",
+    "Missão dada é missão cumprida. Boa, Moisés!",
+    "Check feito! O sucesso é a soma de pequenos esforços diários.",
+    "Moisés, você está voando hoje! Próximo passo?",
+    "Excelente! Sua dedicação é o que faz a diferença aqui.",
+    "Nada resiste ao trabalho duro. Continue assim!",
+    "Vencendo um desafio de cada vez. Você é fera!",
+    "Organização é tudo, e você deu aula agora.",
+    "Menos uma tarefa, mais um motivo para se orgulhar.",
+    "O esforço de hoje é o resultado de amanhã. Pra cima!",
+    "Você é o motor que faz essa engrenagem girar.",
+    "Disciplina é fazer o que precisa ser feito. E você fez!",
+    "Tarefa concluída! Você é o gelo que falta nesse suco.",
+    "Frio na câmara, sangue quente no trabalho. Mandou bem!",
+    "Mais uma para a conta. A administração depende de você!",
+    "Missão cumprida Moisés! Nem o zero grau te segura hoje.",
+    "Foco total, Moisés! A qualidade está em cada detalhe.",
+    "Pressão total e entrega impecável. Boa, Moisés!",
+    "Mais uma tarefa congelada com sucesso.",
+    "Trabalho de gigante em clima de montanha. Parabéns Moisés!",
+    "Sua agilidade mantém tudo no padrão ouro de qualidade.",
+    "A temperatura cai, mas sua produtividade só sobe!"
+    
   ];
   const msg = frases[Math.floor(Math.random() * frases.length)];
 
