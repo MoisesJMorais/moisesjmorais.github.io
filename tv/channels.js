@@ -4,78 +4,78 @@ const canais = [
   {
     nome: "TV Cultura",
     categoria: "Abertos",
-    logo: "https://embedtvonline.com/images/tvcultura.png",
-    url: "https://embedtvonline.com/tvcultura"
+    logo: "https://embedcanaisdetv.com/images/tvcultura.png",
+    url: "https://embedcanaisdetv.com/tvcultura"
   },
   {
     nome: "SBT SP",
     categoria: "Abertos",
-    logo: "https://embedtvonline.com/images/sbtsp.png",
-    url: "https://embedtvonline.com/sbtsp"
+    logo: "https://embedcanaisdetv.com/images/sbtsp.png",
+    url: "https://embedcanaisdetv.com/sbtsp"
   },
   {
     nome: "Globo SP",
     categoria: "Abertos",
-    logo: "https://embedtvonline.com/images/globo.webp",
-    url: "https://embedtvonline.com/globosp"
+    logo: "https://embedcanaisdetv.com/images/globo.webp",
+    url: "https://embedcanaisdetv.com/globosp"
   },
   {
     nome: "Record SP",
     categoria: "Abertos",
-    logo: "https://embedtvonline.com/images/recordsp.png",
-    url: "https://embedtvonline.com/recordsp"
+    logo: "https://embedcanaisdetv.com/images/recordsp.png",
+    url: "https://embedcanaisdetv.com/recordsp"
   },
   {
     nome: "RedeTV SP",
     categoria: "Abertos",
-    logo: "https://embedtvonline.com/images/redetv.png",
-    url: "https://embedtvonline.com/redetv"
+    logo: "https://embedcanaisdetv.com/images/redetv.png",
+    url: "https://embedcanaisdetv.com/redetv"
   },
   {
     nome: "Band SP",
     categoria: "Abertos",
-    logo: "https://embedtvonline.com/images/bandsp.png",
-    url: "https://embedtvonline.com/bandsp"
+    logo: "https://embedcanaisdetv.com/images/bandsp.png",
+    url: "https://embedcanaisdetv.com/bandsp"
   },
   
 /* ========== CANAIS DE ESPORTE ========== */
   {
     nome: "ESPN",
     categoria: "Esporte",
-    logo: "https://embedtvonline.com/images/espn.png",
-    url: "https://embedtvonline.com/espn"
+    logo: "https://embedcanaisdetv.com/images/espn.png",
+    url: "https://embedcanaisdetv.com/espn"
   },
   
 /* ========== CANAIS DE NOTÍCIAS ========== */
   {
     nome: "Globo News",
     categoria: "Notícias",
-    logo: "https://embedtvonline.com/images/globonews.png",
-    url: "https://embedtvonline.com/globonews"
+    logo: "https://embedcanaisdetv.com/images/globonews.png",
+    url: "https://embedcanaisdetv.com/globonews"
   },
   {
     nome: "Record News",
     categoria: "Notícias",
-    logo: "https://embedtvonline.com/images/recordnews.png",
-    url: "https://embedtvonline.com/recordnews"
+    logo: "https://embedcanaisdetv.com/images/recordnews.png",
+    url: "https://embedcanaisdetv.com/recordnews"
   },
   {
     nome: "Band News",
     categoria: "Notícias",
-    logo: "https://embedtvonline.com/images/bandnews.png",
-    url: "https://embedtvonline.com/bandnews"
+    logo: "https://embedcanaisdetv.com/images/bandnews.png",
+    url: "https://embedcanaisdetv.com/bandnews"
   },
   {
     nome: "Jovem Pan News",
     categoria: "Notícias",
-    logo: "https://embedtvonline.com/images/jovempannews.png",
-    url: "https://embedtvonline.com/jovempannews"
+    logo: "https://embedcanaisdetv.com/images/jovempannews.png",
+    url: "https://embedcanaisdetv.com/jovempannews"
   },
   {
     nome: "CNN Brasil",
     categoria: "Notícias",
-    logo: "https://embedtvonline.com/images/cnnbrasil.png",
-    url: "https://embedtvonline.com/cnnbrasil"
+    logo: "https://embedcanaisdetv.com/images/cnnbrasil.png",
+    url: "https://embedcanaisdetv.com/cnnbrasil"
   },
   
 ];
