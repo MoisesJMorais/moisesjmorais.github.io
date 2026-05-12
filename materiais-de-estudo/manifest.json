@@ -1,0 +1,21 @@
+{
+  "name": "Materiais de Estudo",
+  "short_name": "Estudos",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://via.placeholder.com/192/000000/FFFFFF?text=Estudos",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://via.placeholder.com/512/000000/FFFFFF?text=Estudos",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
