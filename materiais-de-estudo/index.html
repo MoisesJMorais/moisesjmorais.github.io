@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Materiais de Estudo</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #000000;
+            color: #e0e0e0;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding-top: 140px; 
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .fixed-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #1a1a1a;
+            z-index: 1000;
+            padding: 20px 0 15px 0;
+            text-align: center;
+        }
+
+        .fixed-header h1 {
+            margin: 0 0 12px 0;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .search-container {
+            width: 90%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        #searchInput {
+            width: 100%;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 12px;
+            font-size: 16px; 
+            box-sizing: border-box;
+            outline: none;
+            text-align: center;
+        }
+
+        .category-section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .category-header {
+            width: 85%;
+            max-width: 350px;
+            background: #0a0a0a;
+            border: 1px solid #222;
+            padding: 16px;
+            color: #888;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px;
+        }
+
+        .category-header:active { background: #1a1a1a; color: #fff; }
+
+        .category-content {
+            width: 100%;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            padding: 20px;
+            justify-items: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .book-link { text-decoration: none; width: 100%; display: block; }
+
+        .cover {
+            background-color: #111;
+            border: 1px solid #222;
+            border-radius: 10px;
+            aspect-ratio: 2 / 3;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.9);
+        }
+
+        .cover img { width: 100%; height: 100%; object-fit: cover; }
+
+        #noResults { display: none; color: #444; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="fixed-header">
+        <h1>Materiais de Estudo</h1>
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Filtrar materiais..." onkeyup="filterBooks()">
+        </div>
+    </div>
+
+    <!-- Adicione seus temas e livros aqui -->
+    <div class="category-section">
+        <div class="category-header" onclick="toggleCategory(this)">ADMINISTRAÇÃO</div>
+        <div class="category-content">
+            <div class="library-grid">
+                <a href="#" class="book-link" data-title="exemplo">
+                    <div class="cover"><img src="https://via.placeholder.com/200x300/111/eee?text=Capa" alt="Capa"></div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div id="noResults">Nenhum item encontrado.</div>
+
+    <script>
+        function toggleCategory(header) {
+            const content = header.nextElementSibling;
+            content.style.maxHeight = (content.style.maxHeight && content.style.maxHeight !== "0px") ? "0px" : content.scrollHeight + "px";
+        }
+
+        function filterBooks() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const links = document.getElementsByClassName('book-link');
+            const sections = document.getElementsByClassName('category-section');
+            let hasResults = false;
+
+            for (let link of links) {
+                const title = link.getAttribute('data-title');
+                const isMatch = title.includes(input);
+                link.style.display = isMatch ? "block" : "none";
+                if(isMatch) hasResults = true;
+            }
+
+            for (let section of sections) {
+                const content = section.querySelector('.category-content');
+                const visible = section.querySelectorAll('.book-link[style="display: block;"]').length > 0;
+                section.style.display = (input.length > 0 && !visible) ? "none" : "flex";
+                if (input.length > 0 && visible) content.style.maxHeight = content.scrollHeight + "px";
+                else if (input.length === 0) content.style.maxHeight = "0px";
+            }
+            document.getElementById('noResults').style.display = hasResults ? "none" : "block";
+        }
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
+</body>
+</html>
