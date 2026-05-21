@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editor de Etiqueta Livre</title>
+    <style>
+        /* Interface Principal */
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #1e1e24; /* Fundo Escuro */
+            color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            user-select: none;
+        }
+
+        .painel-controle {
+            background-color: #2d2d35;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            width: 840px;
+            box-sizing: border-box;
+            justify-content: center;
+        }
+
+        /* Layout em Duas Colunas */
+        .conteudo-principal {
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            align-items: flex-start;
+            width: 840px;
+            justify-content: center;
+        }
+
+        /* Painel de Instruções (Coluna Esquerda) */
+        .painel-instrucoes {
+            background-color: #2d2d35;
+            color: #d1d5db;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            width: 420px;
+            height: 320px;
+            font-size: 14px;
+            line-height: 1.6;
+            box-sizing: border-box;
+        }
+        .painel-instrucoes h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #fff;
+            font-size: 16px;
+        }
+        .painel-instrucoes ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .painel-instrucoes li {
+            margin-bottom: 8px;
+        }
+
+        .btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .btn:hover { background-color: #0056b3; }
+        .btn-sucesso { background-color: #28a745; }
+        .btn-sucesso:hover { background-color: #218838; }
+
+        /* Barra de Ferramentas Estilo Word/Calibri */
+        .toolbar {
+            position: absolute;
+            background: #ffffff;
+            border: 1px solid #dadce0;
+            padding: 4px;
+            border-radius: 8px;
+            display: none;
+            gap: 2px;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            align-items: center;
+        }
+        .toolbar button {
+            background: transparent;
+            color: #3c4043;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        .toolbar button:hover { 
+            background: #f1f3f4; 
+        }
+        .toolbar .divisor {
+            width: 1px;
+            height: 20px;
+            background-color: #dadce0;
+            margin: 0 4px;
+        }
+        .toolbar button.btn-lixo:hover {
+            background: #fce8e6;
+            color: #d93025;
+        }
+
+        /* Área da Etiqueta (Coluna Direita - Fundo Branco) */
+        .etiqueta-container {
+            background: white;
+            width: 400px;
+            height: 320px; 
+            border: 2px dashed #999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        /* Container do Bloco de Texto */
+        .bloco-texto {
+            position: absolute;
+            display: inline-flex;
+            align-items: flex-start;
+            border: 1px dashed transparent;
+            padding: 2px;
+            box-sizing: border-box;
+        }
+        .bloco-texto:hover {
+            border-color: #adadad;
+        }
+        .bloco-texto.selecionado {
+            border-color: #4285f4;
+        }
+
+        /* Alça Oculta por padrão (Aparece apenas quando o bloco for selecionado) */
+        .alca-arrasto {
+            cursor: move;
+            padding: 2px 4px;
+            background: #f1f3f4;
+            color: #70757a;
+            font-size: 10px;
+            border-radius: 3px;
+            margin-right: 4px;
+            display: none; /* Alterado para ocultar inicialmente */
+            align-items: center;
+            user-select: none;
+        }
+        .bloco-texto.selecionado .alca-arrasto {
+            display: flex; /* Visível junto com a toolbar */
+        }
+
+        /* Área editável interna */
+        .conteudo-editavel {
+            outline: none;
+            color: #000;
+            font-size: 16px;
+            white-space: pre-wrap;
+            flex-grow: 1;
+            cursor: default;
+            user-select: text;
+        }
+        .conteudo-editavel[contenteditable="true"] {
+            cursor: text;
+            background-color: #f8f9fa;
+        }
+
+        /* Configuração de Impressão */
+        @media print {
+            body, .painel-controle, .painel-instrucoes, .toolbar, .alca-arrasto {
+                display: none !important;
+            }
+            .conteudo-principal {
+                width: auto;
+            }
+            .etiqueta-container {
+                width: 100mm;
+                height: 80mm;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+                position: relative;
+                overflow: hidden;
+            }
+            .bloco-texto {
+                border: none !important;
+                padding: 0;
+            }
+            .conteudo-editavel {
+                background: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Menu Superior -->
+    <div class="painel-controle">
+        <button class="btn" onclick="adicionarTexto()">📄 Inserir Texto</button>
+        <button class="btn btn-sucesso" onclick="window.print()">🖨️ Imprimir Etiqueta</button>
+    </div>
+
+    <!-- Conteúdo em Duas Colunas -->
+    <div class="conteudo-principal">
+        
+        <!-- Coluna Esquerda: Instruções -->
+        <div class="painel-instrucoes">
+            <h3>💡 Instruções de Uso:</h3>
+            <ul>
+                <li><b>Selecionar:</b> Clique uma vez no texto para abrir a barra de ferramentas e exibir a alça de movimentação.</li>
+                <li><b>Arrastar:</b> Clique e segure na alça cinza <span style="background:#f1f3f4; color:#000; padding:2px 4px; border-radius:3px; font-size:11px;">⋮⋮</span> que surge ao lado do texto para movê-lo.</li>
+                <li><b>Editar Conteúdo:</b> Dê um <u>duplo clique</u> diretamente sobre as letras do texto para modificar o conteúdo escrito.</li>
+                <li><b>Concluir Edição:</b> Clique em qualquer área escura fora da etiqueta para salvar o texto e fechar a barra de ferramentas.</li>
+            </ul>
+        </div>
+
+        <!-- Coluna Direita: Etiqueta (Textos Centralizados de Fábrica) -->
+        <div class="etiqueta-container" id="etiqueta">
+            <div class="bloco-texto" style="top: 30px; left: 30px;">
+                <div class="alca-arrasto">⋮⋮</div>
+                <div class="conteudo-editavel" style="font-size: 26px; font-weight: bold; width: 340px; text-align: center;">Suco Prat's</div>
+            </div>
+            <div class="bloco-texto" style="top: 110px; left: 30px;">
+                <div class="alca-arrasto">⋮⋮</div>
+                <div class="conteudo-editavel" style="font-size: 16px; width: 340px; text-align: center;">Produto: Alte</div>
+            </div>
+            <div class="bloco-texto" style="top: 170px; left: 30px;">
+                <div class="alca-arrasto">⋮⋮</div>
+                <div class="conteudo-editavel" style="font-size: 14px; font-weight: bold; width: 340px; text-align: center;">LOTE: 2026-001</div>
+            </div>
+            <div class="bloco-texto" style="top: 250px; left: 30px;">
+                <div class="alca-arrasto">⋮⋮</div>
+                <div class="conteudo-editavel" style="font-size: 12px; width: 340px; border-top: 1px solid #000; padding-top: 5px; text-align: center;">Desenvolvido por Moisés J. Morais</div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Barra de Ferramentas Flutuante -->
+    <div id="toolbar" class="toolbar">
+        <button onclick="mudarFonte(2)" title="Aumentar Fonte"><b>A<sup>+</sup></b></button>
+        <button onclick="mudarFonte(-2)" title="Diminuir Fonte"><b>A<sup>-</sup></b></button>
+        <div class="divisor"></div>
+        <button id="btn-bold" onclick="alternarNegrito()" title="Negrito"><b>B</b></button>
+        <div class="divisor"></div>
+        <button onclick="alinhar('left')" title="Alinhar à Esquerda">FormatAlignLeft</button>
+        <button onclick="alinhar('center')" title="Centralizar">FormatAlignCenter</button>
+        <button onclick="alinhar('right')" title="Alinhar à Direita">FormatAlignRight</button>
+        <div class="divisor"></div>
+        <button class="btn-lixo" onclick="deletarBloco()" title="Excluir Bloco">🗑️</button>
+    </div>
+
+    <script>
+        let blocoSelecionado = null;
+        const toolbar = document.getElementById('toolbar');
+
+        // Configuração dos fundos dos botões de alinhamento simulados
+        document.querySelector('[title="Alinhar à Esquerda"]').innerText = '      ';
+        document.querySelector('[title="Alinhar à Esquerda"]').style.background = 'repeating-linear-gradient(0deg, #3c4043, #3c4043 2px, transparent 2px, transparent 6px) center/16px 12px no-repeat';
+        
+        document.querySelector('[title="Centralizar"]').innerText = '      ';
+        document.querySelector('[title="Centralizar"]').style.background = 'repeating-linear-gradient(0deg, #3c4043, #3c4043 2px, transparent 2px, transparent 6px) center/12px 12px no-repeat';
+        
+        document.querySelector('[title="Alinhar à Direita"]').innerText = '      ';
+        document.querySelector('[title="Alinhar à Direita"]').style.background = 'repeating-linear-gradient(0deg, #3c4043, #3c4043 2px, transparent 2px, transparent 6px) right 8px center/16px 12px no-repeat';
+
+        // Evento global para fechar ferramentas e desativar edições ativas ao clicar fora
+        document.addEventListener('click', function(e) {
+            const blocoClique = e.target.closest('.bloco-texto');
+            
+            if (blocoClique) {
+                if (blocoSelecionado && blocoSelecionado !== blocoClique) {
+                    fecharEdicaoAnterior(blocoSelecionado);
+                }
+                blocoSelecionado = blocoClique;
+                blocoSelecionado.classList.add('selecionado');
+                posicionarToolbar(blocoSelecionado);
+                atualizarEstadoSublinhado();
+            } else if (!toolbar.contains(e.target) && !e.target.classList.contains('btn')) {
+                toolbar.style.display = 'none';
+                if (blocoSelecionado) {
+                    fecharEdicaoAnterior(blocoSelecionado);
+                }
+                blocoSelecionado = null;
+            }
+        });
+
+        function fecharEdicaoAnterior(bloco) {
+            bloco.classList.remove('selecionado');
+            const textoInterno = bloco.querySelector('.conteudo-editavel');
+            if (textoInterno) {
+                textoInterno.contentEditable = "false";
+            }
+        }
+
+        function posicionarToolbar(elemento) {
+            const rect = elemento.getBoundingClientRect();
+            toolbar.style.display = 'flex';
+            toolbar.style.top = (window.scrollY + rect.top - 45) + 'px';
+            toolbar.style.left = (window.scrollX + rect.left) + 'px';
+        }
+
+        function adicionarTexto() {
+            const novoBloco = document.createElement('div');
+            novoBloco.className = 'bloco-texto';
+            novoBloco.style.top = '140px'; 
+            novoBloco.style.left = '30px'; // Inicia alinhado à esquerda padrão do container
+
+            novoBloco.innerHTML = `
+                <div class="alca-arrasto">⋮⋮</div>
+                <div class="conteudo-editavel" style="width: 340px; text-align: center;">Novo Texto</div>
+            `;
+
+            document.getElementById('etiqueta').appendChild(novoBloco);
+            configurarEventosBloco(novoBloco);
+        }
+
+        function deletarBloco() {
+            if (blocoSelecionado) {
+                blocoSelecionado.remove();
+                toolbar.style.display = 'none';
+                blocoSelecionado = null;
+            }
+        }
+
+        function mudarFonte(mudanca) {
+            if (blocoSelecionado) {
+                const texto = blocoSelecionado.querySelector('.conteudo-editavel');
+                let tamanhoAtual = parseInt(window.getComputedStyle(texto).fontSize);
+                texto.style.fontSize = (tamanhoAtual + mudanca) + 'px';
+                posicionarToolbar(blocoSelecionado);
+            }
+        }
+
+        function alternarNegrito() {
+            if (blocoSelecionado) {
+                const texto = blocoSelecionado.querySelector('.conteudo-editavel');
+                let pesoAtual = window.getComputedStyle(texto).fontWeight;
+                if (pesoAtual === '700' || pesoAtual === 'bold') {
+                    texto.style.fontWeight = 'normal';
+                } else {
+                    texto.style.fontWeight = 'bold';
+                }
+                atualizarEstadoSublinhado();
+            }
+        }
+
+        function atualizarEstadoSublinhado() {
+            if (!blocoSelecionado) return;
+            const btnBold = document.getElementById('btn-bold');
+            const texto = blocoSelecionado.querySelector('.conteudo-editavel');
+            let pesoAtual = window.getComputedStyle(texto).fontWeight;
+            if (pesoAtual === '700' || pesoAtual === 'bold') {
+                btnBold.style.backgroundColor = '#e8f0fe';
+                btnBold.style.color = '#1a73e8';
+            } else {
+                btnBold.style.backgroundColor = 'transparent';
+                btnBold.style.color = '#3c4043';
+            }
+        }
+
+        function alinhar(direcao) {
+            if (blocoSelecionado) {
+                const texto = blocoSelecionado.querySelector('.conteudo-editavel');
+                texto.style.textAlign = direcao;
+                texto.style.width = "340px";
+                blocoSelecionado.style.left = "30px";
+                posicionarToolbar(blocoSelecionado);
+            }
+        }
+
+        // Lógica de Movimentação Baseada em Alça Dedicada
+        function configurarEventosBloco(bloco) {
+            const alca = bloco.querySelector('.alca-arrasto');
+            const texto = bloco.querySelector('.conteudo-editavel');
+            
+            let estadoArrasto = false;
+            let sinalX = 0, sinalY = 0;
+
+            // Duplo clique foca no texto e libera escrita
+            texto.addEventListener('dblclick', (e) => {
+                texto.contentEditable = "true";
+                texto.focus();
+                e.stopPropagation();
+            });
+
+            // Arrasto acionado unicamente pela alça visual lateral
+            alca.addEventListener('mousedown', (e) => {
+                if (texto.contentEditable === "true") return; 
+                
+                estadoArrasto = true;
+                sinalX = e.clientX - bloco.offsetLeft;
+                sinalY = e.clientY - bloco.offsetTop;
+                
+                blocoSelecionado = bloco;
+                e.preventDefault();
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!estadoArrasto) return;
+                
+                let novoLeft = e.clientX - sinalX;
+                let novoTop = e.clientY - sinalY;
+                
+                // Retenção dentro da área limite da etiqueta simulada
+                if (novoTop >= 0 && novoTop <= 290) bloco.style.top = novoTop + 'px';
+                if (novoLeft >= 0 && novoLeft <= 350) bloco.style.left = novoLeft + 'px';
+                
+                if (blocoSelecionado === bloco) posicionarToolbar(bloco);
+            });
+
+            document.addEventListener('mouseup', () => {
+                estadoArrasto = false;
+            });
+        }
+
+        // Inicializa todos os blocos existentes na árvore inicial
+        document.querySelectorAll('.bloco-texto').forEach(configurarEventosBloco);
+    </script>
+</body>
+</html>
