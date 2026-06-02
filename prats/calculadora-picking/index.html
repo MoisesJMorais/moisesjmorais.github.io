@@ -34,7 +34,9 @@
 
         .app-container {
             background-color: var(--container-bg);
-            width: 380px;
+            width: 100%;
+            max-width: 380px;
+            box-sizing: border-box;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
@@ -42,6 +44,7 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+            margin: 0 15px;
         }
 
         h1 {
