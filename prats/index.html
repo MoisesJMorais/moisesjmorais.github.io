@@ -1,168 +1,137 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="robots" content="noindex, nofollow">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <title>Ferramentas Câmara Fria</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="icon" href="https://moisesjmorais.github.io/prats/favicon.ico" type="image/x-icon">
+    <script src="https://moisesjmorais.github.io/security.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-<title>Ferramentas Câmara Fria</title>
-<link rel="icon" href="https://moisesjmorais.github.io/prats/favicon.ico" type="image/x-icon">
-<script src="https://moisesjmorais.github.io/security.js"></script>
+        body {
+            background-color: #0f1210; /* Tom exato de preto/verde-escuro do fundo */
+            font-family: 'Roboto', sans-serif;
+            color: #e2e3e1; /* Cor clara do texto */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 40px 16px;
+        }
 
-<style>
-* {
-    box-sizing: border-box;
-    font-family: Roboto, system-ui, sans-serif;
-    margin: 0;
-    padding: 0;
-}
+        .container {
+            width: 100%;
+            max-width: 480px; /* Ajustado ligeiramente para comportar as 4 colunas */
+        }
 
-body {
-    background: #f8f9fa;
-    color: #202124;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
-}
+        h1 {
+            font-size: 32px;
+            font-weight: 500;
+            margin-bottom: 36px;
+            letter-spacing: 0.5px;
+            padding-left: 8px;
+        }
 
-/* HEADER */
-.header {
-    padding: 20px 16px 24px;
-    text-align: center;
-    flex-shrink: 0;
-}
+        .apps-grid {
+            display: grid;
+            /* Configurado estritamente para 4 colunas de tamanhos iguais */
+            grid-template-columns: repeat(4, 1fr);
+            column-gap: 12px;
+            row-gap: 24px;
+            justify-items: center;
+        }
 
-.header img {
-    height: 80px; /* Ajustado para melhor visualização do logo da Prat's */
-    margin-bottom: 5px;
-    object-fit: contain;
-}
+        .app-item {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
 
-.header h1 {
-    font-size: 24px;
-    font-weight: 700;
-    color: #de1219; /* Tom de vermelho aproximado da marca, mude se preferir */
-    margin-bottom: 4px;
-}
+        .app-item:active {
+            transform: scale(0.95); /* Efeito sutil de clique/toque */
+        }
 
-.header .signature {
-    font-size: 11px;
-    color: #5f6368;
-    font-style: italic;
-}
+        .icon-wrapper {
+            width: 60px; /* Ajustado para caber perfeitamente em 4 colunas */
+            height: 60px;
+            border-radius: 16px; /* Mantém o corte arredondado perfeito nos cantos da imagem */
+            overflow: hidden; /* Garante que a imagem respeite as bordas arredondadas */
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #1a1f1b; /* Fundo reserva caso a imagem falhe ao carregar */
+        }
 
-/* CONTENT GRID */
-.content {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px;
-}
+        .icon-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Faz a imagem preencher o quadrado sem distorcer */
+        }
 
-.icon-grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 16px;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-@media (max-width: 768px) {
-    .icon-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-@media (max-width: 480px) {
-    .icon-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-}
-
-.favorite-icon {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    padding: 12px 4px;
-    text-align: center;
-    cursor: pointer;
-    transition: background 0.2s, box-shadow 0.2s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-}
-
-.favorite-icon:hover {
-    background-color: #f1f3f4;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.favorite-icon a {
-    color: #3c4043;
-    text-decoration: none;
-    display: inline-block;
-    width: 100%;
-}
-
-.favorite-icon img {
-    width: 40px;
-    height: 40px;
-    margin-bottom: 6px;
-    border-radius: 12px;
-    object-fit: cover;
-}
-
-.favorite-icon span {
-    display: block;
-    font-size: 11px;
-    font-weight: 500;
-    word-break: break-word;
-    padding: 0 4px;
-}
-</style>
+        .app-label {
+            font-size: 13px; /* Reduzido levemente para melhor legibilidade em 4 colunas */
+            text-align: center;
+            line-height: 1.3;
+            word-break: break-word;
+            max-width: 76px;
+        }
+    </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<div class="header">
-    <img src="https://moisesjmorais.github.io/prats/img/prats-logo.jpg" alt="Suco Prat's">
-    <h1>Ferramentas Câmara Fria</h1>
-    <p class="signature">Desenvolvido por Moisés J. Morais Lima</p>
-</div>
+    <div class="container">
+        <h1>Apps Suco Prat's</h1>
+        
+        <div class="apps-grid">
+            
+            <a href="http://10.1.1.29" target="_self" class="app-item">
+                <div class="icon-wrapper">
+                    <img src="https://moisesjmorais.github.io/prats/img/SMDIA.png" alt="SMDIA">
+                </div>
+                <span class="app-label">SMDIA</span>
+            </a>
 
-<!-- FAVORITOS -->
-<div class="content">
-    <div class="icon-grid" id="iconGrid">
-        <div class="favorite-icon">
-            <a href="http://10.1.1.29" target="_self">
-                <img src="https://moisesjmorais.github.io/prats/img/SMDIA.png" alt="SMDIA">
-                <span>SMDIA</span>
+            <a href="https://sucospratsservices.engeman.com:30289" target="_self" class="app-item">
+                <div class="icon-wrapper">
+                    <img src="https://moisesjmorais.github.io/prats/img/engeman.png" alt="Engeman">
+                </div>
+                <span class="app-label">Engeman</span>
             </a>
-        </div>
-        <div class="favorite-icon">
-            <a href="https://sucospratsservices.engeman.com:30289" target="_self">
-                <img src="https://moisesjmorais.github.io/prats/img/engeman.png" alt="Engeman">
-                <span>Engeman</span>
+
+            <a href="https://app.livemes.com" target="_self" class="app-item">
+                <div class="icon-wrapper">
+                    <img src="https://moisesjmorais.github.io/prats/img/livemes.jpg" alt="LiveMes">
+                </div>
+                <span class="app-label">LiveMes</span>
             </a>
-        </div>
-        <div class="favorite-icon">
-            <a href="https://moisesjmorais.github.io/prats/calculadora-picking" target="_self">
-                <img src="https://moisesjmorais.github.io/prats/calculadora-picking/favicon.ico" alt="Calculadora de Picking">
-                <span>Calcular Picking</span>
+
+            <a href="https://moisesjmorais.github.io/prats/lote-nfc" target="_self" class="app-item">
+                <div class="icon-wrapper">
+                    <img src="https://moisesjmorais.github.io/prats/lote-nfc/favicon.ico" alt="Lote do Dia">
+                </div>
+                <span class="app-label">Lote do Dia</span>
             </a>
-        </div>
-        <div class="favorite-icon">
-            <a href="https://moisesjmorais.github.io/prats/calculadora-producao" target="_self">
-                <img src="https://moisesjmorais.github.io/prats/calculadora-producao/favicon.ico" alt="Calculadora de Produção">
-                <span>Calcular Produção</span>
-            </a>
-        </div>
-        <div class="favorite-icon">
-            <a href="https://moisesjmorais.github.io/prats/lote-nfc" target="_self">
-                <img src="https://moisesjmorais.github.io/prats/lote-nfc/favicon.ico" alt="Lote do Dia">
-                <span>Lote do Dia</span>
-            </a>
+
         </div>
     </div>
-</div>
 
 </body>
 </html>
