@@ -1,0 +1,18 @@
+{
+  "name": "Ferramentas Câmara Fria",
+  "short_name": "Ferramentas Câmara Fria",
+  "description": "Acesso rápido as principais ferramentas de trabalho da câmara fria.",
+  "scope": "https://moisesjmorais.github.io",
+  "start_url": "/prats",
+  "display": "standalone",
+  "background_color": "#121212",
+  "theme_color": "#000000",
+  "icons": [
+    {
+      "src": "https://moisesjmorais.github.io/prats/favicon.ico",
+      "sizes": "512x512",
+      "type": "image/ico",
+      "purpose": "any maskable"
+    }
+  ]
+}
