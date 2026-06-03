@@ -18,6 +18,31 @@
 <script src="https://unpkg.com/html5-qrcode"></script>
 <script src="security.js"></script>
 
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/atalhos-web/sw.js', { scope: '/' })
+        .then((reg) => {
+          console.log('SW registrado com sucesso!');
+          
+          // Se houver uma atualização pendente, avisa o SW para rodar o skipWaiting
+          if (reg.waiting) {
+            reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+    });
+
+    // Detecta se um novo Service Worker assumiu o controle e recarrega a página
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!refreshing) {
+        refreshing = true;
+        window.location.reload(); // Recarrega para aplicar a nova index.html imediatamente
+      }
+    });
+  }
+</script>
+
 <style>
 * {
     box-sizing: border-box;
