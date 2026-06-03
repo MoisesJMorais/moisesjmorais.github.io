@@ -2,10 +2,10 @@
 const canais = [
 /* ========== CANAIS ABERTOS ========== */
   {
-    nome: "TV Cultura",
-    categoria: "Abertos",
-    logo: "https://embedcanaisdetv.com/images/tvcultura.png",
-    url: "https://embedcanaisdetv.com/tvcultura"
+    nome: "History Channel",
+    categoria: "Documentários",
+    logo: "https://embedcanaisdetv.xyz/e/index.php?canal=history/",
+    url: "https://8embeddecanais.xyz/history/"
   },
   {
     nome: "SBT SP",
