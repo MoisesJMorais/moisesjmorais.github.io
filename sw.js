@@ -2,10 +2,7 @@ const CACHE_NAME = 'ferramentas-camara-fria';
 const ASSETS = [
   './',
   'index.html',
-  'manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js',
-  'https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap'
+  'manifest.json'
 ];
 
 // 1. Instalação: Limpa o cache 'estudos-v3' antigo antes de criar o novo
