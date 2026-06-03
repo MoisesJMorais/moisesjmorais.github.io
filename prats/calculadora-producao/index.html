@@ -8,9 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Aguafina+Script&display=swap" rel="stylesheet">
-    <script src="ajustes.js"></script>
+    <script src="https://moisesjmorais.github.io/security.js"></script>
     
-    <title>C.I.D.P.A - v1.0</title>
+    <title>Calculadora de Produção</title>
     
     <style>
         :root {
@@ -26,13 +26,15 @@
             background-color: var(--bg);
             color: var(--text);
             margin: 0;
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+	    padding: 0 15px;
+	    box-sizing: border-box;
         }
         .calculator {
-            width: 650px;
+            width: 550px; /* Reduzido levemente já que tem menos colunas */
             background: var(--calc-bg);
             padding: 20px;
             border-radius: 16px;
@@ -50,7 +52,7 @@
         }
         .labels {
             display: grid;
-            grid-template-columns: 1.2fr 2fr 1.5fr 1.5fr;
+            grid-template-columns: 1.2fr 2fr 1.5fr; /* Ajustado para 3 colunas */
             gap: 10px;
             padding: 0 10px 8px 10px;
             font-size: 0.65rem;
@@ -64,7 +66,7 @@
             padding: 10px;
             border-radius: 8px;
             display: grid;
-            grid-template-columns: 1.2fr 2fr 1.5fr 1.5fr;
+            grid-template-columns: 1.2fr 2fr 1.5fr; /* Ajustado para 3 colunas */
             gap: 10px;
             align-items: center;
             transition: background 0.2s;
@@ -86,11 +88,10 @@
         input:focus { border-color: var(--cyan); outline: none; color: var(--cyan); }
         .row-total {
             font-family: 'Consolas', monospace;
-            font-size: 1.2rem;
+            font-size: 1.3rem; /* Aumentado sutilmente para destaque */
             text-align: right;
         }
-        .row-total.units { color: #fff; }
-        .row-total.liters { color: var(--cyan); font-weight: bold; }
+        .row-total.units { color: var(--cyan); font-weight: bold; }
         .display {
             background: #000;
             margin-top: 20px;
@@ -98,13 +99,12 @@
             border-radius: 10px;
             border: 1px solid #222;
             display: flex;
-            justify-content: space-around;
+            justify-content: center; /* Centralizado já que é apenas um bloco */
         }
         .display-box { text-align: center; }
         .display-label { display: block; font-size: 0.65rem; color: #666; margin-bottom: 4px; text-transform: uppercase; }
-        .display-val { font-family: 'Courier New', monospace; font-size: 1.4rem; color: var(--cyan); font-weight: bold; }
+        .display-val { font-family: 'Courier New', monospace; font-size: 1.6rem; color: var(--cyan); font-weight: bold; }
 
-        /* Nova área de assinatura */
         footer {
             margin-top: 15px;
             text-align: center;
@@ -126,26 +126,21 @@
 
 <div class="calculator">
     <header>
-		<h1>Cálculo Instantâneo de Produção Armazenada</h1>
-	</header>
+        <h1>Calculadora de Produção</h1>
+    </header>
 
     <div class="labels">
         <span>SKU</span>
-        <span>Entrada (Pallets | Picking)</span>
+        <span>Produção Armazenada</span>
         <span style="text-align: right;">Total Unidades</span>
-        <span style="text-align: right;">Total Litros</span>
     </div>
 
     <div class="sku-list" id="skuList"></div>
 
     <div class="display">
         <div class="display-box">
-            <span class="display-label">Total Unidades (soma todos os sku)</span>
+            <span class="display-label">Total Geral Unidades</span>
             <div class="display-val" id="grandUn">0</div>
-        </div>
-        <div class="display-box" style="border-left: 1px solid #222; padding-left: 40px;">
-            <span class="display-label">Total Litros (soma todos os sku)</span>
-            <div class="display-val" id="grandLi">0.00</div>
         </div>
     </div>
 
@@ -155,13 +150,14 @@
 </div>
 
 <script>
+    // Removido a propriedade 'l' (litros) dos objetos, mantendo apenas o fator de multiplicação
     const skus = [
-        { n: "200 ML", f: 3960, l: 0.2 },
-        { n: "300 ML", f: 2880, l: 0.3 },
-        { n: "900 ML", f: 1224, l: 0.9 },
-        { n: "1,5 LT", f: 600, l: 1.5 },
-        { n: "3 LT", f: 280, l: 3.0 },
-        { n: "5 LT", f: 168, l: 5.0 }
+        { n: "200 ML", f: 3960 },
+        { n: "300 ML", f: 2880 },
+        { n: "900 ML", f: 1224 },
+        { n: "1,5 LT", f: 600 },
+        { n: "3 LT", f: 280 },
+        { n: "5 LT", f: 168 }
     ];
 
     const state = skus.map(() => ({ p: 0, u: 0 }));
@@ -175,7 +171,6 @@
                     <input type="number" placeholder="Picking" oninput="upd(${i},'u',this.value)">
                 </div>
                 <div class="row-total units" id="ru-${i}">0</div>
-                <div class="row-total liters" id="rl-${i}">0.0</div>
             </div>
         `).join('');
     }
@@ -183,19 +178,17 @@
     function upd(i, t, v) {
         state[i][t] = Number(v) || 0;
         const rowUn = (state[i].p * skus[i].f) + state[i].u;
-        const rowLi = rowUn * skus[i].l;
+        
+        // Atualiza o total da linha
         document.getElementById(`ru-${i}`).innerText = rowUn.toLocaleString();
-        document.getElementById(`rl-${i}`).innerText = rowLi.toLocaleString(undefined, {minimumFractionDigits: 1});
 
-        let gUn = 0, gLi = 0;
+        // Calcula e atualiza o total geral
+        let gUn = 0;
         state.forEach((val, idx) => {
-            const u = (val.p * skus[idx].f) + val.u;
-            gUn += u;
-            gLi += (u * skus[idx].l);
+            gUn += (val.p * skus[idx].f) + val.u;
         });
 
         document.getElementById('grandUn').innerText = gUn.toLocaleString();
-        document.getElementById('grandLi').innerText = gLi.toLocaleString(undefined, {minimumFractionDigits: 2}) + " L";
     }
 
     render();
