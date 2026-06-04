@@ -1,5 +1,5 @@
 // 1. Sempre que alterar a index.html, mude o número da versão aqui (ex: v1 para v2)
-const CACHE_NAME = 'atalhos-web-v1'; 
+const CACHE_NAME = 'atalhos-web-v2'; 
 const ASSETS = [
   '/atalhos-web/',
   '/atalhos-web/index.html',
