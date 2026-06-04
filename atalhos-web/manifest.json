@@ -3,7 +3,7 @@
   "short_name": "Apps Leves",
   "description": "Meu app de atalhos rápidos",
   "start_url": "/atalhos-web/index.html",
-  "scope": "/",
+  "scope": "./",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "background_color": "#121212",
