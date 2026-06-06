@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <title>Ferramentas Câmara Fria</title>
+    <link rel="icon" href="https://moisesjmorais.github.io/prats/lote-nfc/favicon.ico" type="image/png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Aquafina+Script&family=Poppins:wght@700&display=swap&subset=latin,latin-ext" rel="stylesheet">
+
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <script src="security.js"></script>
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Roboto, system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #121212;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* HEADER */
+        .header {
+            padding: 24px 16px 12px;
+            text-align: center;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qr-button {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background-color: #2a2a2a;
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+            transition: background 0.2s;
+            margin-bottom: 6px;
+        }
+
+        .qr-button:hover {
+            background-color: #333333;
+        }
+
+        .header-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #00e5ff;
+        }
+
+        .header-signature {
+            font-size: 13px;
+            color: #a0a0a0;
+            font-weight: normal;
+        }
+
+        .header-signature span {
+            font-family: 'Poppins', cursive !important;
+            font-size: 13px;
+            color: #a0a0a0; 
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); 
+            display: inline-block;
+            margin-left: 6px;
+            text-transform: none !important;
+        }
+
+        /* CONTENT GRID */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .icon-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .favorite-icon {
+            background-color: #1f1f1f;
+            border-radius: 12px;
+            padding: 12px 4px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .favorite-icon:hover {
+            background-color: #2a2a2a;
+        }
+
+        .favorite-icon a {
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .favorite-icon img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 6px;
+            border-radius: 12px;
+        }
+
+        .favorite-icon span {
+            display: block;
+            font-size: 10px;
+            font-weight: bold;
+            word-break: break-word;
+        }
+
+        /* QR Modal */
+        #qr-reader-container {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.85);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        #qr-reader {
+            width: 300px;
+            background: #000;
+            padding: 12px;
+            border-radius: 8px;
+        }
+
+        .qr-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 26px;
+            color: #fff;
+            cursor: pointer;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="qr-button" onclick="openQR()" title="Ler QR Code">
+        <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="#ffffff" viewBox="0 0 24 24">
+            <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm2-2h2v6h-6v-2h4v-4z"/>
+        </svg>
+    </div>
+    <h1 class="header-title">Ferramentas Câmara Fria</h1>
+    <p class="header-signature">Desenvolvido por <span>Mois&eacute;s J. Morais Lima</span></p>
+</div>
+
+<div class="content">
+    <div class="icon-grid" id="iconGrid">
+        <div class="favorite-icon">
+            <a href="http://10.1.1.29/" target="_self">
+                <img src="https://moisesjmorais.github.io/prats/img/SMDIA.png">
+                <span>SMDIA</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<div id="qr-reader-container">
+    <div class="qr-close" onclick="closeQR()">✕</div>
+    <div id="qr-reader"></div>
+</div>
+
+<script>
+let qrScanner;
+function openQR() {
+    const container = document.getElementById('qr-reader-container');
+    container.style.display = 'flex';
+
+    qrScanner = new Html5Qrcode("qr-reader");
+    qrScanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        (decodedText) => {
+            if (navigator.vibrate) navigator.vibrate(200);
+            qrScanner.stop();
+            container.style.display = 'none';
+            window.location.href = decodedText;
+        }
+    ).catch(err => { alert("Erro ao acessar a câmera: "+err); });
+}
+
+function closeQR() {
+    if(qrScanner) qrScanner.stop();
+    document.getElementById('qr-reader-container').style.display = 'none';
+}
+</script>
+</body>
+</html>
