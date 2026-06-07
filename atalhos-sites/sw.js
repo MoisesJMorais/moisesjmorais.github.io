@@ -1,9 +1,9 @@
-const CACHE_NAME = 'atalhos-web-cache-v1';
+const CACHE_NAME = 'atalhos-sites-cache-v1';
 // É essencial incluir a barra final e o index.html explicitando o subdiretório
 const ASSETS_TO_CACHE = [
-  '/atalhos-web/',
-  '/atalhos-web/index.html',
-  '/atalhos-web/manifest.json',
+  '/atalhos-sites/',
+  '/atalhos-sites/index.html',
+  '/atalhos-sites/manifest.json',
   // Adicione aqui outros arquivos estáticos essenciais, como CSS, JS ou ícones:
   // '/atalhos-web/css/style.css',
 ];
