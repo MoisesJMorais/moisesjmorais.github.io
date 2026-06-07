@@ -1,59 +1,63 @@
-// 1. Sempre que alterar a index.html, mude o número da versão aqui (ex: v1 para v2)
-const CACHE_NAME = 'atalhos-web-v2'; 
-const ASSETS = [
+const CACHE_NAME = 'atalhos-web-cache-v1';
+// É essencial incluir a barra final e o index.html explicitando o subdiretório
+const ASSETS_TO_CACHE = [
   '/atalhos-web/',
   '/atalhos-web/index.html',
-  '/security.js'
+  '/atalhos-web/manifest.json',
+  // Adicione aqui outros arquivos estáticos essenciais, como CSS, JS ou ícones:
+  // '/atalhos-web/css/style.css',
 ];
 
-// Instalação - Cria o novo cache
+// Evento de Instalação: Armazena os arquivos essenciais no cache inicial
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS);
-    }).then(() => self.skipWaiting()) // Força o SW novo a se tornar ativo imediatamente
+      return cache.addAll(ASSETS_TO_CACHE);
+    }).then(() => {
+      // Força o Service Worker a se tornar ativo imediatamente
+      return self.skipWaiting();
+    })
   );
 });
 
-// Ativação - Remove caches antigos automaticamente
+// Evento de Ativação: Limpa caches antigos se houver atualização de versão
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
-            console.log('Removendo cache antigo:', cache);
             return caches.delete(cache);
           }
         })
       );
-    }).then(() => self.clients.claim()) // Assume o controle das páginas abertas imediatamente
+    }).then(() => {
+      // Permite que o Service Worker passe a controlar a página imediatamente
+      return self.clients.claim();
+    })
   );
 });
 
-// Estratégia: Stale-While-Revalidate (Serve o cache, mas atualiza em segundo plano)
+// Evento Fetch com estratégia Network First (Rede Primeiro)
 self.addEventListener('fetch', (event) => {
-  // Executa apenas para requisições do próprio site (evita erros com extensões)
-  if (event.request.url.startsWith(self.location.origin)) {
-    event.respondWith(
-      caches.open(CACHE_NAME).then((cache) => {
-        return cache.match(event.request).then((cachedResponse) => {
-          
-          // Busca a versão nova na rede
-          const fetchPromise = fetch(event.request).then((networkResponse) => {
-            // Se a resposta for válida, atualiza o cache em segundo plano
-            if (networkResponse.status === 200) {
-              cache.put(event.request, networkResponse.clone());
-            }
-            return networkResponse;
-          }).catch(() => {
-            // Se estiver totalmente offline, não faz nada, apenas falha a rede silenciosamente
-          });
+  // Ignora requisições que não sejam do protocolo HTTP/HTTPS (como extensões ou chrome-extension)
+  if (!event.request.url.startsWith(self.location.origin)) return;
 
-          // Retorna o que estava no cache imediatamente (rápido), ou espera a rede se não tiver no cache
-          return cachedResponse || fetchPromise;
-        });
+  event.respondWith(
+    fetch(event.request)
+      .then((networkResponse) => {
+        // Se a resposta for válida, atualiza o cache dinamicamente
+        if (networkResponse && networkResponse.status === 200 && networkResponse.type === 'basic') {
+          const responseToCache = networkResponse.clone();
+          caches.open(CACHE_NAME).then((cache) => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return networkResponse;
       })
-    );
-  }
+      .catch(() => {
+        // Se a rede falhar (offline), busca o recurso no cache
+        return caches.match(event.request);
+      })
+  );
 });
