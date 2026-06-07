@@ -2,7 +2,7 @@
   "name": "Apps Leves",
   "short_name": "Apps Leves",
   "description": "Meu app de atalhos rápidos",
-  "start_url": "/atalhos-web/index.html",
+  "start_url": "/atalhos-sites/index.html",
   "scope": "./",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
@@ -10,12 +10,12 @@
   "theme_color": "#121212",
   "icons": [
     {
-      "src": "/atalhos-web/icon-192.png",
+      "src": "/atalhos-sites/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/atalhos-web/icon-512.png",
+      "src": "/atalhos-sites/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
