@@ -195,7 +195,7 @@
                 <span>SMDIA</span>
             </a>
         </div>
-        <div class="favorite-icon hide-on-mobile">
+        <div class="favorite-icon hide-on-mobile" id="atalho-restrito" style="display: none;">
             <a href="https://moisesjmorais.github.io/prats/gestao-de-reprocessos" target="_self">
                 <img src="https://moisesjmorais.github.io/prats/gestao-de-reprocessos/favicon.ico">
                 <span>Gestão de Reprocessos</span>
@@ -232,6 +232,14 @@ function closeQR() {
     if(qrScanner) qrScanner.stop();
     document.getElementById('qr-reader-container').style.display = 'none';
 }
+
+    // Executa assim que a página carrega
+document.addEventListener("DOMContentLoaded", function() {
+    // Verifica se a chave secreta está salva no navegador e libera o atalho
+    if (localStorage.getItem("atalho_chave") === "ativo") {
+        document.getElementById("atalho-restrito").style.display = "block";
+    }
+});
 </script>
 </body>
 </html>
