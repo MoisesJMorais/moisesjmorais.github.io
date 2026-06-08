@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex, nofollow">
+
+<title>Apps Leves</title>
+<link rel="icon" href="https://www.google.com/chrome/static/images/favicons/favicon-32x32.png" type="image/png">
+<link rel="manifest" href="https://moisesjmorais.github.io/atalhos-sites/manifest.json">
+ 
+<script src="https://unpkg.com/html5-qrcode"></script>
+<script src="security.js"></script>
+
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/atalhos-web/sw.js', { scope: '/' })
+        .then((reg) => {
+          console.log('SW registrado com sucesso!');
+          
+          if (reg.waiting) {
+            reg.waiting.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+    });
+
+    let refreshing = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!refreshing) {
+        refreshing = true;
+        window.location.reload();
+      }
+    });
+  }
+</script>
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: Roboto, system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #121212;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* HEADER */
+.header {
+    padding: 32px 16px 16px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.header img {
+    height: 48px;
+    margin-bottom: 16px;
+}
+
+.search-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #2a2a2a;
+    border-radius: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    padding: 4px 8px;
+}
+
+.search-box input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+    padding: 10px;
+    border-radius: 24px;
+}
+
+.search-box input::placeholder {
+    color: #ccc;
+}
+
+.qr-button {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+/* BOTÕES DE GERENCIAMENTO DISCRETOS */
+.manage-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.btn-manage {
+    background: transparent;
+    border: none;
+    color: #888;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: color 0.2s, background-color 0.2s;
+}
+
+.btn-manage:hover {
+    color: #fff;
+    background-color: #1f1f1f;
+}
+
+.btn-manage.active {
+    color: #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.1);
+}
+
+/* CONTENT GRID */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.icon-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+}
+
+@media (max-width: 768px) {
+    .icon-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+.favorite-icon {
+    position: relative;
+    background-color: #1f1f1f;
+    border-radius: 12px;
+    padding: 12px 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.favorite-icon:hover {
+    background-color: #2a2a2a;
+}
+
+.favorite-icon a {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+    width: 100%;
+}
+
+.favorite-icon img {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 6px;
+    border-radius: 12px;
+}
+
+.favorite-icon span {
+    display: block;
+    font-size: 10px;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.remove-btn {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(255, 77, 77, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    font-size: 11px;
+    cursor: pointer;
+    display: none; /* Controlado dinamicamente via JS */
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    z-index: 10;
+}
+
+/* Modificadores para o Modo de Remoção */
+.remove-mode .remove-btn {
+    display: flex;
+}
+
+.remove-mode .favorite-icon {
+    animation: shake 0.3s infinite alternate;
+}
+
+@keyframes shake {
+    0% { transform: rotate(-0.5deg); }
+    100% { transform: rotate(0.5deg); }
+}
+
+/* QR Modal & Add Modal */
+#qr-reader-container, #add-modal-container {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+#qr-reader, .modal-content {
+    width: 300px;
+    background: #000;
+    padding: 12px;
+    border-radius: 8px;
+}
+
+.modal-content {
+    background: #1f1f1f;
+    border: 1px solid #333;
+    padding: 20px;
+}
+
+.modal-content h3 {
+    margin-bottom: 16px;
+    font-size: 16px;
+    text-align: center;
+}
+
+.modal-content input {
+    width: 100%;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    color: white;
+    outline: none;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-cancel {
+    background: #444;
+    color: white;
+}
+
+.btn-save {
+    background: #0f9d58;
+    color: white;
+}
+
+.qr-close, .modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 26px;
+    color: #fff;
+    cursor: pointer;
+    user-select: none;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png" alt="Logo">
+    
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Pesquisar ou digitar endereço">
+        <div class="qr-button" onclick="openQR()" title="Ler QR Code">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#ffffff" viewBox="0 0 24 24">
+                <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm2-2h2v6h-6v-2h4v-4z"/>
+            </svg>
+        </div>
+    </div>
+
+    <div class="manage-buttons">
+        <button class="btn-manage" onclick="openAddModal()">+ Adicionar atalho</button>
+        <button class="btn-manage" id="btnToggleRemove" onclick="toggleRemoveMode()">- Remover atalho</button>
+    </div>
+</div>
+
+<div class="content">
+    <div class="icon-grid" id="iconGrid">
+        </div>
+</div>
+
+<div id="qr-reader-container">
+    <div class="qr-close" onclick="closeQR()">✕</div>
+    <div id="qr-reader"></div>
+</div>
+
+<div id="add-modal-container">
+    <div class="modal-close" onclick="closeAddModal()">✕</div>
+    <div class="modal-content">
+        <h3>Adicionar Atalho</h3>
+        <input type="text" id="newTitle" placeholder="Nome do aplicativo">
+        <input type="text" id="newUrl" placeholder="URL (https://...)">
+        <input type="text" id="newIcon" placeholder="URL do Ícone (Opcional)">
+        <div class="modal-buttons">
+            <button class="btn-cancel" onclick="closeAddModal()">Cancelar</button>
+            <button class="btn-save" onclick="saveShortcut()">Salvar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let qrScanner;
+let isRemoveMode = false;
+
+const defaultShortcuts = [
+    { name: "Gemini", url: "https://gemini.google.com/", icon: "https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64" },
+    { name: "ChatGPT", url: "https://chatgpt.com", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/ChatGPT.png" },
+    { name: "Baixar do Instagram", url: "https://sssinstagram.com/pt", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/SSSInstagram.png" },
+    { name: "AVA", url: "https://www.eadunifatecie.com.br/login/index.php", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/UniFatecie.jpg" },
+    { name: "Portal do Aluno", url: "https://portaldoaluno.fatecie.edu.br/", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/UniFatecie.jpg" },
+    { name: "AlunoNet", url: "https://waeweb.unifatecie.edu.br/servlet/hwalgn?1", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/UniFatecie.jpg" },
+    { name: "FACUMINAS EAD", url: "https://ead.eduno.com.br/login", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/Facuminas.jpeg" },
+    { name: "IFRS Cursos Gratuitos", url: "https://moodle.ifrs.edu.br", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/IF-Logo.png" },
+    { name: "Materiais de Estudo", url: "https://drive.google.com/drive/folders/1KXNl_8oZG4un2biQp8fr8EjmFV6tVeTB", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/GoogleDrive.png" },
+    { name: "Mercado Livre", url: "https://mercadolivre.com.br", icon: "https://play-lh.googleusercontent.com/iVaeA0HDw8CZjEM-K7GdLB9XYmpcwVFSuv4Q8o9uh4Br7PuKCm3QSYCVU73tr9BBXdR_7xTX4yO0azOJegRVcA=w240-h480-rw" },
+    { name: "Casas Bahia", url: "https://casasbahia.com.br", icon: "https://play-lh.googleusercontent.com/mK8nSaHKW-RyJu0m-ykYiSoWXxj3LdnDmHRMxkPPTtl_X9LYrs4Tz7M5srd6AxtuOBk2vDJVRZo42tGIKG1cmiY" },
+    { name: "Saiko Pastel", url: "https://saiko.comandax.com.br", icon: "https://moisesjmorais.github.io/atalhos-web/Icons/Saiko-Pastel-Delivery.png" }
+];
+
+let shortcuts = JSON.parse(localStorage.getItem('myShortcuts')) || defaultShortcuts;
+
+function renderShortcuts() {
+    const grid = document.getElementById('iconGrid');
+    grid.innerHTML = '';
+
+    shortcuts.forEach((shortcut, index) => {
+        const div = document.createElement('div');
+        div.className = 'favorite-icon';
+        
+        const iconSrc = shortcut.icon || `https://www.google.com/s2/favicons?domain=${new URL(shortcut.url).hostname}&sz=64`;
+
+        div.innerHTML = `
+            <button class="remove-btn" onclick="removeShortcut(event, ${index})" title="Remover">×</button>
+            <a href="${shortcut.url}" target="_self">
+                <img src="${iconSrc}" alt="${shortcut.name}" onerror="this.src='https://www.google.com/s2/favicons?domain=${shortcut.url}&sz=64'">
+                <span>${shortcut.name}</span>
+            </a>
+        `;
+        grid.appendChild(div);
+    });
+}
+
+function toggleRemoveMode() {
+    isRemoveMode = !isRemoveMode;
+    const grid = document.getElementById('iconGrid');
+    const btn = document.getElementById('btnToggleRemove');
+
+    if (isRemoveMode) {
+        grid.classList.add('remove-mode');
+        btn.classList.add('active');
+        btn.innerText = 'Pronto';
+    } else {
+        grid.classList.remove('remove-mode');
+        btn.classList.remove('active');
+        btn.innerText = '- Remover atalho';
+    }
+}
+
+function openAddModal() {
+    if (isRemoveMode) toggleRemoveMode(); // Desativa modo remoção se estiver ativo
+    document.getElementById('add-modal-container').style.display = 'flex';
+}
+
+function closeAddModal() {
+    document.getElementById('add-modal-container').style.display = 'none';
+    document.getElementById('newTitle').value = '';
+    document.getElementById('newUrl').value = '';
+    document.getElementById('newIcon').value = '';
+}
+
+function saveShortcut() {
+    const name = document.getElementById('newTitle').value.trim();
+    let url = document.getElementById('newUrl').value.trim();
+    const icon = document.getElementById('newIcon').value.trim();
+
+    if (!name || !url) {
+        alert("Por favor, preencha o nome e a URL.");
+        return;
+    }
+
+    if (!/^https?:\/\//i.test(url)) {
+        url = 'https://' + url;
+    }
+
+    shortcuts.push({ name, url, icon });
+    localStorage.setItem('myShortcuts', JSON.stringify(shortcuts));
+    renderShortcuts();
+    closeAddModal();
+}
+
+function removeShortcut(event, index) {
+    event.stopPropagation();
+    event.preventDefault();
+    if (confirm(`Deseja realmente remover o atalho "${shortcuts[index].name}"?`)) {
+        shortcuts.splice(index, 1);
+        localStorage.setItem('myShortcuts', JSON.stringify(shortcuts));
+        renderShortcuts();
+    }
+}
+
+function openQR() {
+    const container = document.getElementById('qr-reader-container');
+    container.style.display = 'flex';
+
+    qrScanner = new Html5Qrcode("qr-reader");
+    qrScanner.start(
+        { facingMode: "environment" },
+        { fps: 10, qrbox: 250 },
+        (decodedText) => {
+            if (navigator.vibrate) navigator.vibrate(200);
+            qrScanner.stop();
+            container.style.display = 'none';
+            window.location.href = decodedText;
+        }
+    ).catch(err => { alert("Erro ao acessar a câmera: "+err); });
+}
+
+function closeQR() {
+    if(qrScanner) qrScanner.stop();
+    document.getElementById('qr-reader-container').style.display = 'none';
+}
+
+document.getElementById('searchInput').addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+        e.preventDefault();
+        const query = this.value.trim();
+        if(query) window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+    }
+});
+
+renderShortcuts();
+</script>
+
+</body>
+</html>
