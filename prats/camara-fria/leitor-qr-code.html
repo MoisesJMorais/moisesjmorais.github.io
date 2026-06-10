@@ -38,18 +38,14 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         }
 
-        /* Container do vídeo da câmera */
+        /* Container do vídeo da câmera corrigido */
         #reader {
             width: 100% !important;
             height: 100% !important;
             border: none !important;
         }
-
-        /* Esconder elementos internos padrão da biblioteca que possam poluir o layout */
-        #reader__dashboard, #reader__status_span {
-            display: none !important;
-        }
         
+        /* CORREÇÃO: Não escondemos mais os elementos por ID via display:none */
         video {
             object-fit: cover !important;
             width: 100% !important;
@@ -126,46 +122,46 @@
         </div>
     </div>
 
-    <p class="description">Aponte sua câmera para escanear o QR-Code.</p>
+    <p class="description">Aponte sua câmera e centralize para escanear um QR-Code.</p>
 
     <div id="result"></div>
 
     <script>
         function onScanSuccess(decodedText, decodedResult) {
-            // Para o escaneamento após o sucesso (opcional)
-            html5QrcodeScanner.clear();
-            
-            const resultContainer = document.getElementById('result');
-            resultContainer.style.display = 'block';
-            
-            // Verifica se o resultado é um link
-            if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
-                resultContainer.innerHTML = `<strong>Resultado:</strong> <br><a href="${decodedText}" target="_blank">${decodedText}</a>`;
-            } else {
-                resultContainer.innerHTML = `<strong>Resultado:</strong> <br>${decodedText}`;
-            }
+            // Para o escaneamento após o sucesso
+            html5QrcodeScanner.stop().then(() => {
+                const resultContainer = document.getElementById('result');
+                resultContainer.style.display = 'block';
+                
+                // Verifica se o resultado é um link
+                if (decodedText.startsWith('http://') || decodedText.startsWith('https://')) {
+                    resultContainer.innerHTML = `<strong>Resultado:</strong> <br><a href="${decodedText}" target="_blank">${decodedText}</a>`;
+                } else {
+                    resultContainer.innerHTML = `<strong>Resultado:</strong> <br>${decodedText}`;
+                }
+            }).catch((err) => {
+                console.error("Erro ao parar o scanner", err);
+            });
         }
 
         function onScanFailure(error) {
-            // Erros de leitura contínuos são comuns enquanto a câmera busca o código, 
-            // por isso deixamos vazio para não travar a experiência do usuário.
+            // Erros contínuos de busca são normais
         }
 
-        // Configuração do leitor otimizado para o smartphone
         const html5QrcodeScanner = new Html5Qrcode("reader");
         
-        // Prioriza a câmera traseira (environment) e define o tamanho da área de leitura
+        // Ajustado o qrbox para caber perfeitamente dentro do container de 280px
         html5QrcodeScanner.start(
             { facingMode: "environment" }, 
             {
                 fps: 24,
-                qrbox: { width: 250, height: 250 }
+                qrbox: { width: 220, height: 220 } 
             },
             onScanSuccess,
             onScanFailure
         ).catch((err) => {
             console.error("Erro ao iniciar a câmera: ", err);
-            document.querySelector('.description').innerText = "Erro ao acessar a câmera. Certifique-se de dar as permissões necessárias.";
+            document.querySelector('.description').innerText = "Erro ao acessar a câmera. Certifique-se de que o seu dispositivo possui uma câmera e as permissões necessárias.";
         });
     </script>
 </body>
