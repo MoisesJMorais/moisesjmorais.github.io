@@ -1,0 +1,23 @@
+{
+  "name": "Ferramentas Câmara Fria",
+  "short_name": "Ferramentas Câmara Fria",
+  "description": "Todas as ferramentas essenciais reunidas em um aplicativo para acesso rápido e melhoria na produtividade.",
+  "start_url": "/prats/camara-fria/index.html",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#121212",
+  "theme_color": "#121212",
+  "icons": [
+    {
+      "src": "/prats/camara-fria/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/prats/camara-fria/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
