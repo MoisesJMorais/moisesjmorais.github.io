@@ -43,6 +43,11 @@
             align-items: center;
             gap: 10px;
         }
+
+        .icon-grid {
+                display: grid;
+                grid-template-columns: repeat(6, 1fr);
+            }
         
         .header-title {
             font-family: 'Poppins', sans-serif;
@@ -77,6 +82,7 @@
 
         @media (max-width: 768px) {
             .icon-grid {
+                display: grid;
                 grid-template-columns: repeat(4, 1fr);
             }
 
