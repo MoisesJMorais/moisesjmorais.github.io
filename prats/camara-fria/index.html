@@ -75,23 +75,6 @@
             padding: 16px;
         }
 
-        /* Por padrão, esconde o que for "apenas mobile" em telas grandes/desktop */
-        .only-mobile {
-            display: none !important;
-        }
-
-        /* Se o dispositivo for pequeno OU se for um dispositivo com tela de toque (smartphone/tablet) */
-        @media (max-width: 1024px), (pointer: coarse) {
-        .only-mobile {
-            display: flex !important;
-
-            .icon-grid {
-                display: grid;
-                grid-template-columns: repeat(4, 1fr);
-                gap: 16px;
-            }
-        }
-
         @media (max-width: 768px) {
             .icon-grid {
                 grid-template-columns: repeat(4, 1fr);
@@ -151,7 +134,7 @@
 
 <div class="content">
     <div class="icon-grid" id="iconGrid">
-        <div class="favorite-icon only-mobile">
+        <div class="favorite-icon">
             <a href="https://moisesjmorais.github.io/prats/camara-fria/leitor-qr-code.html" target="_self">
                 <img src="https://moisesjmorais.github.io/prats/camara-fria/icons/qr-code-icon.png">
                 <span>Ler QR-Code</span>
