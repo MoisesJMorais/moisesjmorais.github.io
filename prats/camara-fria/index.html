@@ -83,12 +83,11 @@
         /* Se o dispositivo for pequeno OU se for um dispositivo com tela de toque (smartphone/tablet) */
         @media (max-width: 1024px), (pointer: coarse) {
         .only-mobile {
-            display: block !important; /* Ou inline-block / flex dependendo do seu layout */
-        }
+            display: flex !important;
 
             .icon-grid {
                 display: grid;
-                grid-template-columns: repeat(6, 1fr);
+                grid-template-columns: repeat(4, 1fr);
                 gap: 16px;
             }
         }
