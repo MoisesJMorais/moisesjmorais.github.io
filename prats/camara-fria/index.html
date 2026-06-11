@@ -45,9 +45,10 @@
         }
 
         .icon-grid {
-                display: grid;
-                grid-template-columns: repeat(6, 1fr);
-            }
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 16px;
+}
         
         .header-title {
             font-family: 'Poppins', sans-serif;
@@ -84,6 +85,7 @@
             .icon-grid {
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
             }
 
             .hide-on-mobile {
