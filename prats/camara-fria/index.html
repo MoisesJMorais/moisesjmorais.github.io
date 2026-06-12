@@ -10,10 +10,6 @@
     <title>Ferramentas Câmara Fria</title>
     <link rel="icon" href="/prats/camara-fria/favicon.ico" type="image/png">
     <link rel="manifest" href="/prats/camara-fria/manifest.json">
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Aguafina+Script&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -61,22 +57,6 @@
             color: #a0a0a0;
         }
 
-        .header-signature {
-            font-size: 13px;
-            color: #a0a0a0;
-            font-weight: normal;
-        }
-
-        .header-signature span {
-            font-family: 'Aguafina Script', cursive !important;
-            font-size: 1.2rem;
-            color: #00e5ff; 
-            text-shadow: 0 0 10px rgba(0, 229, 255, 0.3); 
-            display: inline-block;
-            margin-left: 6px;
-            text-transform: none !important;
-        }
-
         /* CONTENT GRID */
         .content {
             flex: 1;
@@ -106,7 +86,7 @@
         }
         
         .favorite-icon:hover {
-            background-color: #2a2a2a;
+            background-color: #a0a0a0;
         }
 
         .favorite-icon a {
@@ -136,7 +116,6 @@
 
 <div class="header">
     <h1 class="header-title">Ferramentas Câmara Fria</h1>
-    <p class="header-signature">Desenvolvido por<br><span>Moisés J. Morais Lima</span></p>
 </div>
 
 <div class="content">
@@ -195,6 +174,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 </script>
-    {% include signature.html %}
 </body>
+    {% include signature.html %}
 </html>
