@@ -1,8 +1,8 @@
 const USUARIOS_PERMITIDOS = {
 	"moises.morais": "71239856",
+	"MOISES.MORAIS": "71239856",
 	"jhonn.santos": "1910",
 	"geazi.mathias": "abc123",
-	"mateus.alves": "@prats5000",
 	"carlos.domingos": "@prats5000",
 	"otavio.godoy": "@prats5000",
 	"claudio.ribeiro": "146080"
@@ -29,13 +29,9 @@ if (loginForm) {
     });
 }
 
-// Função de Proteção: Adicione esta chamada no topo do seu arquivo rep-nfc.html
 function verificarAutenticacao() {
     if (sessionStorage.getItem('autenticado') !== 'true') {
-        window.location.href = 'index.html';
+        window.location.href = 'login-rep-nfc.html';
     }
 
 }
-
-
-
