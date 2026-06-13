@@ -1,11 +1,14 @@
+---
+---
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="icon" type="image/x-icon" href="https://moisesjmorais.github.io/prats/camara-fria/favicons/lote-nfc-2026.ico">
+    
     <title>Lote do Dia</title>
-    <link href="https://fonts.googleapis.com/css2?family=Aguafina+Script&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --primary-cyan: #00e5ff;
@@ -124,21 +127,6 @@
             color: var(--primary-cyan);
         }
 
-        .footer-credits {
-            text-align: center;
-            color: var(--text-secondary);
-            font-size: 0.75rem;
-            margin-top: 10px;
-            margin-bottom: 0;
-        }
-
-        .footer-credits span {
-            color: var(--primary-cyan);
-            font-weight: regular;
-            font-family: 'Aguafina Script', cursive;
-            font-size: 1.2rem;
-        }
-
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.7; }
@@ -162,8 +150,7 @@
         </div>
 
         <div id="production-lines" class="production-grid"></div>
-
-        <p class="footer-credits">Desenvolvido por<br><span>Moisés J. Morais Lima</span></p>
+            {% include signature.html %}
     </div>
     
     <script src="https://moisesjmorais.github.io/security.js"></script>
