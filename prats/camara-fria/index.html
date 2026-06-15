@@ -32,31 +32,12 @@
             overflow: hidden;
         }
 
-        /* HEADER */
-        .header {
-            padding: 24px 16px 12px;
-            text-align: center;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-        }
-
         .icon-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 16px;
-}
-        
-        .header-title {
-            font-family: 'Poppins', sans-serif;
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            color: #a0a0a0;
         }
-
+        
         /* CONTENT GRID */
         .content {
             flex: 1;
@@ -113,11 +94,7 @@
     </style>
 </head>
 <body>
-
-<div class="header">
-    <h1 class="header-title">Ferramentas Câmara Fria</h1>
-</div>
-
+    
 <div class="content">
     <div class="icon-grid" id="iconGrid">
         <div class="favorite-icon">
