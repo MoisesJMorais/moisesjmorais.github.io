@@ -3,11 +3,8 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    {% include default-config.html %}
     <link rel="icon" type="image/x-icon" href="https://moisesjmorais.github.io/prats/camara-fria/favicons/calculadora-producao.ico">
-    
-    <script src="https://moisesjmorais.github.io/security.js"></script>
     
     <title>Calculadora de Produção</title>
     
@@ -129,8 +126,6 @@
             <div class="display-val" id="grandUn">0</div>
         </div>
     </div>
-		<br>
-		{% include signature.html %}
 </div>
 
 <script>
@@ -181,4 +176,5 @@
     render();
 </script>
 </body>
+	{% include signature.html %}
 </html>
