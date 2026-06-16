@@ -3,8 +3,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    {% include default-config.html %}
     <link rel="icon" type="image/x-icon" href="https://moisesjmorais.github.io/prats/camara-fria/favicons/lote-nfc-2026.ico">
     
     <title>Lote do Dia</title>
@@ -151,8 +150,6 @@
         </div>
 
         <div id="production-lines" class="production-grid"></div>
-            <br>
-            {% include signature.html %}
     </div>
     
     <script src="https://moisesjmorais.github.io/security.js"></script>
@@ -200,4 +197,5 @@
         atualizar();
     </script>
 </body>
+    {% include signature.html %}
 </html>
