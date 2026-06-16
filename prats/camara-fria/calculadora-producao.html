@@ -147,17 +147,20 @@
     const state = skus.map(() => ({ p: 0, u: 0 }));
 
     function render() {
-        document.getElementById('skuList').innerHTML = skus.map((s, i) => `
-            <div class="sku-row">
-                <div class="sku-name">${s.n} <span>Pallet: ${s.f} un</span></div>
-                <div class="inputs-group">
-                    <input type="number" placeholder="Pallets" oninput="upd(${i},'p',this.value)">
-                    <input type="number" placeholder="Picking" oninput="upd(${i},'u',this.value)">
-                </div>
-                <div class="row-total units" id="ru-${i}">0</div>
+    document.getElementById('skuList').innerHTML = skus.map((s, i) => `
+        <div class="sku-row">
+            <div class="sku-name">${s.n} <span>Pallet: ${s.f} un</span></div>
+            <div class="inputs-group">
+                <input type="number" placeholder="Pallets" 
+                       oninput="if(this.value.length > 3) this.value = this.value.slice(0,3); upd(${i},'p',this.value)">
+                
+                <input type="number" placeholder="Picking" 
+                       oninput="if(this.value.length > 4) this.value = this.value.slice(0,4); upd(${i},'u',this.value)">
             </div>
-        `).join('');
-    }
+            <div class="row-total units" id="ru-${i}">0</div>
+        </div>
+    `).join('');
+	}
 
     function upd(i, t, v) {
         state[i][t] = Number(v) || 0;
