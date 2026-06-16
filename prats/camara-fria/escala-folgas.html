@@ -1,0 +1,388 @@
+---
+---
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+      {% include default-config.html %}
+      <meta name="theme-color" content="#000000">
+
+    <title>Escala de Folgas</title>
+    </head>
+
+    <style>
+    /* Estilização do Fundo Geral */
+    body {
+        background-color: #1a1a1a !important;
+        margin: 0;
+        padding: 15px;
+    }
+
+    /* Container Principal do App */
+    .escala-container {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 480px;
+        margin: 10px auto;
+        padding: 20px;
+        background-color: #121212;
+        border-radius: 12px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+        color: #cdcdcd;
+        border: 1px solid #222;
+        box-sizing: border-box;
+    }
+
+    .escala-container h2 {
+        color: #00e5ff; /* Azul Elétrico */
+        margin-top: 0;
+        border-bottom: 2px solid #0055ff;
+        padding-bottom: 12px;
+        font-size: 1.4rem;
+        letter-spacing: 0.5px;
+        text-align: center;
+    }
+
+    /* Grid de Filtros (Seletores) */
+    .filtros-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .filtro-duplo {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .seletor-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .seletor-group label {
+        font-size: 0.8rem;
+        color: #aaaaaa;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .seletor-select {
+        background-color: #1a1a1a;
+        color: #ffffff;
+        border: 1px solid #333;
+        padding: 12px;
+        font-size: 0.95rem;
+        border-radius: 8px;
+        outline: none;
+        cursor: pointer;
+        transition: border-color 0.2s, box-shadow 0.2s;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2300e5ff'><polygon points='0,0 10,0 5,5'/></svg>");
+        background-repeat: no-repeat;
+        background-position: right 15px center;
+    }
+
+    .seletor-select:focus {
+        border-color: #00e5ff;
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.2);
+    }
+
+    /* Cartão de Detalhes da Escala */
+    .cartao-resultado {
+        background-color: #1a1a1a;
+        border: 1px solid #222;
+        border-radius: 10px;
+        padding: 15px;
+        display: none;
+        animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .info-linha {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #262626;
+    }
+
+    .info-label {
+        font-size: 0.85rem;
+        color: #888888;
+        text-transform: uppercase;
+    }
+
+    .info-valor {
+        font-size: 0.95rem;
+        color: #ffffff;
+        font-weight: 500;
+    }
+
+    /* Bloco de Folgas Mensais */
+    .futuras-container {
+        margin-top: 18px;
+    }
+
+    .futuras-titulo {
+        font-size: 0.85rem;
+        color: #00e5ff; /* Azul Elétrico */
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .lista-futuras {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .item-futura {
+        background-color: #151515;
+        border: 1px solid #262626;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        color: #ffffff;
+        border-left: 4px solid #0055ff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .sem-folga {
+        background-color: #1c1414;
+        border: 1px solid #3a1f1f;
+        color: #ff6b6b;
+        border-left: 4px solid #cc3333;
+    }
+</style>
+  {% include title-fixed.html %}
+<body>
+<div class="escala-container">
+    <h2>Consulta de Folgas</h2>
+    
+    <div class="filtros-grid">
+        <div class="seletor-group">
+            <label for="colaboradorSelect">Colaborador</label>
+            <select id="colaboradorSelect" class="seletor-select" onchange="atualizarInterface()">
+                <option value="" disabled selected>Escolha um nome...</option>
+                </select>
+        </div>
+        
+        <div class="filtro-duplo">
+            <div class="seletor-group">
+                <label for="mesSelect">Mês</label>
+                <select id="mesSelect" class="seletor-select" onchange="atualizarInterface()">
+                    <option value="0">Janeiro</option>
+                    <option value="1">Fevereiro</option>
+                    <option value="2">Março</option>
+                    <option value="3">Abril</option>
+                    <option value="4">Maio</option>
+                    <option value="5" selected>Junho</option>
+                    <option value="6">Julho</option>
+                    <option value="7">Agosto</option>
+                    <option value="8">Setembro</option>
+                    <option value="9">Outubro</option>
+                    <option value="10">Novembro</option>
+                    <option value="11">Dezembro</option>
+                </select>
+            </div>
+            
+            <div class="seletor-group">
+                <label for="anoSelect">Ano</label>
+                <select id="anoSelect" class="seletor-select" onchange="atualizarInterface()">
+                    <option value="2026" selected>2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div id="cartaoResultado" class="cartao-resultado">
+        <div class="info-linha">
+            <span class="info-label">Colaborador</span>
+            <span id="resNome" class="info-valor" style="color: #ffffff; font-weight: bold;">-</span>
+        </div>
+        <div class="info-linha">
+            <span class="info-label">Turno</span>
+            <span id="resTurno" class="info-valor">-</span>
+        </div>
+        <div class="info-linha">
+            <span class="info-label">Escala</span>
+            <span id="resEscala" class="info-valor" style="color: #00e5ff;">-</span>
+        </div>
+
+        <div class="futuras-container">
+            <div id="tituloLista" class="futuras-titulo">Folgas do Mês</div>
+            <div id="listaFolgasMes" class="lista-futuras">
+                </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const colaboradores = [
+        { nome: "Moisés Morais", dataBase: "2026-06-08", escala: "6x1", turno: "2° (16:00 - 0:00)" }, 
+        { nome: "Carlos Lima", dataBase: "2026-06-08", escala: "6x2", turno: "Tarde (14:00 - 22:00)" },
+        { nome: "Mariana Costa", dataBase: "2026-06-10", escala: "5x2", turno: "Integral (08:00 - 18:00)" },
+        { nome: "Ricardo Oliveira", dataBase: "2026-06-14", escala: "12x36", turno: "Noturno (19:00 - 07:00)" }
+    ];
+
+    function inicializarApp() {
+        const select = document.getElementById('colaboradorSelect');
+        colaboradores.sort((a, b) => a.nome.localeCompare(b.nome));
+
+        colaboradores.forEach((colab, index) => {
+            const opt = document.createElement('option');
+            opt.value = index;
+            opt.textContent = colab.nome;
+            select.appendChild(opt);
+        });
+    }
+
+    function capitalizar(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
+    function formatarDataComSemana(dataObj) {
+        const dataFormatada = dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+        const diaSemana = dataObj.toLocaleDateString('pt-BR', { weekday: 'long' });
+        return `${dataFormatada} (${capitalizar(diaSemana.split('-')[0])})`;
+    }
+
+    function obterDadosEscala(escalaStr) {
+        let diasTrabalho = 1;
+        let diasFolga = 1;
+
+        if (escalaStr.toLowerCase() === "12x36") {
+            diasTrabalho = 1;
+            diasFolga = 1;
+        } else {
+            const partes = escalaStr.toLowerCase().split('x');
+            if (partes.length === 2) {
+                diasTrabalho = parseInt(partes[0]) || 1;
+                diasFolga = parseInt(partes[1]) || 1;
+            }
+        }
+        return { trabalho: diasTrabalho, folga: diasFolga, totalCiclo: diasTrabalho + diasFolga };
+    }
+
+    // Calcula todas as folgas que encostam ou acontecem dentro do mês selecionado
+    function obterFolgasDoMes(dataBaseStr, escalaStr, mesAlvo, anoAlvo) {
+        if (!dataBaseStr) return [];
+        
+        const configEscala = obterDadosEscala(escalaStr);
+        let ciclo = new Date(dataBaseStr + 'T00:00:00');
+        
+        // Define os limites do mês selecionado
+        const inicioMesAlvo = new Date(anoAlvo, mesAlvo, 1);
+        const fimMesAlvo = new Date(anoAlvo, mesAlvo + 1, 0, 23, 59, 59);
+
+        // Alinha o ciclo para começar próximo ou antes do início do mês alvo
+        if (ciclo > inicioMesAlvo) {
+            while (ciclo > inicioMesAlvo) {
+                ciclo.setDate(ciclo.getDate() - configEscala.totalCiclo);
+            }
+        } else {
+            while (true) {
+                let proximoCiclo = new Date(ciclo);
+                proximoCiclo.setDate(proximoCiclo.getDate() + configEscala.totalCiclo);
+                if (proximoCiclo > inicioMesAlvo) break;
+                ciclo = proximoCiclo;
+            }
+        }
+
+        let folgasDoMes = [];
+
+        // Varre os ciclos enquanto eles estiverem dentro do mês desejado
+        while (ciclo <= fimMesAlvo) {
+            let primeiroDiaFolga = new Date(ciclo);
+            primeiroDiaFolga.setDate(primeiroDiaFolga.getDate() + configEscala.trabalho);
+
+            let ultimoDiaFolga = new Date(primeiroDiaFolga);
+            ultimoDiaFolga.setDate(ultimoDiaFolga.getDate() + configEscala.folga - 1);
+
+            // Verifica se o intervalo de folga intersecta o mês filtrado
+            if (ultimoDiaFolga >= inicioMesAlvo && primeiroDiaFolga <= fimMesAlvo) {
+                folgasDoMes.push({
+                    inicio: new Date(primeiroDiaFolga),
+                    fim: new Date(ultimoDiaFolga),
+                    multiplosDias: configEscala.folga > 1
+                });
+            }
+
+            ciclo.setDate(ciclo.getDate() + configEscala.totalCiclo);
+        }
+
+        return folgasDoMes;
+    }
+
+    function gerarTextoFolga(folgaObj) {
+        if (folgaObj.multiplosDias) {
+            return `${formatarDataComSemana(folgaObj.inicio)} até ${formatarDataComSemana(folgaObj.fim)}`;
+        }
+        return formatarDataComSemana(folgaObj.inicio);
+    }
+
+    // Gerencia as mudanças nos filtros e monta o cartão correspondente
+    function atualizarInterface() {
+        const selectColab = document.getElementById('colaboradorSelect');
+        const selectMes = document.getElementById('mesSelect');
+        const selectAno = document.getElementById('anoSelect');
+        const cartao = document.getElementById('cartaoResultado');
+        const containerLista = document.getElementById('listaFolgasMes');
+        const tituloLista = document.getElementById('tituloLista');
+        
+        const colab = colaboradores[selectColab.value];
+
+        if (colab) {
+            const mes = parseInt(selectMes.value);
+            const ano = parseInt(selectAno.value);
+            const nomeMesTxt = selectMes.options[selectMes.selectedIndex].text;
+
+            document.getElementById('resNome').textContent = colab.nome;
+            document.getElementById('resTurno').textContent = colab.turno;
+            document.getElementById('resEscala').textContent = `Escala ${colab.escala.toUpperCase()}`;
+            tituloLista.textContent = `Folgas em ${nomeMesTxt} / ${ano}`;
+
+            // Busca as folgas mapeadas
+            const listaFolgas = obterFolgasDoMes(colab.dataBase, colab.escala, mes, ano);
+            
+            containerLista.innerHTML = '';
+            
+            if (listaFolgas.length === 0) {
+                const div = document.createElement('div');
+                div.className = 'item-futura sem-folga';
+                div.textContent = 'Nenhuma folga encontrada para este mês.';
+                containerLista.appendChild(div);
+            } else {
+                listaFolgas.forEach(folga => {
+                    const div = document.createElement('div');
+                    div.className = 'item-futura';
+                    div.innerHTML = gerarTextoFolga(folga);
+                    containerLista.appendChild(div);
+                });
+            }
+
+            cartao.style.display = 'block';
+        }
+    }
+
+    inicializarApp();
+</script>
+</body>
+  {% include signature.html %}
+</html>
