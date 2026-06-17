@@ -333,7 +333,7 @@
 
     function gerarTextoFolga(folgaObj) {
         if (folgaObj.multiplosDias) {
-            return `${formatarDataComSemana(folgaObj.inicio)} até ${formatarDataComSemana(folgaObj.fim)}`;
+            return `${formatarDataComSemana(folgaObj.inicio)} e ${formatarDataComSemana(folgaObj.fim)}`;
         }
         return formatarDataComSemana(folgaObj.inicio);
     }
