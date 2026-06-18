@@ -5,7 +5,8 @@ const USUARIOS_PERMITIDOS = {
 	"geazi.mathias": "abc123",
 	"carlos.domingos": "@prats5000",
 	"otavio.godoy": "@prats5000",
-	"claudio.ribeiro": "146080"
+	"claudio.ribeiro": "146080",
+	"eduardo.costa": "386511"
 };
 
 const loginForm = document.getElementById('loginForm');
