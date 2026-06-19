@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Calculadora de Armazenamento - Câmara Fria</title>
+  {% include default-config.html %}
+  <meta name="theme-color" content="#000000">
+  
+  <title>Calculadora de Baias</title>
   
   <style>
-    /* RESET & BODY BACKGROUND */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,7 +14,7 @@
     }
 
     body {
-      background-color: #1A1A1A; /* Invertido para o background geral */
+      background-color: #1A1A1A;
       color: #ffffff;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       display: flex;
@@ -24,7 +24,6 @@
       padding: 20px;
     }
 
-    /* CALCULATOR STYLES */
     .calculator-wrapper {
       width: 100%;
       display: flex;
@@ -33,7 +32,7 @@
     }
 
     .calculator-container {
-      background-color: #121212; /* Invertido para o interior do container */
+      background-color: #121212;
       border: 1px solid #2A2A2A;
       border-radius: 8px;
       width: 100%;
@@ -43,7 +42,7 @@
     }
 
     .calculator-title {
-      color: #00e5ff; /* Título principal em azul elétrico */
+      color: #00e5ff;
       font-size: 26px;
       margin: 0 0 8px 0;
       font-weight: 700;
@@ -116,7 +115,6 @@
       transform: scale(0.98);
     }
 
-    /* Results Section Styling */
     .calculator-result {
       margin-top: 30px;
       padding-top: 20px;
@@ -136,7 +134,7 @@
     }
 
     .calculator-summary {
-      background-color: #1A1A1A; /* Ajustado para dar contraste sobre o fundo #121212 */
+      background-color: #1A1A1A;
       padding: 15px;
       border-radius: 6px;
       margin-bottom: 20px;
@@ -174,7 +172,7 @@
     }
 
     .calculator-table th {
-      background-color: #1A1A1A; /* Ajustado para harmonizar com a inversão */
+      background-color: #1A1A1A;
       color: #ffffff;
       font-size: 14px;
       font-weight: 600;
@@ -185,7 +183,6 @@
       font-size: 14px;
     }
 
-    /* Responsive Adjustments */
     @media (max-width: 480px) {
       body {
         padding: 10px;
@@ -209,8 +206,8 @@
 
   <div class="calculator-wrapper">
     <div class="calculator-container">
-      <h1 class="calculator-title">Calculadora de Armazenamento</h1>
-      <p class="calculator-subtitle">Planeje a ocupação da câmara fria por SKU</p>
+      <h1 class="calculator-title">Calculadora de Baias</h1>
+      <p class="calculator-subtitle">Planeje quantas baias serão necessárias para armazenar a produção de cada SKU</p>
       
       <hr class="calculator-divider">
 
@@ -227,7 +224,7 @@
       </div>
 
       <div class="calculator-form-group">
-        <label class="calculator-label" for="quantityInput">Quantidade Exata de Unidades Produzidas:</label>
+        <label class="calculator-label" for="quantityInput">Quantidade de unidades da Ordem de Produção:</label>
         <input type="number" id="quantityInput" class="calculator-input" placeholder="Ex: 10500" min="1" step="1">
       </div>
 
@@ -241,7 +238,7 @@
           <p>Total de Pallets: <span id="resTotalPallets" class="calculator-highlight">0</span></p>
         </div>
 
-        <p class="calculator-table-caption">Sugestão de distribuição das baias:</p>
+        <p class="calculator-table-caption">Distribuição das baias:</p>
         <table class="calculator-table">
           <thead>
             <tr>
