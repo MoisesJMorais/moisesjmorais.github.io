@@ -53,12 +53,6 @@
       letter-spacing: 0.5px;
     }
 
-    .calculator-subtitle {
-      color: #aaaaaa;
-      font-size: 14px;
-      margin: 0 0 20px 0;
-    }
-
     .calculator-divider {
       border: 0;
       height: 1px;
@@ -128,12 +122,6 @@
     @keyframes calculatorFadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
-    }
-
-    .calculator-result-title {
-      color: #ffffff;
-      font-size: 18px;
-      margin: 0 0 15px 0;
     }
 
     .calculator-summary {
@@ -210,7 +198,6 @@
   <div class="calculator-wrapper">
     <div class="calculator-container">
       <h1 class="calculator-title">Calculadora de Baias</h1>
-      <p class="calculator-subtitle">Planeje quantas baias serão necessárias para armazenar a produção de cada SKU</p>
       
       <hr class="calculator-divider">
 
@@ -234,7 +221,6 @@
       <button id="calculateBtn" class="calculator-btn">Calcular Baias</button>
 
       <div id="calculatorResult" class="calculator-result" style="display: none;">
-        <h3 class="calculator-result-title">Resultado do Dimensionamento</h3>
         
         <div class="calculator-summary">
           <p>Total de Unidades: <span id="resTotalUnits" class="calculator-highlight">0</span></p>
@@ -331,7 +317,7 @@
           if (baiaCount[capacity] > 0) {
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td>Baia para ${capacity} Pallets</td>
+              <td>Baia de ${capacity} Pallets</td>
               <td><strong>${baiaCount[capacity]} baia(s)</strong></td>
             `;
             tableBody.appendChild(row);
