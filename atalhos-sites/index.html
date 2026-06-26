@@ -54,41 +54,46 @@ body {
     overflow: hidden;
 }
 
-/* HEADER SIMPLIFICADO */
+/* HEADER OTIMIZADO E DISCRETO */
 .header {
-    padding: 24px 16px 12px;
-    text-align: center;
+    padding: 16px 20px 8px;
+    display: flex;
+    justify-content: flex-end; /* Alinha os botões discretamente à direita */
     flex-shrink: 0;
 }
 
-/* BOTÕES DE GERENCIAMENTO DISCRETOS */
 .manage-buttons {
     display: flex;
-    justify-content: center;
-    gap: 16px;
+    gap: 10px;
 }
 
 .btn-manage {
-    background: #1f1f1f;
-    border: 1px solid #333;
-    color: #bbb;
-    font-size: 13px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #aaa;
+    font-size: 16px;
     font-weight: 500;
     cursor: pointer;
-    padding: 10px 16px;
-    border-radius: 20px;
-    transition: color 0.2s, background-color 0.2s;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
 }
 
 .btn-manage:hover {
     color: #fff;
-    background-color: #2a2a2a;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .btn-manage.active {
     color: #ff4d4d;
-    background-color: rgba(255, 77, 77, 0.1);
-    border-color: #ff4d4d;
+    background-color: rgba(255, 77, 77, 0.15);
+    border-color: rgba(255, 77, 77, 0.4);
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
 }
 
 /* CONTENT GRID */
@@ -155,21 +160,23 @@ body {
 
 .remove-btn {
     position: absolute;
-    top: 4px;
-    right: 4px;
-    background: rgba(255, 77, 77, 0.9);
+    top: -4px;
+    right: -4px;
+    background: #ff4d4d;
     color: white;
     border: none;
     border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    font-size: 11px;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    font-weight: bold;
     cursor: pointer;
     display: none;
     align-items: center;
     justify-content: center;
     line-height: 1;
     z-index: 10;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 .remove-mode .remove-btn {
@@ -262,8 +269,8 @@ body {
 
 <div class="header">
     <div class="manage-buttons">
-        <button class="btn-manage" onclick="openAddModal()">+ Adicionar</button>
-        <button class="btn-manage" id="btnToggleRemove" onclick="toggleRemoveMode()">- Remover</button>
+        <button class="btn-manage" onclick="openAddModal()" title="Adicionar">+</button>
+        <button class="btn-manage" id="btnToggleRemove" onclick="toggleRemoveMode()" title="Remover">−</button>
     </div>
 </div>
 
@@ -397,6 +404,9 @@ function renderShortcuts() {
         div.addEventListener('touchend', (e) => {
             clearTimeout(touchStartTimer);
             
+            // CORREÇÃO AQUI: Se estiver no modo de exclusão, ignora o clique de abrir o site inteiramente
+            if (isRemoveMode) return; 
+
             if (activeDragElement) {
                 activeDragElement.remove();
                 activeDragElement = null;
@@ -433,10 +443,10 @@ function toggleRemoveMode() {
 
     if (isRemoveMode) {
         btn.classList.add('active');
-        btn.innerText = 'Pronto';
+        btn.innerText = '✕'; // Ícone discreto para fechar/desativar a remoção
     } else {
         btn.classList.remove('active');
-        btn.innerText = '- Remover';
+        btn.innerText = '−';
     }
     renderShortcuts();
 }
@@ -474,7 +484,10 @@ function saveShortcut() {
 }
 
 function removeShortcut(event, index) {
+    // Para travar o clique tanto no Mobile quanto Desktop
     event.stopPropagation();
+    event.preventDefault();
+    
     if (confirm(`Deseja realmente remover o atalho "${shortcuts[index].name}"?`)) {
         shortcuts.splice(index, 1);
         localStorage.setItem('myShortcuts', JSON.stringify(shortcuts));
