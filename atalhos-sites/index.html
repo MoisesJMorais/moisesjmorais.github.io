@@ -9,7 +9,6 @@
 <link rel="icon" href="https://www.google.com/chrome/static/images/favicons/favicon-32x32.png" type="image/png">
 <link rel="manifest" href="https://moisesjmorais.github.io/atalhos-sites/manifest.json">
  
-<script src="https://unpkg.com/html5-qrcode"></script>
 <script src="security.js"></script>
 
 <script>
@@ -41,6 +40,9 @@
     font-family: Roboto, system-ui, sans-serif;
     margin: 0;
     padding: 0;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 body {
@@ -52,102 +54,55 @@ body {
     overflow: hidden;
 }
 
-/* HEADER */
+/* HEADER SIMPLIFICADO */
 .header {
-    padding: 32px 16px 16px;
+    padding: 24px 16px 12px;
     text-align: center;
     flex-shrink: 0;
-}
-
-.header img {
-    height: 48px;
-    margin-bottom: 16px;
-}
-
-.search-box {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    max-width: 600px;
-    margin: 0 auto;
-    background-color: #2a2a2a;
-    border-radius: 24px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    padding: 4px 8px;
-}
-
-.search-box input {
-    flex: 1;
-    border: none;
-    outline: none;
-    background: transparent;
-    color: #fff;
-    font-size: 16px;
-    padding: 10px;
-    border-radius: 24px;
-}
-
-.search-box input::placeholder {
-    color: #ccc;
-}
-
-.qr-button {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    margin-left: 4px;
 }
 
 /* BOTÕES DE GERENCIAMENTO DISCRETOS */
 .manage-buttons {
     display: flex;
     justify-content: center;
-    gap: 12px;
-    margin-top: 12px;
+    gap: 16px;
 }
 
 .btn-manage {
-    background: transparent;
-    border: none;
-    color: #888;
-    font-size: 11px;
+    background: #1f1f1f;
+    border: 1px solid #333;
+    color: #bbb;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 10px 16px;
+    border-radius: 20px;
     transition: color 0.2s, background-color 0.2s;
 }
 
 .btn-manage:hover {
     color: #fff;
-    background-color: #1f1f1f;
+    background-color: #2a2a2a;
 }
 
 .btn-manage.active {
     color: #ff4d4d;
     background-color: rgba(255, 77, 77, 0.1);
+    border-color: #ff4d4d;
 }
 
 /* CONTENT GRID */
 .content {
     flex: 1;
     overflow-y: auto;
-    padding: 16px;
+    padding: 12px 16px;
+    position: relative;
 }
 
 .icon-grid {
     display: grid;
-    grid-template-columns: repeat(6, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 16px;
-}
-
-@media (max-width: 768px) {
-    .icon-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
 }
 
 .favorite-icon {
@@ -156,22 +111,24 @@ body {
     border-radius: 12px;
     padding: 12px 4px;
     text-align: center;
-    cursor: grab;
     transition: background 0.2s, transform 0.1s, opacity 0.2s;
+    touch-action: none;
 }
 
-.favorite-icon:active {
-    cursor: grabbing;
+.favorite-icon.dragging-mobile {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.8;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    transform: scale(1.1);
+    background-color: #333333;
 }
 
-/* Estilo visual para feedback visual do item arrastado */
-.favorite-icon.dragging {
-    opacity: 0.4;
-    transform: scale(0.95);
-}
-
-.favorite-icon:hover {
-    background-color: #2a2a2a;
+.favorite-icon.placeholder-mobile {
+    opacity: 0.3;
+    background-color: #121212;
+    border: 2px dashed #444;
 }
 
 .favorite-icon a {
@@ -179,6 +136,7 @@ body {
     text-decoration: none;
     display: inline-block;
     width: 100%;
+    pointer-events: none;
 }
 
 .favorite-icon img {
@@ -186,7 +144,6 @@ body {
     height: 40px;
     margin-bottom: 6px;
     border-radius: 12px;
-    pointer-events: none; /* Impede interferência no drag nativo */
 }
 
 .favorite-icon span {
@@ -194,7 +151,6 @@ body {
     font-size: 10px;
     font-weight: bold;
     word-break: break-word;
-    pointer-events: none; /* Impede interferência no drag nativo */
 }
 
 .remove-btn {
@@ -209,14 +165,13 @@ body {
     height: 18px;
     font-size: 11px;
     cursor: pointer;
-    display: none; /* Controlado dinamicamente via JS */
+    display: none;
     align-items: center;
     justify-content: center;
     line-height: 1;
     z-index: 10;
 }
 
-/* Modificadores para o Modo de Remoção */
 .remove-mode .remove-btn {
     display: flex;
 }
@@ -230,8 +185,8 @@ body {
     100% { transform: rotate(0.5deg); }
 }
 
-/* QR Modal & Add Modal */
-#qr-reader-container, #add-modal-container {
+/* Add Modal */
+#add-modal-container {
     position: fixed;
     inset: 0;
     background: rgba(0,0,0,0.85);
@@ -241,17 +196,12 @@ body {
     z-index: 999;
 }
 
-#qr-reader, .modal-content {
-    width: 300px;
-    background: #000;
-    padding: 12px;
-    border-radius: 8px;
-}
-
 .modal-content {
+    width: 300px;
     background: #1f1f1f;
     border: 1px solid #333;
     padding: 20px;
+    border-radius: 8px;
 }
 
 .modal-content h3 {
@@ -269,6 +219,8 @@ body {
     border-radius: 6px;
     color: white;
     outline: none;
+    -webkit-user-select: text;
+    user-select: text;
 }
 
 .modal-buttons {
@@ -296,45 +248,27 @@ body {
     color: white;
 }
 
-.qr-close, .modal-close {
+.modal-close {
     position: absolute;
     top: 20px;
     right: 20px;
     font-size: 26px;
     color: #fff;
     cursor: pointer;
-    user-select: none;
 }
 </style>
 </head>
 <body>
 
 <div class="header">
-    <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_light_color_272x92dp.png" alt="Logo">
-    
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Pesquisar ou digitar endereço">
-        <div class="qr-button" onclick="openQR()" title="Ler QR Code">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="#ffffff" viewBox="0 0 24 24">
-                <path d="M3 3h8v8H3V3zm2 2v4h4V5H5zm8-2h8v8h-8V3zm2 2v4h4V5h-4zM3 13h8v8H3v-8zm2 2v4h4v-4H5zm10-2h2v2h-2v-2zm-2 2h2v2h-2v-2zm2 2h2v2h-2v-2zm2-2h2v6h-6v-2h4v-4z"/>
-            </svg>
-        </div>
-    </div>
-
     <div class="manage-buttons">
-        <button class="btn-manage" onclick="openAddModal()">+ Adicionar atalho</button>
-        <button class="btn-manage" id="btnToggleRemove" onclick="toggleRemoveMode()">- Remover atalho</button>
+        <button class="btn-manage" onclick="openAddModal()">+ Adicionar</button>
+        <button class="btn-manage" id="btnToggleRemove" onclick="toggleRemoveMode()">- Remover</button>
     </div>
 </div>
 
-<div class="content">
-    <div class="icon-grid" id="iconGrid">
-        </div>
-</div>
-
-<div id="qr-reader-container">
-    <div class="qr-close" onclick="closeQR()">✕</div>
-    <div id="qr-reader"></div>
+<div class="content" id="contentArea">
+    <div class="icon-grid" id="iconGrid"></div>
 </div>
 
 <div id="add-modal-container">
@@ -352,9 +286,16 @@ body {
 </div>
 
 <script>
-let qrScanner;
 let isRemoveMode = false;
-let draggedItemIndex = null; // Guarda o índice do elemento arrastado
+
+// Variáveis de Controle do Touch Mobile
+let touchStartTimer = null;
+let activeDragElement = null;
+let dragPlaceholder = null;
+let initialShortcutIndex = null;
+let currentShortcutIndex = null;
+let offsetX = 0;
+let offsetY = 0;
 
 const defaultShortcuts = [
     { name: "Gemini", url: "https://gemini.google.com/", icon: "https://www.google.com/s2/favicons?domain=gemini.google.com&sz=64" },
@@ -377,81 +318,131 @@ function renderShortcuts() {
     const grid = document.getElementById('iconGrid');
     grid.innerHTML = '';
 
-    // Re-adiciona classe de remoção se estiver ativada ao re-renderizar
     if (isRemoveMode) {
         grid.classList.add('remove-mode');
+    } else {
+        grid.classList.remove('remove-mode');
     }
 
     shortcuts.forEach((shortcut, index) => {
         const div = document.createElement('div');
         div.className = 'favorite-icon';
-        div.setAttribute('draggable', 'true'); // Habilita o drag nativo
         div.setAttribute('data-index', index);
         
         const iconSrc = shortcut.icon || `https://www.google.com/s2/favicons?domain=${new URL(shortcut.url).hostname}&sz=64`;
 
         div.innerHTML = `
             <button class="remove-btn" onclick="removeShortcut(event, ${index})" title="Remover">×</button>
-            <a href="${shortcut.url}" target="_self" onclick="if(isRemoveMode) return false;">
+            <a href="#">
                 <img src="${iconSrc}" alt="${shortcut.name}" onerror="this.src='https://www.google.com/s2/favicons?domain=${shortcut.url}&sz=64'">
                 <span>${shortcut.name}</span>
             </a>
         `;
 
-        // --- EVENTOS DRAG AND DROP ---
-        div.addEventListener('dragstart', (e) => {
-            if (isRemoveMode) { 
-                e.preventDefault(); // Impede o drag se estiver deletando
-                return; 
+        // ---- LÓGICA DE EVENTOS MOBILE SMARTPHONE ----
+        div.addEventListener('touchstart', (e) => {
+            if (isRemoveMode) return;
+            
+            const touch = e.touches[0];
+            const rect = div.getBoundingClientRect();
+            
+            initialShortcutIndex = index;
+            currentShortcutIndex = index;
+            
+            offsetX = touch.clientX - rect.left;
+            offsetY = touch.clientY - rect.top;
+
+            touchStartTimer = setTimeout(() => {
+                if (navigator.vibrate) navigator.vibrate(50);
+                
+                activeDragElement = div.cloneNode(true);
+                activeDragElement.classList.add('dragging-mobile');
+                activeDragElement.style.width = `${rect.width}px`;
+                activeDragElement.style.height = `${rect.height}px`;
+                activeDragElement.style.left = `${touch.clientX - offsetX}px`;
+                activeDragElement.style.top = `${touch.clientY - offsetY}px`;
+                document.body.appendChild(activeDragElement);
+
+                dragPlaceholder = div;
+                dragPlaceholder.classList.add('placeholder-mobile');
+            }, 200);
+        }, { passive: true });
+
+        div.addEventListener('touchmove', (e) => {
+            if (!activeDragElement) {
+                clearTimeout(touchStartTimer);
+                return;
             }
-            draggedItemIndex = index;
-            setTimeout(() => div.classList.add('dragging'), 0);
-        });
-
-        div.addEventListener('dragend', () => {
-            div.classList.remove('dragging');
-            draggedItemIndex = null;
-        });
-
-        div.addEventListener('dragover', (e) => {
-            e.preventDefault(); // Necessário para permitir o drop
-        });
-
-        div.addEventListener('drop', (e) => {
             e.preventDefault();
-            if (draggedItemIndex === null || draggedItemIndex === index) return;
 
-            // Remove o item arrastado da posição antiga e insere na nova
-            const movedItem = shortcuts.splice(draggedItemIndex, 1)[0];
-            shortcuts.splice(index, 0, movedItem);
+            const touch = e.touches[0];
+            activeDragElement.style.left = `${touch.clientX - offsetX}px`;
+            activeDragElement.style.top = `${touch.clientY - offsetY}px`;
 
-            // Salva o novo arranjo no localStorage e atualiza a UI
-            localStorage.setItem('myShortcuts', JSON.stringify(shortcuts));
-            renderShortcuts();
+            const targetElement = document.elementFromPoint(touch.clientX, touch.clientY);
+            const targetIcon = targetElement ? targetElement.closest('.favorite-icon') : null;
+
+            if (targetIcon && targetIcon !== dragPlaceholder) {
+                const targetIndex = parseInt(targetIcon.getAttribute('data-index'));
+                if (!isNaN(targetIndex) && targetIndex !== currentShortcutIndex) {
+                    const movedItem = shortcuts.splice(currentShortcutIndex, 1)[0];
+                    shortcuts.splice(targetIndex, 0, movedItem);
+                    currentShortcutIndex = targetIndex;
+                    
+                    renderShortcutsSilently(currentShortcutIndex);
+                }
+            }
+        }, { passive: false });
+
+        div.addEventListener('touchend', (e) => {
+            clearTimeout(touchStartTimer);
+            
+            if (activeDragElement) {
+                activeDragElement.remove();
+                activeDragElement = null;
+                
+                if (dragPlaceholder) {
+                    dragPlaceholder.classList.remove('placeholder-mobile');
+                    dragPlaceholder = null;
+                }
+
+                localStorage.setItem('myShortcuts', JSON.stringify(shortcuts));
+                renderShortcuts();
+            } else {
+                window.location.href = shortcut.url;
+            }
         });
 
         grid.appendChild(div);
     });
 }
 
-function toggleRemoveMode() {
-    isRemoveMode = !isRemoveMode;
+function renderShortcutsSilently(placeholderIdx) {
+    renderShortcuts();
     const grid = document.getElementById('iconGrid');
-    const btn = document.getElementById('btnToggleRemove');
-
-    if (isRemoveMode) {
-        grid.classList.add('remove-mode');
-        btn.classList.add('active');
-        btn.innerText = 'Pronto';
-    } else {
-        grid.classList.remove('remove-mode');
-        btn.classList.remove('active');
-        btn.innerText = '- Remover atalho';
+    const items = grid.querySelectorAll('.favorite-icon');
+    if(items[placeholderIdx]) {
+        dragPlaceholder = items[placeholderIdx];
+        dragPlaceholder.classList.add('placeholder-mobile');
     }
 }
 
+function toggleRemoveMode() {
+    isRemoveMode = !isRemoveMode;
+    const btn = document.getElementById('btnToggleRemove');
+
+    if (isRemoveMode) {
+        btn.classList.add('active');
+        btn.innerText = 'Pronto';
+    } else {
+        btn.classList.remove('active');
+        btn.innerText = '- Remover';
+    }
+    renderShortcuts();
+}
+
 function openAddModal() {
-    if (isRemoveMode) toggleRemoveMode(); // Desativa modo remoção se estiver ativo
+    if (isRemoveMode) toggleRemoveMode();
     document.getElementById('add-modal-container').style.display = 'flex';
 }
 
@@ -484,7 +475,6 @@ function saveShortcut() {
 
 function removeShortcut(event, index) {
     event.stopPropagation();
-    event.preventDefault();
     if (confirm(`Deseja realmente remover o atalho "${shortcuts[index].name}"?`)) {
         shortcuts.splice(index, 1);
         localStorage.setItem('myShortcuts', JSON.stringify(shortcuts));
@@ -492,36 +482,7 @@ function removeShortcut(event, index) {
     }
 }
 
-function openQR() {
-    const container = document.getElementById('qr-reader-container');
-    container.style.display = 'flex';
-
-    qrScanner = new Html5Qrcode("qr-reader");
-    qrScanner.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: 250 },
-        (decodedText) => {
-            if (navigator.vibrate) navigator.vibrate(200);
-            qrScanner.stop();
-            container.style.display = 'none';
-            window.location.href = decodedText;
-        }
-    ).catch(err => { alert("Erro ao acessar a câmera: "+err); });
-}
-
-function closeQR() {
-    if(qrScanner) qrScanner.stop();
-    document.getElementById('qr-reader-container').style.display = 'none';
-}
-
-document.getElementById('searchInput').addEventListener('keydown', function(e){
-    if(e.key === 'Enter'){
-        e.preventDefault();
-        const query = this.value.trim();
-        if(query) window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
-    }
-});
-
+// Inicialização
 renderShortcuts();
 </script>
 
