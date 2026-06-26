@@ -36,13 +36,19 @@ document.addEventListener("contextmenu", (e) => {
 		  }
 		});
 
-// Desabilitar seleção de texto e copiar
+// Desabilitar seleção de texto e copiar (permitindo nos inputs)
 const style = document.createElement("style");
 style.innerHTML = `
   body {
     user-select: none !important;
     -webkit-user-select: none !important;
     -ms-user-select: none !important;
+  }
+  /* Abre uma exceção para que as caixas de texto funcionem perfeitamente */
+  input, textarea {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+    -ms-user-select: text !important;
   }
 `;
 document.head.appendChild(style);
