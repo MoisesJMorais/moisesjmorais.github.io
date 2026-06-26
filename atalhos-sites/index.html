@@ -113,11 +113,17 @@ body {
 .favorite-icon {
     position: relative;
     background-color: #1f1f1f;
+    border: 1px solid #adadad;
     border-radius: 12px;
     padding: 12px 4px;
     text-align: center;
     transition: background 0.2s, transform 0.1s, opacity 0.2s;
     touch-action: none;
+}
+
+ .favorite-icon:hover {
+    border-color: #00e5ff; /* Borda neon quando passa o mouse */
+    background-color: #252525; /* Opcional: um leve destaque no fundo ao passar o mouse */
 }
 
 .favorite-icon.dragging-mobile {
