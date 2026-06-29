@@ -54,12 +54,20 @@ body {
     overflow: hidden;
 }
 
-/* HEADER OTIMIZADO E DISCRETO */
+/* HEADER OTIMIZADO - MODIFICADO PARA COMPORTAR O H1 ALINHADO */
 .header {
     padding: 16px 20px 8px;
     display: flex;
-    justify-content: flex-end; /* Alinha os botões discretamente à direita */
+    justify-content: space-between; /* Espalha o título para a esquerda e botões para a direita */
+    align-items: center; /* Alinha verticalmente o texto com os botões */
     flex-shrink: 0;
+}
+
+/* ESTILIZAÇÃO DO TÍTULO H1 */
+.header h1 {
+    font-size: 20px;
+    font-weight: 500;
+    color: #ffffff;
 }
 
 .manage-buttons {
@@ -273,6 +281,7 @@ body {
 <body>
 
 <div class="header">
+    <h1>Apps Leves</h1>
     <div class="manage-buttons">
         <button class="btn-manage" onclick="openAddModal()" title="Adicionar">+</button>
         <button class="btn-manage" id="btnToggleRemove" onclick="toggleRemoveMode()" title="Remover">−</button>
