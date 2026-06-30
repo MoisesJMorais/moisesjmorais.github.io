@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Códigos NFC</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-muted: #adadad;
+            --accent-color: #00e5ff;
+            --card-bg: #1e1e1e;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: #ffffff;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Container de Filtros */
+        .filter-section {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .filter-group input, .filter-group select {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            color: #ffffff;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group input:focus, .filter-group select:focus {
+            border-color: var(--accent-color);
+        }
+
+        /* Contador de Resultados */
+        .results-count {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-align: right;
+        }
+
+        /* Tabela para Desktop */
+        .table-container {
+            overflow-x: auto;
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: middle;
+        }
+
+        th {
+            background-color: rgba(0, 229, 255, 0.1);
+            color: var(--accent-color);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .code-cell {
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            color: var(--accent-color);
+            letter-spacing: 0.5px;
+        }
+
+        .flag-img {
+            width: 20px;
+            height: auto;
+            vertical-align: middle;
+            margin-right: 8px;
+            border-radius: 2px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Layout em Cards para Mobile */
+        .mobile-cards {
+            display: none;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .table-container {
+                display: none;
+            }
+
+            .mobile-cards {
+                display: flex;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .card {
+                background-color: var(--card-bg);
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                padding: 15px;
+                position: relative;
+            }
+
+            .card-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-bottom: 1px solid var(--border-color);
+                padding-bottom: 8px;
+                margin-bottom: 10px;
+            }
+
+            .card-title {
+                font-weight: bold;
+                font-size: 1rem;
+                padding-right: 10px;
+            }
+
+            .card-code {
+                font-family: 'Courier New', Courier, monospace;
+                color: var(--accent-color);
+                font-weight: bold;
+                font-size: 1.1rem;
+                margin-bottom: 10px;
+            }
+
+            .card-row {
+                display: flex;
+                justify-content: space-between;
+                font-size: 0.9rem;
+                margin-bottom: 5px;
+            }
+
+            .card-label {
+                color: var(--text-muted);
+            }
+
+            .card-value {
+                color: #ffffff;
+                text-align: right;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Consulta de Códigos de Produtos NFC</h1>
+        <p>Lista de códigos para abertura de OP's</p>
+    </header>
+
+    <!-- Filtros -->
+    <div class="filter-section">
+        <div class="filter-group">
+            <label for="searchDesc">Descrição / Código</label>
+            <input type="text" id="searchDesc" placeholder="Ex: 900 ML ou Código...">
+        </div>
+        <div class="filter-group">
+            <label for="filterSabor">Sabor</label>
+            <select id="filterSabor">
+                <option value="">Todos</option>
+                <option value="LARANJA">Laranja</option>
+                <option value="FRUITZ">Laranja Fruitz</option>
+                <option value="LIMÃO">Limão</option>
+                <option value="UVA">Uva</option>
+                <option value="GOIABA">Goiaba</option>
+                <option value="ACEROLA">Acerola</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="filterPais">Mercado / País</label>
+            <select id="filterPais">
+                <option value="">Todos</option>
+                <option value="BR">Nacional (Brasil)</option>
+                <option value="PY">Exportação (Paraguai)</option>
+                <option value="US">Exportação (Estados Unidos)</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="filterLinha">Linha</label>
+            <select id="filterLinha">
+                <option value="">Todas</option>
+                <option value="C.FLEX">C.FLEX</option>
+                <option value="KHS 1">KHS 1</option>
+                <option value="KHS 2">KHS 2</option>
+                <option value="SIDEL">SIDEL</option>
+                <option value="MESAL 60">MESAL 60</option>
+                <option value="ZEGLA 1">ZEGLA 1</option>
+                <option value="ZEGLA 2">ZEGLA 2</option>
+                <option value="PI">Processo (PI)</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="results-count" id="countDisplay">Produtos encontrados: 0</div>
+
+    <!-- Visualização Desktop -->
+    <div class="table-container">
+        <table id="productsTable">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Origem</th>
+                    <th>Tipo</th>
+                    <th>Linha</th>
+                    <th>Sabor</th>
+                    <th>SKU</th>
+                    <th>Descrição</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Inserido via JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Visualização Mobile -->
+    <div class="mobile-cards" id="cardsContainer">
+        <!-- Inserido via JavaScript -->
+    </div>
+</div>
+
+<script>
+    const produtos = [
+        // LARANJA INTEGRAL
+        { cod: "1010.200.000072", tipo: "PA", rep: "C", linha: "C.FLEX", sabor: "LARANJA", sku: "200", desc: "SUCO DE LARANJA INTEGRAL 200 ML CARTONADO", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000035", tipo: "PA", rep: "T", linha: "KHS 2", sabor: "LARANJA", sku: "300", desc: "SUCO DE LARANJA INTEGRAL PET 300 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000045", tipo: "PY", rep: "T", linha: "KHS 2", sabor: "LARANJA", sku: "300", desc: "SUCO DE LARANJA INTEGRAL PET 300 ML EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000002", tipo: "PA", rep: "H", linha: "SIDEL", sabor: "LARANJA", sku: "900", desc: "SUCO DE LARANJA INTEGRAL PET 900 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000014", tipo: "PY", rep: "H", linha: "SIDEL", sabor: "LARANJA", sku: "900", desc: "SUCO DE LARANJA INTEGRAL PET 900 ML EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000003", tipo: "PA", rep: "M", linha: "MESAL 60", sabor: "LARANJA", sku: "1700", desc: "SUCO DE LARANJA INTEGRAL PET 1,7 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000003", tipo: "PA", rep: "K", linha: "KHS 1", sabor: "LARANJA", sku: "1700", desc: "SUCO DE LARANJA INTEGRAL PET 1,7 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000015", tipo: "PY", rep: "M", linha: "MESAL 60", sabor: "LARANJA", sku: "1700", desc: "SUCO DE LARANJA INTEGRAL PET 1,7 LT EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000015", tipo: "PY", rep: "K", linha: "KHS 1", sabor: "LARANJA", sku: "1700", desc: "SUCO DE LARANJA INTEGRAL PET 1,7 LT EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000027", tipo: "PA COOP", rep: "M", linha: "MESAL 60", sabor: "LARANJA", sku: "1700", desc: "SUCO DE LARANJA INTEGRAL 1,7 LT - COOPERSANTA", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000027", tipo: "PA - COOP", rep: "K", linha: "KHS 1", sabor: "LARANJA", sku: "1700", desc: "SUCO DE LARANJA INTEGRAL 1,7 LT - COOPERSANTA", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000032", tipo: "PA", rep: "Z", linha: "ZEGLA 1", sabor: "LARANJA", sku: "3000", desc: "SUCO DE LARANJA INTEGRAL PET 3 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000032", tipo: "PA", rep: "G", linha: "ZEGLA 2", sabor: "LARANJA", sku: "3000", desc: "SUCO DE LARANJA INTEGRAL PET 3 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000033", tipo: "PY", rep: "Z", linha: "ZEGLA 1", sabor: "LARANJA", sku: "3000", desc: "SUCO DE LARANJA INTEGRAL PET 3 LT EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000033", tipo: "PY", rep: "G", linha: "ZEGLA 2", sabor: "LARANJA", sku: "3000", desc: "SUCO DE LARANJA INTEGRAL PET 3 LT EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000058", tipo: "PA - COOP", rep: "Z", linha: "ZEGLA 1", sabor: "LARANJA", sku: "3000", desc: "SUCO DE LARANJA INTEGRAL 3 LT - COOPERSANTA", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000058", tipo: "PA - COOP", rep: "G", linha: "ZEGLA 2", sabor: "LARANJA", sku: "3000", desc: "SUCO DE LARANJA INTEGRAL 3 LT - COOPERSANTA", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1030.100.000020", tipo: "PI", rep: "-", linha: "-", sabor: "LARANJA", sku: "-", desc: "SUCO DE LARANJA PREPARADO", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+
+        // LARANJA ADOÇADO FRUITZ
+        { cod: "1010.200.000074", tipo: "PA", rep: "H", linha: "SIDEL", sabor: "FRUITZ", sku: "900", desc: "SUCO DE LARANJA ADOÇADO FRUITZ PET 900 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000069", tipo: "PA", rep: "M", linha: "MESAL 60", sabor: "FRUITZ", sku: "1500", desc: "SUCO DE LARANJA ADOÇADO FRUITZ PET 1,5 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000070", tipo: "PA", rep: "Z", linha: "ZEGLA 1", sabor: "FRUITZ", sku: "3000", desc: "SUCO DE LARANJA ADOÇADO FRUITZ PET 3 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000070", tipo: "PA", rep: "G", linha: "ZEGLA 2", sabor: "FRUITZ", sku: "3000", desc: "SUCO DE LARANJA ADOÇADO FRUITZ PET 3 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000071", tipo: "PA", rep: "Z", linha: "ZEGLA 1", sabor: "FRUITZ", sku: "5000", desc: "SUCO DE LARANJA ADOÇADO FRUITZ PET 5 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000071", tipo: "PA", rep: "G", linha: "ZEGLA 2", sabor: "FRUITZ", sku: "5000", desc: "SUCO DE LARANJA ADOÇADO FRUITZ PET 5 LT", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1030.100.000037", tipo: "PI", rep: "-", linha: "-", sabor: "FRUITZ", sku: "-", desc: "SUCO DE LARANJA PREPARADO ADOÇADO FRUITZ", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+
+        // LIMÃO
+        { cod: "1010.200.000039", tipo: "PA", rep: "T", linha: "KHS 2", sabor: "LIMÃO", sku: "300", desc: "LIMONADA ADOÇADA PET 300 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000049", tipo: "PY", rep: "T", linha: "KHS 2", sabor: "LIMÃO", sku: "300", desc: "LIMONADA ADOÇADA PET 300 ML EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000008", tipo: "PA", rep: "H", linha: "SIDEL", sabor: "LIMÃO", sku: "900", desc: "LIMONADA ADOÇADA PET 900 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000020", tipo: "PY", rep: "H", linha: "SIDEL", sabor: "LIMÃO", sku: "900", desc: "LIMONADA ADOÇADA PET 900 ML EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1030.100.000019", tipo: "PI", rep: "-", linha: "-", sabor: "LIMÃO", sku: "-", desc: "SUCO DE LIMÃO PREPARADO", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+
+        // UVA
+        { cod: "1010.200.000073", tipo: "PA", rep: "C", linha: "C.FLEX", sabor: "UVA", sku: "200", desc: "SUCO DE UVA 200 ML CARTONADO", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000037", tipo: "PA", rep: "T", linha: "KHS 2", sku: "300", sabor: "UVA", desc: "SUCO DE UVA PET 300 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000047", tipo: "PY", rep: "T", linha: "KHS 2", sku: "300", sabor: "UVA", desc: "SUCO DE UVA PET 300 ML EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000006", tipo: "PA", rep: "H", linha: "SIDEL", sku: "900", sabor: "UVA", desc: "SUCO DE UVA PET 900 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000018", tipo: "PY", rep: "H", linha: "SIDEL", sku: "900", sabor: "UVA", desc: "SUCO DE UVA PET 900 ML EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1030.100.000012", tipo: "PI", rep: "-", linha: "-", sku: "-", sabor: "UVA", desc: "SUCO DE UVA PREPARADO", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+
+        // GOIABA
+        { cod: "1010.200.000041", tipo: "PA", rep: "T", linha: "KHS 2", sabor: "GOIABA", sku: "300", desc: "SUCO DE GOIABA PET 300 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000051", tipo: "PY", rep: "T", linha: "KHS 2", sabor: "GOIABA", sku: "300", desc: "SUCO DE GOIABA PET 300 ML EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000010", tipo: "PA", rep: "H", linha: "SIDEL", sabor: "GOIABA", sku: "900", desc: "SUCO DE GOIABA PET 900 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000022", tipo: "PY", rep: "H", linha: "SIDEL", sabor: "GOIABA", sku: "900", desc: "SUCO DE GOIABA PET 900 ML EXPORTAÇÃO - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1030.100.000017", tipo: "PI", rep: "-", linha: "-", sabor: "GOIABA", sku: "-", desc: "SUCO DE GOIABA PREPARADO", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+
+        // ACEROLA
+        { cod: "1010.200.000043", tipo: "PA", rep: "T", linha: "KHS 2", sabor: "ACEROLA", sku: "300", desc: "SUCO MISTO LARANJA, ACEROLA E MAÇÃ PET 300 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000053", tipo: "PY", rep: "T", linha: "KHS 2", sabor: "ACEROLA", sku: "300", desc: "SUCO MISTO LARANJA, ACEROLA E MAÇÃ PET 300 ML EXPORT. - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1010.200.000012", tipo: "PA", rep: "H", linha: "SIDEL", sabor: "ACEROLA", sku: "900", desc: "SUCO MISTO LARANJA, ACEROLA E MAÇÃ PET 900 ML", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+        { cod: "1010.200.000031", tipo: "PY", rep: "H", linha: "SIDEL", sabor: "ACEROLA", sku: "900", desc: "SUCO MISTO LARANJA, ACEROLA E MAÇÃ PET 900 ML EXPORT. - PARAGUAY", pais: "PY", flagUrl: "https://flagcdn.com/py.svg" },
+        { cod: "1030.100.000018", tipo: "PI", rep: "-", linha: "-", sabor: "ACEROLA", sku: "-", desc: "SUCO MISTO LARANJA, ACEROLA E MAÇÃ PREPARADO", pais: "BR", flagUrl: "https://flagcdn.com/br.svg" },
+
+        // EXTRAS / EXEMPLOS ESTADOS UNIDOS (Edite esses campos quando tiver as informações reais)
+        { cod: "1010.200.000099", tipo: "US", rep: "H", linha: "SIDEL", sabor: "LARANJA", sku: "900", desc: "SUCO DE LARANJA INTEGRAL PET 900 ML EXPORTAÇÃO - USA (EXEMPLO)", pais: "US", flagUrl: "https://flagcdn.com/us.svg" },
+        { cod: "1010.200.000100", tipo: "US", rep: "T", linha: "KHS 2", sabor: "LIMÃO", sku: "300", desc: "LIMONADA ADOÇADA PET 300 ML EXPORTAÇÃO - USA (EXEMPLO)", pais: "US", flagUrl: "https://flagcdn.com/us.svg" }
+    ];
+
+    // Elementos do DOM
+    const inputDesc = document.getElementById('searchDesc');
+    const selectSabor = document.getElementById('filterSabor');
+    const selectPais = document.getElementById('filterPais');
+    const selectLinha = document.getElementById('filterLinha');
+    
+    const tableBody = document.getElementById('tableBody');
+    const cardsContainer = document.getElementById('cardsContainer');
+    const countDisplay = document.getElementById('countDisplay');
+
+    // Função de renderização e filtro
+    function render() {
+        const textFilter = inputDesc.value.toLowerCase();
+        const saborFilter = selectSabor.value;
+        const paisFilter = selectPais.value;
+        const linhaFilter = selectLinha.value;
+
+        // Filtrar a base de dados
+        const filtrados = produtos.filter(p => {
+            const matchesText = p.desc.toLowerCase().includes(textFilter) || p.cod.includes(textFilter);
+            const matchesSabor = saborFilter === "" || p.sabor === saborFilter;
+            const matchesPais = paisFilter === "" || p.pais === paisFilter;
+            const matchesLinha = linhaFilter === "" || p.linha === linhaFilter || (linhaFilter === "PI" && p.tipo === "PI");
+
+            return matchesText && matchesSabor && matchesPais && matchesLinha;
+        });
+
+        // Atualizar contador
+        countDisplay.textContent = `Produtos encontrados: ${filtrados.length}`;
+
+        // Construir HTML para Desktop (Tabela)
+        let tableHTML = '';
+        // Construir HTML para Mobile (Cards)
+        let cardsHTML = '';
+
+        filtrados.forEach(p => {
+            // Tabela
+            tableHTML += `
+                <tr>
+                    <td class="code-cell">${p.cod}</td>
+                    <td><img src="${p.flagUrl}" class="flag-img" alt="${p.pais}"> ${p.pais}</td>
+                    <td>${p.tipo}</td>
+                    <td>${p.linha}</td>
+                    <td>${p.sabor}</td>
+                    <td>${p.sku}</td>
+                    <td>${p.desc}</td>
+                </tr>
+            `;
+
+            // Cards
+            cardsHTML += `
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">${p.desc}</span>
+                        <img src="${p.flagUrl}" class="flag-img" style="width: 25px; margin: 0;" alt="${p.pais}">
+                    </div>
+                    <div class="card-code">${p.cod}</div>
+                    <div class="card-row">
+                        <span class="card-label">Sabor:</span>
+                        <span class="card-value">${p.sabor}</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="card-label">Linha / Tipo:</span>
+                        <span class="card-value">${p.linha} (${p.tipo})</span>
+                    </div>
+                    <div class="card-row">
+                        <span class="card-label">SKU:</span>
+                        <span class="card-value">${p.sku}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        tableBody.innerHTML = tableHTML || '<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">Nenhum produto encontrado.</td></tr>';
+        cardsContainer.innerHTML = cardsHTML || '<div style="text-align:center; color: var(--text-muted); padding: 20px;">Nenhum produto encontrado.</div>';
+    }
+
+    // Event listeners para filtros em tempo real
+    inputDesc.addEventListener('input', render);
+    selectSabor.addEventListener('change', render);
+    selectPais.addEventListener('change', render);
+    selectLinha.addEventListener('change', render);
+
+    // Renderização inicial
+    render();
+</script>
+
+</body>
+</html>
