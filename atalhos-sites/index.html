@@ -54,16 +54,15 @@ body {
     overflow: hidden;
 }
 
-/* HEADER OTIMIZADO - MODIFICADO PARA COMPORTAR O H1 ALINHADO */
+/* HEADER OTIMIZADO */
 .header {
     padding: 16px 20px 8px;
     display: flex;
-    justify-content: space-between; /* Espalha o título para a esquerda e botões para a direita */
-    align-items: center; /* Alinha verticalmente o texto com os botões */
+    justify-content: space-between;
+    align-items: center;
     flex-shrink: 0;
 }
 
-/* ESTILIZAÇÃO DO TÍTULO H1 */
 .header h1 {
     font-size: 20px;
     font-weight: 500;
@@ -108,29 +107,25 @@ body {
 .content {
     flex: 1;
     overflow-y: auto;
-    padding: 12px 16px;
+    padding: 16px;
     position: relative;
 }
 
 .icon-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 16px;
+    gap: 20px 12px;
 }
 
+/* ESTILO DOS ATALHOS SEM FUNDO (QUADRINHO) */
 .favorite-icon {
     position: relative;
-    background-color: #1f1f1f;
-    border-radius: 12px;
-    padding: 12px 4px;
     text-align: center;
-    transition: background 0.2s, transform 0.1s, opacity 0.2s;
+    transition: transform 0.1s, opacity 0.2s;
     touch-action: none;
-}
-
- .favorite-icon:hover {
-    border-color: #00e5ff; /* Borda neon quando passa o mouse */
-    background-color: #252525; /* Opcional: um leve destaque no fundo ao passar o mouse */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .favorite-icon.dragging-mobile {
@@ -138,50 +133,58 @@ body {
     z-index: 9999;
     pointer-events: none;
     opacity: 0.8;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
     transform: scale(1.1);
-    background-color: #333333;
 }
 
 .favorite-icon.placeholder-mobile {
-    opacity: 0.3;
-    background-color: #121212;
-    border: 2px dashed #444;
+    opacity: 0.2;
 }
 
 .favorite-icon a {
     color: white;
     text-decoration: none;
-    display: inline-block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
     pointer-events: none;
 }
 
+/* ÍCONE MAIOR E COM CANTOS ARREDONDADOS */
 .favorite-icon img {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
     margin-bottom: 6px;
-    border-radius: 12px;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    object-fit: cover;
 }
 
 .favorite-icon span {
     display: block;
-    font-size: 10px;
-    font-weight: bold;
+    font-size: 11px;
+    font-weight: 500;
     word-break: break-word;
+    line-height: 1.2;
+    max-width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
+/* BOTÃO DE REMOÇÃO */
 .remove-btn {
     position: absolute;
-    top: -4px;
-    right: -4px;
+    top: -6px;
+    right: 2px;
     background: #ff4d4d;
     color: white;
     border: none;
     border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    font-size: 12px;
+    width: 22px;
+    height: 22px;
+    font-size: 14px;
     font-weight: bold;
     cursor: pointer;
     display: none;
@@ -189,7 +192,7 @@ body {
     justify-content: center;
     line-height: 1;
     z-index: 10;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
 
 .remove-mode .remove-btn {
@@ -201,8 +204,8 @@ body {
 }
 
 @keyframes shake {
-    0% { transform: rotate(-0.5deg); }
-    100% { transform: rotate(0.5deg); }
+    0% { transform: rotate(-1deg); }
+    100% { transform: rotate(1deg); }
 }
 
 /* Add Modal */
@@ -309,7 +312,6 @@ body {
 <script>
 let isRemoveMode = false;
 
-// Variáveis de Controle do Touch Mobile
 let touchStartTimer = null;
 let activeDragElement = null;
 let dragPlaceholder = null;
@@ -360,7 +362,6 @@ function renderShortcuts() {
             </a>
         `;
 
-        // ---- LÓGICA DE EVENTOS MOBILE SMARTPHONE ----
         div.addEventListener('touchstart', (e) => {
             if (isRemoveMode) return;
             
@@ -418,7 +419,6 @@ function renderShortcuts() {
         div.addEventListener('touchend', (e) => {
             clearTimeout(touchStartTimer);
             
-            // CORREÇÃO AQUI: Se estiver no modo de exclusão, ignora o clique de abrir o site inteiramente
             if (isRemoveMode) return; 
 
             if (activeDragElement) {
@@ -457,7 +457,7 @@ function toggleRemoveMode() {
 
     if (isRemoveMode) {
         btn.classList.add('active');
-        btn.innerText = '✕'; // Ícone discreto para fechar/desativar a remoção
+        btn.innerText = '✕';
     } else {
         btn.classList.remove('active');
         btn.innerText = '−';
@@ -498,7 +498,6 @@ function saveShortcut() {
 }
 
 function removeShortcut(event, index) {
-    // Para travar o clique tanto no Mobile quanto Desktop
     event.stopPropagation();
     event.preventDefault();
     
@@ -509,7 +508,6 @@ function removeShortcut(event, index) {
     }
 }
 
-// Inicialização
 renderShortcuts();
 </script>
 
