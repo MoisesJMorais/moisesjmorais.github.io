@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Acervo Acadêmico | Moisés J. M. Lima</title>
+  <script type="module">
+    import * as pdfjsLib from "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/6.1.200/pdf.min.mjs";
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/6.1.200/pdf.worker.min.mjs";
+    window.pdfjsLib = pdfjsLib;
+    window.dispatchEvent(new Event("pdfjs-ready"));
+  </script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    :root {
+      --bg: #f7f7f5;
+      --card: #ffffff;
+      --text: #171717;
+      --muted: #8b8b8b;
+      --border: #e9e9e7;
+      --accent: #111111;
+      --header-bg: linear-gradient(135deg, #0055ff 0%, #00d2ff 100%);
+      --header-text: #ffffff;
+      --header-muted: rgba(255, 255, 255, 0.85);
+    }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .top-container {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--header-bg);
+      box-shadow: 0 4px 20px rgba(0, 85, 255, 0.15);
+      flex-shrink: 0;
+    }
+    header {
+      max-width: 1400px;
+      margin: auto;
+      padding: 38px 40px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+    }
+    .brand h1 {
+      font-size: 25px;
+      font-weight: 750;
+      text-align: center;
+      letter-spacing: -0.8px;
+      color: var(--header-text);
+    }
+    .brand p {
+      color: var(--header-muted);
+      font-size: 13px;
+      text-align: center;
+      margin-top: 5px;
+    }
+    .search {
+      width: 300px;
+      height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 12px;
+      padding: 0 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .search span {
+      color: #777;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .search input {
+      border: 0;
+      outline: none;
+      width: 100%;
+      background: transparent;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .search input::placeholder {
+      color: #999;
+    }
+    .categories {
+      max-width: 1400px;
+      margin: auto;
+      padding: 0 40px 25px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .categories::-webkit-scrollbar {
+      display: none;
+    }
+    .category {
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background: rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      padding: 8px 14px;
+      border-radius: 100px;
+      font-size: 12px;
+      cursor: pointer;
+      white-space: nowrap;
+      backdrop-filter: blur(4px);
+      transition: .2s ease;
+    }
+    .category:hover {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+    .category.active {
+      background: #ffffff;
+      color: #0055ff;
+      border-color: #ffffff;
+      font-weight: 600;
+    }
+    main {
+      max-width: 1400px;
+      width: 100%;
+      margin: auto;
+      padding: 0 40px 60px;
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+    .library {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 30px 22px;
+      padding-top: 30px;
+    }
+    .book {
+      position: relative;
+      cursor: pointer;
+      min-width: 0;
+    }
+    .cover-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 0.70;
+      border-radius: 7px;
+      overflow: hidden;
+      background: #ffffff;
+      border: none;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, .10);
+      isolation: isolate;
+      transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .book:hover .cover-wrapper {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 30px rgba(0, 0, 0, .16);
+      border-color: #243b53;
+    }
+    .pdf-canvas {
+      position: absolute;
+      display: block;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+    .cover-loading {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(100deg, #eeeeec 20%, #f8f8f7 40%, #eeeeec 60%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      z-index: 2;
+    }
+    @keyframes shimmer {
+      to {
+        background-position: -200% 0;
+      }
+    }
+    .cover-error {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: #999;
+      font-size: 11px;
+      text-align: center;
+      background: #f5f5f3;
+      z-index: 3;
+    }
+    .cover-error span {
+      font-size: 28px;
+    }
+    .book-info {
+      padding: 11px 2px 0;
+      text-align: center;
+    }
+    .book-title {
+      font-size: 13px;
+      text-align: center;
+      font-weight: 650;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      line-height: 1.3;
+    }
+    .book-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      white-space: normal;
+      overflow: visible;
+      text-overflow: clip;
+      line-height: 1.3;
+    }
+    .empty {
+      display: none;
+      text-align: center;
+      color: var(--muted);
+      padding: 80px 20px;
+    }
+    .empty strong {
+      display: block;
+      color: var(--text);
+      font-size: 18px;
+      margin-bottom: 7px;
+    }
+    @media (max-width: 700px) {
+      header {
+        padding: 25px 18px 20px;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 18px;
+      }
+      .search {
+        width: 100%;
+      }
+      .categories {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+      main {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+      .library {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 25px 15px;
+      }
+    }
+    @media (min-width: 1000px) {
+      .library {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+    }
+    @media (min-width: 1300px) {
+      .library {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-container">
+    <header>
+      <div class="brand">
+        <h1>Acervo Acadêmico</h1>
+        <p>Projeto mantido por <b>Moisés J. M. Lima</b><br><br>Repositório de indexação autônomo focado exclusivamente na centralização de hiperlinks de materiais acadêmicos sob domínio público, sem armazenamento ou hospedagem própria de arquivos e sem fins comerciais.<br><br><b>"O tempo de estudo nunca é um tempo perdido..."</b></p>
+      </div>
+      <div class="search">
+        <span>⌕</span>
+        <input id="search" type="text" placeholder="Buscar PDF..." autocomplete="off">
+      </div>
+    </header>
+    <div class="categories">
+      <button class="category active" data-category="todos">Todos</button>
+      <button class="category" data-category="Dev">Programação</button>
+      <button class="category" data-category="Adm">Administração</button>
+    </div>
+  </div>
+  <main>
+    <div class="library" id="library"></div>
+    <div class="empty" id="empty">
+      <strong>Nenhum PDF encontrado</strong>
+      <span>Tente pesquisar por outro nome.</span>
+    </div>
+  </main>
+  <script>
+    const pdfs = [
+      {
+        titulo: "Algoritmos e Técnicas de Programação",
+        autor: "Marcio Aparecido Artero",
+        categoria: ["Dev"],
+        url: "https://cm-kls-content.s3.amazonaws.com/201802/INTERATIVAS_2_0/ALGORITMOS_E_TECNICAS_DE_PROGRAMACAO/U1/LIVRO_UNICO.pdf"
+      },
+      {
+        titulo: "Planejamento Estratégico",
+        autor: "Luiz Fernando Gomes Pinto",
+        categoria: ["Adm"],
+        url: "https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/PLANEJAMENTO_ESTRATEGICO/U1/LIVRO_UNICO.pdf"
+      },
+      {
+        titulo: "Sistemas de Informação Gerencial",
+        autor: "Danylo Augusto Armelin",
+        categoria: ["Adm"],
+        url: "https://cm-kls-content.s3.amazonaws.com/201601/INTERATIVAS_2_0/SISTEMAS_DE_INFORMACAO_GERENCIAL/U1/LIVRO_UNICO.pdf"
+      },
+    ];
+
+    function escapeHTML(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    const coverCache = new Map();
+
+    async function renderCover(pdfUrl, canvas, container) {
+      if (coverCache.has(pdfUrl)) {
+        const cached = coverCache.get(pdfUrl);
+        const img = new Image();
+        img.onload = function() {
+          const context = canvas.getContext("2d", { alpha: false });
+          canvas.width = cached.canvasWidth;
+          canvas.height = cached.canvasHeight;
+          context.drawImage(img, 0, 0);
+          canvas.style.width = `${cached.viewportWidth}px`;
+          canvas.style.height = `${cached.viewportHeight}px`;
+          canvas.style.left = `${cached.left}px`;
+          canvas.style.top = `${cached.top}px`;
+          const loading = container.querySelector(".cover-loading");
+          if (loading) loading.remove();
+        };
+        img.src = cached.dataUrl;
+        return;
+      }
+
+      try {
+        const loadingTask = window.pdfjsLib.getDocument({
+          url: pdfUrl,
+          withCredentials: false
+        });
+        const pdf = await loadingTask.promise;
+        const page = await pdf.getPage(1);
+        const cardWidth = container.clientWidth;
+        const cardHeight = container.clientHeight;
+        if (cardWidth <= 0 || cardHeight <= 0) {
+          throw new Error("O container da capa não possui tamanho.");
+        }
+        const baseViewport = page.getViewport({ scale: 1 });
+        const coverScale = Math.max(
+          cardWidth / baseViewport.width,
+          cardHeight / baseViewport.height
+        );
+        const viewport = page.getViewport({ scale: coverScale });
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        const renderScale = Math.min(Math.max(devicePixelRatio, 3), 4);
+        const canvasWidth = Math.ceil(viewport.width * renderScale);
+        const canvasHeight = Math.ceil(viewport.height * renderScale);
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        canvas.style.width = `${viewport.width}px`;
+        canvas.style.height = `${viewport.height}px`;
+        const left = Math.round((cardWidth - viewport.width) / 2);
+        const top = Math.round((cardHeight - viewport.height) / 2);
+        canvas.style.left = `${left}px`;
+        canvas.style.top = `${top}px`;
+
+        const context = canvas.getContext("2d", { alpha: false });
+        if (!context) throw new Error("Canvas 2D indisponível.");
+
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        context.fillStyle = "#ffffff";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        const renderTask = page.render({
+          canvasContext: context,
+          viewport: viewport,
+          transform: renderScale !== 1 ? [renderScale, 0, 0, renderScale, 0, 0] : null,
+          background: "#ffffff"
+        });
+
+        await renderTask.promise;
+
+        coverCache.set(pdfUrl, {
+          dataUrl: canvas.toDataURL(),
+          canvasWidth: canvas.width,
+          canvasHeight: canvas.height,
+          viewportWidth: viewport.width,
+          viewportHeight: viewport.height,
+          left: left,
+          top: top
+        });
+
+        const loading = container.querySelector(".cover-loading");
+        if (loading) loading.remove();
+        page.cleanup();
+      } catch (error) {
+        console.error("Erro ao renderizar capa:", pdfUrl, error);
+        const loading = container.querySelector(".cover-loading");
+        if (loading) loading.remove();
+        if (container.querySelector(".cover-error")) return;
+
+        const errorElement = document.createElement("div");
+        errorElement.className = "cover-error";
+        errorElement.innerHTML = `
+          <span>📄</span>
+          <div>Capa indisponível</div>
+        `;
+        container.appendChild(errorElement);
+      }
+    }
+
+    function createBook(book) {
+      const article = document.createElement("article");
+      article.className = "book";
+      // Armazena as categorias como string separada por vírgulas no dataset para fácil verificação
+      article.dataset.categories = JSON.stringify(book.categoria);
+      article.dataset.title = book.titulo.toLowerCase();
+
+      const cover = document.createElement("div");
+      cover.className = "cover-wrapper";
+
+      const loading = document.createElement("div");
+      loading.className = "cover-loading";
+      cover.appendChild(loading);
+
+      const canvas = document.createElement("canvas");
+      canvas.className = "pdf-canvas";
+      cover.appendChild(canvas);
+
+      const info = document.createElement("div");
+      info.className = "book-info";
+      info.innerHTML = `
+        <div class="book-title">${escapeHTML(book.titulo)}</div>
+        <div class="book-meta">${escapeHTML(book.autor || "")}</div>
+      `;
+
+      article.addEventListener("click", function() {
+        window.open(book.url, "_blank", "noopener,noreferrer");
+      });
+
+      article.appendChild(cover);
+      article.appendChild(info);
+
+      requestAnimationFrame(function() {
+        renderCover(book.url, canvas, cover);
+      });
+
+      return article;
+    }
+
+    const library = document.getElementById("library");
+
+    function renderLibrary() {
+      library.innerHTML = "";
+      pdfs.forEach(function(book) {
+        library.appendChild(createBook(book));
+      });
+    }
+
+    function startLibrary() {
+      if (window.pdfjsLib) {
+        renderLibrary();
+      } else {
+        window.addEventListener("pdfjs-ready", renderLibrary, { once: true });
+      }
+    }
+
+    startLibrary();
+
+    const search = document.getElementById("search");
+    const empty = document.getElementById("empty");
+    search.addEventListener("input", filterBooks);
+
+    const categories = document.querySelectorAll(".category");
+    let currentCategory = "todos";
+
+    categories.forEach(function(category) {
+      category.addEventListener("click", function() {
+        categories.forEach(function(item) { item.classList.remove("active"); });
+        category.classList.add("active");
+        currentCategory = category.dataset.category;
+        filterBooks();
+      });
+    });
+
+    function filterBooks() {
+      const query = search.value.toLowerCase().trim();
+      const books = document.querySelectorAll(".book");
+      let visible = 0;
+
+      books.forEach(function(book) {
+        const title = book.dataset.title;
+        const bookCategories = JSON.parse(book.dataset.categories);
+        
+        const matchesSearch = title.includes(query);
+        // Verifica se a categoria atual está inclusa no array de categorias do livro
+        const matchesCategory = currentCategory === "todos" || bookCategories.includes(currentCategory);
+
+        if (matchesSearch && matchesCategory) {
+          book.style.display = "";
+          visible++;
+        } else {
+          book.style.display = "none";
+        }
+      });
+
+      empty.style.display = visible === 0 ? "block" : "none";
+    }
+
+    let resizeTimer = null;
+    window.addEventListener("resize", function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        renderLibrary();
+      }, 350);
+    });
+  </script>
+</body>
+</html>
