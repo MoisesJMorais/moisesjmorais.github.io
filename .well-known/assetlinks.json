@@ -5,9 +5,8 @@
         "package_name": "com.moisesjmlima.appsleves",
         "sha256_cert_fingerprints": ["A3:4D:D6:AA:97:58:4F:88:7B:A3:54:01:C9:D4:BF:3B:5A:14:9B:78:62:5F:2A:3D:B8:FB:2F:7E:54:5E:62:F6"]
       }
-    }]
-
-[{
+    }
+ {
       "relation": ["delegate_permission/common.handle_all_urls"],
       "target": {
         "namespace": "android_app",
